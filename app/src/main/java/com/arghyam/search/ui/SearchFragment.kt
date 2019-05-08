@@ -1,4 +1,4 @@
-package com.arghyam.myactivity.ui
+package com.arghyam.search.ui
 
 
 import android.os.Bundle
@@ -8,22 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.arghyam.R
+import com.arghyam.more.ui.MoreFragment
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class MyActivityFragment : Fragment() {
+class SearchFragment : Fragment() {
 
     /**
      * Initialize newInstance for passing paameters
      */
     companion object {
-        fun newInstance(): MyActivityFragment {
-            var fragmentMyActivity = MyActivityFragment()
+        fun newInstance(): SearchFragment {
+            var fragmentSearch = SearchFragment()
             var args = Bundle()
-            fragmentMyActivity.arguments = args
-            return fragmentMyActivity
+            fragmentSearch.arguments = args
+            return fragmentSearch
         }
 
     }
@@ -34,10 +35,9 @@ class MyActivityFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_my_activity, container, false)
+        var rootView = inflater!!.inflate(R.layout.fragment_search, container, false)
         return rootView
     }
-
 
 
 }

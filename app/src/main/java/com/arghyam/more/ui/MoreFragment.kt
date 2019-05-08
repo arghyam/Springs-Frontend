@@ -10,11 +10,6 @@ import android.view.ViewGroup
 import com.arghyam.R
 import com.arghyam.myactivity.ui.MyActivityFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -26,10 +21,10 @@ class MoreFragment : Fragment() {
      */
     companion object {
         fun newInstance(): MoreFragment {
-            var fragmentHome = MoreFragment()
+            var fragmentMore = MoreFragment()
             var args = Bundle()
-            fragmentHome.arguments = args
-            return fragmentHome
+            fragmentMore.arguments = args
+            return fragmentMore
         }
 
     }

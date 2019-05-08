@@ -23,7 +23,7 @@ class LandingActivity : AppCompatActivity() {
                     return true
                 }
                 R.id.navigation_search -> {
-                    // Todo 08-MAY-2019 Create a new fragment for Search( check if the button redirects to new activity or fragment is loaded)
+
                     return true
                 }
                 R.id.navigation_my_activty -> {
