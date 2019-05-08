@@ -11,8 +11,20 @@ import com.arghyam.R
 import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
+import com.arghyam.search.ui.SearchFragment
 
 class LandingActivity : AppCompatActivity() {
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_landing)
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        val fragment = HomeFragment.Companion.newInstance()
+        addFragment(fragment)
+    }
 
     private val onNavigationItemSelectedListener = object : BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -23,7 +35,8 @@ class LandingActivity : AppCompatActivity() {
                     return true
                 }
                 R.id.navigation_search -> {
-
+                    val fragment = SearchFragment.Companion.newInstance()
+                    addFragment(fragment)
                     return true
                 }
                 R.id.navigation_my_activty -> {
@@ -55,13 +68,4 @@ class LandingActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_landing)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-
-        val fragment = HomeFragment.Companion.newInstance()
-        addFragment(fragment)
-    }
 }
