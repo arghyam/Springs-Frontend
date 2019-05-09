@@ -10,5 +10,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="splash_text">Springs Inventory</string>
+    <string name="title_activity_splash">Arghyam</string>
+    <string name="welcome_to_springs">Welcome to \n Springs Inventory</string>
+    <string name="sign_in">Sign In</string>
+    <string name="hint_mobile">Mobile Number</string>
+    <string name="send_otp">Send Otp</string>
+    <string name="browse_as_guest">Browse as Guest</string>
 
 </resources>
