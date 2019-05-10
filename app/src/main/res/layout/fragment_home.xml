@@ -1,14 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="#F5F5F5"
+             android:scrollbars="none"
+             android:orientation="vertical"
              tools:context=".landing.ui.fragment.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home Fragment"></TextView>
 
-</FrameLayout>
+<androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <ImageView
+                android:id="@+id/near_me_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_icon_shape"
+                android:padding="15dp"/>
+
+
+        <TextView
+                android:id="@+id/spring_near"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="15dp"
+                android:layout_toRightOf="@+id/near_me_icon"
+                android:textSize="14sp"
+                android:textColor="#262524"
+                android:text="Springs near me">
+
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/springRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/spring_near"
+                android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:srcCompat="@drawable/ic_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:tint="#fff"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="#0D65D9"
+            app:borderWidth="0dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/floatingActionButton"/>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

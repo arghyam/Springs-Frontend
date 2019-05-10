@@ -1,17 +1,23 @@
 package com.arghyam.landing.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.FrameLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
+import com.arghyam.landing.adapters.LandingAdapter
+import com.arghyam.landing.model.LandingModel
 import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
 import com.arghyam.search.ui.SearchFragment
+import kotlinx.android.synthetic.main.activity_landing.*
 
 class LandingActivity : AppCompatActivity() {
 
@@ -47,7 +53,6 @@ class LandingActivity : AppCompatActivity() {
                 R.id.navigation_more -> {
                     val fragment = MoreFragment.Companion.newInstance()
                     addFragment(fragment)
-                    return true
                     return true
                 }
             }
