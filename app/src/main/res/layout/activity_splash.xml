@@ -4,10 +4,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".iam.ui.LoginActivity">
+        tools:context=".splash.ui.SplashActivity">
 
 
-    <include layout="@layout/content_login"/>
-
+    <include layout="@layout/content_splash"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,5 +2,11 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="royal_blue">#2372D9</color>
+    <color name="denim">#0D65D9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="bokara_grey">#262524</color>
+    <color name="cornflower_blue">#6BA5F2</color>
+    <color name="colorAccent">#6BA5F2</color>
+    <color name="colorBackButton">#595958</color>
 </resources>

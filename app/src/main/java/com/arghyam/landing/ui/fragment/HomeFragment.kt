@@ -1,6 +1,7 @@
 package com.arghyam.landing.ui.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.arghyam.R
+import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
 import kotlinx.android.synthetic.main.activity_landing.*
@@ -39,6 +41,8 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
     }
 
 
@@ -51,6 +55,12 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
+
+        floatingActionButton.setOnClickListener{
+            var intent = Intent(activity,NewSpringActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun init() {

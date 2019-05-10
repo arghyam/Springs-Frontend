@@ -140,7 +140,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+
+            >
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -161,7 +163,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:textColor="#595958"
-                        android:text="NOte: Recommended accuracy is 50 mts"/>
+                        android:paddingTop="16dp"
+                        android:text="N0te: Recommended accuracy is 50 mts"/>
 
             </LinearLayout>
 
@@ -169,6 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
+                    android:padding="16dp"
                     app:srcCompat="@drawable/ic_icon_shape"/>
 
         </LinearLayout>
@@ -200,7 +204,7 @@
                 android:textSize="14sp"
                 android:textColor="#262524"
                 android:paddingTop="16dp"
-                android:text="LOngitude  : 17.9971"/>
+                android:text="Longitude  : 17.9971"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -208,7 +212,7 @@
 
             <Button
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="45dp"
                     android:background="#0D65D9"
                     android:text="SUBMIT"
                     android:textSize="18sp"
