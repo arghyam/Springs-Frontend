@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.R
 import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.iam.ui.profile.ui.ProfileActivity
 import com.arghyam.landing.services.SmsListener
 import com.arghyam.landing.services.SmsReceiver
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -48,8 +49,10 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initClickListener(): View.OnClickListener {
         return View.OnClickListener {
-            if(isOtpFilled) {
-                // goto profile
+            if (isOtpFilled) {
+                val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
+                intent.putExtra(PHONE_NUMBER, phoneNumber)
+                startActivity(intent)
             }
         }
     }
