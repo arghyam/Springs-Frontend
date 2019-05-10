@@ -48,7 +48,6 @@ class LandingActivity : AppCompatActivity() {
                     val fragment = MoreFragment.Companion.newInstance()
                     addFragment(fragment)
                     return true
-                    return true
                 }
             }
             return false
