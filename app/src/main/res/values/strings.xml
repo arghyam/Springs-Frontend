@@ -17,5 +17,10 @@
     <string name="hint_mobile">Mobile Number</string>
     <string name="send_otp">Send Otp</string>
     <string name="browse_as_guest">Browse as Guest</string>
+    <string name="title_activity_otp_verify">OtpVerifyActivity</string>
+    <string name="four_digit_code">Enter 4 Digit Code</string>
+    <string name="sms_was_sent">It was sent in an SMS message to + 91</string>
+    <string name="resend">Resend code</string>
+    <string name="verify">Verify</string>
 
 </resources>
