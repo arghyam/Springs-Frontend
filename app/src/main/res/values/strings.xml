@@ -10,6 +10,20 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="splash_text">Springs Inventory</string>
+    <string name="title_activity_splash">Arghyam</string>
+    <string name="welcome_to_springs">Welcome to \n Springs Inventory</string>
+    <string name="sign_in">Sign In</string>
+    <string name="hint_mobile">Mobile Number</string>
+    <string name="send_otp">Send Otp</string>
+    <string name="browse_as_guest">Browse as Guest</string>
+    <string name="title_activity_otp_verify">OtpVerifyActivity</string>
+    <string name="four_digit_code">Enter 4 Digit Code</string>
+    <string name="sms_was_sent">It was sent in an SMS message to + 91</string>
+    <string name="resend">Resend code</string>
+    <string name="verify">Verify</string>
+
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="phone">Phone</string>
     <string name="full_name">Full name</string>
