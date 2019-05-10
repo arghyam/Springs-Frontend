@@ -65,6 +65,4 @@
             android:id="@+id/floatingActionButton"/>
 
 
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
