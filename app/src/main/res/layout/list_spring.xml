@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+        <RelativeLayout
+                android:id="@+id/layout_spring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:id="@+id/img_spring"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="119dp"
+                    android:background="#D3D3D3"
+            />
+
+            <TextView
+                    android:id="@+id/spring_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/img_spring"
+                    android:layout_alignBottom="@id/img_spring"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="Thana"
+                    android:textStyle="normal"
+                    android:padding="10dp"
+                    android:textSize="18sp"
+                    android:lineHeight="21dp"
+                    android:textColor="#FDFDFD"
+            />
+
+        </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Spring ID"
+                        android:textSize="12sp"
+                        android:textColor="#8C8C8B"
+                        android:id="@+id/mytextview1"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="Ownership"
+                        android:textSize="12sp"
+                        android:textColor="#8C8C8B"
+                        android:id="@+id/mytextview2"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Spring5678"
+                        android:textSize="16sp"
+                        android:textColor="#262524"
+                        android:id="@+id/mytextview3"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="Private"
+                        android:textSize="16sp"
+                        android:textColor="#262524"
+                        android:id="@+id/mytextview4"/>
+
+            </RelativeLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Location"
+                    android:textSize="12sp"
+                    android:textColor="#8C8C8B"
+                    android:paddingTop="10dp"
+                    android:id="@+id/mytextview5"/>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Narandwar"
+                        android:textColor="#262524"
+                        android:textSize="16sp"
+                        android:id="@+id/village_name"/>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

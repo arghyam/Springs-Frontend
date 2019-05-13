@@ -3,6 +3,7 @@ package com.arghyam.landing.ui.activity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.arghyam.R
 import com.arghyam.commons.utils.Constants.TAG_HOME
@@ -15,13 +16,15 @@ import com.arghyam.myactivity.ui.MyActivityFragment
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+
 class LandingActivity : AppCompatActivity() {
 
     var CURRENT_TAG : String = TAG_HOME
+    lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         val fragment = HomeFragment.newInstance()
@@ -80,6 +83,7 @@ class LandingActivity : AppCompatActivity() {
             finish()
         } else {
             CURRENT_TAG = TAG_HOME
+            navView.menu[0].isChecked = true
             val fragment = HomeFragment.newInstance()
             addFragment(fragment)
         }
