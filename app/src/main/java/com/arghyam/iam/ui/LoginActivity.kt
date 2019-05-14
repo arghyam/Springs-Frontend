@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(s.toString().length == 10) {
-                    sendOtpButton.setBackgroundColor(resources.getColor(R.color.denim))
+                    sendOtpButton.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                 } else {
                     sendOtpButton.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
