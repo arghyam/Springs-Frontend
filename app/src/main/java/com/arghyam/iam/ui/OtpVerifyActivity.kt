@@ -2,6 +2,7 @@ package com.arghyam.iam.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -12,8 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.R
 import com.arghyam.commons.utils.AppSignatureHelper
+import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
-import com.arghyam.iam.ui.profile.ui.ProfileActivity
+import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.landing.services.SmsListener
 import com.arghyam.landing.services.SmsReceiver
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -21,8 +23,11 @@ import kotlinx.android.synthetic.main.content_otp_verify.*
 
 class OtpVerifyActivity : AppCompatActivity() {
 
-    lateinit var phoneNumber: String
-    var isOtpFilled: Boolean = false
+    private lateinit var phoneNumber: String
+    private var resendOtpCount: Int = 0
+    private var maxTime = 30
+    private var isCounterRunning: Boolean = false
+    private lateinit var countDownTimer : CountDownTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_otp_verify)
@@ -35,6 +40,58 @@ class OtpVerifyActivity : AppCompatActivity() {
         startSmsRetriever()
         initSubmitButtonClick()
         initBackPressListener()
+        initTermsCheckBox()
+        initResendCodeButton()
+        initResendTimer()
+    }
+
+
+    private fun initResendCodeButton() {
+        resendCode.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if (resendOtpCount < 4) {
+                    initResendTimer()
+                } else {
+                    Toast.makeText(
+                        this@OtpVerifyActivity,
+                        "You have reached the maximum limit, Please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+        })
+    }
+
+    private fun initResendTimer() {
+        if (!isCounterRunning) {
+            resendCode.alpha = 0.5f
+            isCounterRunning = true
+            countDownTimer = object : CountDownTimer(30000, 1000) {
+                override fun onFinish() {
+                    resendCode.text = "${getString(R.string.resend)}"
+                    maxTime = 30
+                    resendOtpCount++
+                    isCounterRunning = false
+                    resendCode.alpha = 1.0f
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    resendCode.text = "${getString(R.string.resend)} (00:${ArghyamUtils().checkDigit(maxTime)})"
+                    maxTime--
+                }
+            }.start()
+        }
+    }
+
+    private fun initTermsCheckBox() {
+        termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && isOtpEditTextFilled()) {
+                btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+            } else {
+                btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+            }
+        }
     }
 
     private fun initSubmitButtonClick() {
@@ -49,7 +106,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initClickListener(): View.OnClickListener {
         return View.OnClickListener {
-            if (isOtpFilled) {
+            if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
                 val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
                 intent.putExtra(PHONE_NUMBER, phoneNumber)
                 startActivity(intent)
@@ -117,23 +174,25 @@ class OtpVerifyActivity : AppCompatActivity() {
         otp_2.setText("${code[1]}")
         otp_3.setText("${code[2]}")
         otp_4.setText("${code[3]}")
-        btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+        countDownTimer.cancel()
+        resendCode.text = "${getString(R.string.resend)}"
+        resendCode.alpha = 1.0f
     }
 
     private fun onEditTextBackSpaceClicked(from: EditText, to: EditText) {
-        from.setOnKeyListener { v, keyCode, event ->
+        from.setOnKeyListener { _, keyCode, _ ->
             //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
             if (keyCode == KeyEvent.KEYCODE_DEL) {
                 if (from.text.toString().isEmpty()) {
                     to.requestFocus()
                     to.setSelection(to.text.toString().length)
-                    if (otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty() && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()) {
-                        isOtpFilled = true
+                    if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
-                        isOtpFilled = false
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                     }
+                } else {
+                    btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
             }
             false
@@ -152,19 +211,21 @@ class OtpVerifyActivity : AppCompatActivity() {
                 if (s.length == 1) {
                     to.requestFocus()
                     to.setSelection(to.text.toString().length)
-                    if (otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty() && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()) {
-                        isOtpFilled = true
+                    if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
-                        isOtpFilled = false
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                     }
                 } else {
-                    isOtpFilled = false
                     btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
             }
         })
+    }
+
+    private fun isOtpEditTextFilled(): Boolean {
+        return otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty()
+                && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()
     }
 
 }
