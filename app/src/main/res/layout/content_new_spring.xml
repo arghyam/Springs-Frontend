@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               >
-<ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/button_layout">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-           >
+            android:paddingBottom="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/new_spring_name"
@@ -98,7 +100,45 @@
                 android:layout_height="wrap_content"
                 android:textColor="#595958"
                 android:textSize="14sp"
-                android:text="Image"/>
+                android:text="Image"
+                android:paddingBottom="16dp"/>
+
+            <LinearLayout
+                    android:id="@+id/image_upload_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@drawable/image_border">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_icon_shape"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:textSize="11.84sp"
+                        android:textColor="#262524"
+                        android:text="Capture"/>
+
+            </LinearLayout>
+
+            <!--<ImageView-->
+                    <!--android:id="@+id/image_load"-->
+                    <!--android:layout_width="100dp"-->
+                    <!--android:layout_height="100dp"-->
+                    <!--app:srcCompat="@drawable/ic_icon_shape"/>-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/imageRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/spring_near"
+                    android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
@@ -124,6 +164,33 @@
 
         />
 
+            <LinearLayout
+                    android:id="@+id/location_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/image_border">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_icon_shape"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:textSize="11.84sp"
+                        android:textColor="#262524"
+                        android:text="Get location accuracy"/>
+
+
+
+            </LinearLayout>
 
         <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -140,9 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
-
-            >
+                    android:padding="16dp">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -212,33 +277,32 @@
                 android:layout_height="1dp"
                 android:paddingBottom="8dp"
                 android:background="#e6e6e6" />
-
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp">
-
-            <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="#0D65D9"
-                    android:text="SUBMIT"
-                    android:textSize="18sp"
-
-            android:textColor="#FFFFFF"/>
-
-        </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-
-
     </LinearLayout>
 </ScrollView>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:paddingBottom="8dp"
+            android:background="#e6e6e6" />
+<LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp">
+
+
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#0D65D9"
+            android:text="SUBMIT"
+            android:textSize="18sp"
+            android:layout_alignParentBottom="true"
+            android:textColor="#FFFFFF"/>
+
 </LinearLayout>
+
+</RelativeLayout>
