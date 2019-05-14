@@ -33,4 +33,8 @@
     <string name="no_springs_nearby">No Springs Nearby</string>
     <string name="allow_location_permission">Please allow location permission to view springs near you</string>
     <string name="search_for_springs">Search for Springs</string>
+    <string name="i_agree_to">I agree to &#032;</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="and">&#032; and &#032;</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>
