@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Arghyam</string>
+    <string name="app_name">Spring Inventory</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_landing">LandingActivity</string>
@@ -30,4 +30,7 @@
     <string name="continue_button">continue</string>
     <string name="profile_details">PROFILE DETAILS</string>
     <string name="profile_phone">phone</string>
+    <string name="no_springs_nearby">No Springs Nearby</string>
+    <string name="allow_location_permission">Please allow location permission to view springs near you</string>
+    <string name="search_for_springs">Search for Springs</string>
 </resources>

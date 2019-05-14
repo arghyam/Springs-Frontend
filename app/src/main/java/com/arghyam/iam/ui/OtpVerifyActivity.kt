@@ -117,7 +117,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         otp_2.setText("${code[1]}")
         otp_3.setText("${code[2]}")
         otp_4.setText("${code[3]}")
-        btnVerify.setBackgroundColor(resources.getColor(R.color.denim))
+        btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
     }
 
     private fun onEditTextBackSpaceClicked(from: EditText, to: EditText) {
@@ -129,7 +129,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                     to.setSelection(to.text.toString().length)
                     if (otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty() && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()) {
                         isOtpFilled = true
-                        btnVerify.setBackgroundColor(resources.getColor(R.color.denim))
+                        btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
                         isOtpFilled = false
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
@@ -154,7 +154,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                     to.setSelection(to.text.toString().length)
                     if (otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty() && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()) {
                         isOtpFilled = true
-                        btnVerify.setBackgroundColor(resources.getColor(R.color.denim))
+                        btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
                         isOtpFilled = false
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
