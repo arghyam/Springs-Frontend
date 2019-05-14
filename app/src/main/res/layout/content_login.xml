@@ -15,7 +15,7 @@
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/denim"
+            android:background="@color/colorPrimaryDark"
             android:layout_weight="1.25">
 
         <ImageView
@@ -78,7 +78,7 @@
 
         <TextView android:layout_width="match_parent"
                   android:layout_marginTop="32dp"
-                  android:textColor="@color/royal_blue"
+                  android:textColor="@color/colorPrimary"
                   android:text="@string/browse_as_guest"
                   android:textSize="@dimen/browse_as_guest"
                   android:textAlignment="center"
