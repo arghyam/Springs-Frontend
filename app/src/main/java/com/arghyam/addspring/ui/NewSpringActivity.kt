@@ -13,7 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -31,7 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.android.synthetic.main.content_new_spring.*
 import java.io.ByteArrayOutputStream
 
-class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -41,6 +41,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private val listener: com.google.android.gms.location.LocationListener? = null
     private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
+    var count: Int = 0
+    var imageList = ArrayList<ImageEntity>()
 
     lateinit var locationManager: LocationManager
 
@@ -53,32 +55,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     override fun onStop() {
         super.onStop();
-        if (mGoogleApiClient!!.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient!!.isConnected) {
             mGoogleApiClient!!.disconnect();
         }
     }
 
     override fun onConnected(p0: Bundle?) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
-
-
-        startLocationUpdates();
-
-        var fusedLocationProviderClient :
-                FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationProviderClient .getLastLocation()
-            .addOnSuccessListener(this, OnSuccessListener<Location> { location ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    // Logic to handle location object
-                    mLocation = location;
-                    latitude.setText("" + mLocation.latitude)
-                    longitude.setText("" + mLocation.longitude)
-                }
-            })
     }
 
     override fun onConnectionSuspended(p0: Int) {
@@ -91,15 +76,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
     }
 
-    override fun onLocationChanged(location: Location) {
-        var msg = "Updated Location: Latitude " + location.longitude.toString() + location.longitude;
-        latitude.setText(""+location.latitude);
-        longitude.setText(""+location.longitude);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
 
-    var count: Int = 0
-    var imageList = ArrayList<ImageEntity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,25 +91,43 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun init() {
         initRecyclerView()
         initLocation()
+        initLocationClick()
+    }
+
+    private fun initLocationClick() {
+        img_GPS.setOnClickListener {
+            getGoogleClient()
+            tv_reposition.text = "fetching information..."
+        }
     }
 
     private fun initLocation() {
-
-        location_layout.setOnClickListener {
-            MultiDex.install(this)
-
-            mGoogleApiClient = GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build()
-
-            mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-            checkLocation()
+        location_layout.setOnClickListener  {
+            getGoogleClient()
+            card_device.visibility = View.VISIBLE
+            tv_coordinates.visibility = View.VISIBLE
+            latitude.visibility = View.VISIBLE
+            longitude.visibility = View.VISIBLE
+            location_layout.visibility = View.GONE
         }
 
     }
+
+
+    private fun getGoogleClient() {
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API)
+            .build()
+
+        mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if(checkLocation()){
+            getLocation()
+        }
+
+    }
+
 
     private fun checkLocation(): Boolean {
         if(!isLocationEnabled())
@@ -158,22 +153,28 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         dialog.show()
     }
 
-    protected fun startLocationUpdates() {
 
-        // Create the location request
-        mLocationRequest = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(UPDATE_INTERVAL)
-            .setFastestInterval(FASTEST_INTERVAL);
-        // Request location updates
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+    private fun getLocation(){
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//TODO permission should be displayed
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-            mLocationRequest, this);
+        var fusedLocationProviderClient :
+                FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient .getLastLocation()
+            .addOnSuccessListener(this, OnSuccessListener<Location> { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    // Logic to handle location object
+                    mLocation = location;
+                    latitude.text = "Latitude     : ${mLocation.latitude}"
+                    longitude.text = "Longitude  : ${mLocation.longitude}"
+                    tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
+                    tv_reposition.text = "Click on to reposition your gps"
+                }
+            })
     }
 
     private fun initRecyclerView() {
