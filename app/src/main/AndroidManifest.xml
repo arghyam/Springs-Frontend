@@ -15,8 +15,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".geographySearch.ui.activity.GeographySearch">
-            android:label="@string/search_geography">
+        <activity android:name=".geographySearch.ui.activity.GeographySearchActivity"
+                  android:label="@string/search_geography">
+
         </activity>
         <activity
                 android:name=".addspring.ui.NewSpringActivity"

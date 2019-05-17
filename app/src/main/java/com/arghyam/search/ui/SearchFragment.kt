@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.arghyam.R
-import com.arghyam.geographySearch.ui.activity.GeographySearch
-import com.arghyam.more.ui.MoreFragment
-import com.bumptech.glide.Glide.init
+import com.arghyam.geographySearch.ui.activity.GeographySearchActivity
 import kotlinx.android.synthetic.main.content_search.*
 
 /**
@@ -44,7 +42,7 @@ class SearchFragment : Fragment() {
 
     private fun initClick() {
         geo_layout.setOnClickListener {
-            val intent = Intent(activity, GeographySearch::class.java)
+            val intent = Intent(activity, GeographySearchActivity::class.java)
             startActivity(intent)
         }
     }

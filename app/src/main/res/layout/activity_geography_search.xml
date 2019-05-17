@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".geographySearch.ui.activity.GeographySearch">
+        tools:context=".geographySearch.ui.activity.GeographySearchActivity">
 
     <include layout="@layout/content_geography_search"/>
 
