@@ -1,23 +1,23 @@
 package com.arghyam.geographySearch.ui.fragment
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.arghyam.R
 import com.arghyam.geographySearch.adapter.BlockAdapter
+import com.arghyam.geographySearch.interfaces.GeographyInterface
+import com.arghyam.geographySearch.interfaces.SearchInterface
 import com.arghyam.geographySearch.model.BlockModel
 import kotlinx.android.synthetic.main.content_state.*
 
 
 class BlockFragment : Fragment() {
     private var blockList = ArrayList<BlockModel>()
-
+    private lateinit var searchInterface: SearchInterface
 
     companion object {
         fun newInstance(): BlockFragment {
@@ -28,6 +28,7 @@ class BlockFragment : Fragment() {
         }
 
     }
+
 
     override fun onCreate(savedInstanceBlock: Bundle?) {
         super.onCreate(savedInstanceBlock)
@@ -50,16 +51,22 @@ class BlockFragment : Fragment() {
     }
 
     private fun init() {
-        activity?.setTitle("Select Block")
+        activity?.title = "Select Block"
         initRecyclerView()
+        initClick()
+    }
+
+    private fun initClick() {
+
     }
 
     private fun initRecyclerView() {
         stateRecyclerView.layoutManager = LinearLayoutManager(activity)
-        val adapter = activity?.let { BlockAdapter(blockList, it) }
+        val adapter = activity?.let { BlockAdapter(blockList, it, geographyInterface) }
         stateRecyclerView.adapter = adapter
 
         blockList.add(BlockModel("Block 1"))
+
         blockList.add(BlockModel("Block 2"))
 
         blockList.add(BlockModel("Block 3"))
@@ -75,8 +82,13 @@ class BlockFragment : Fragment() {
         blockList.add(BlockModel("Block 8"))
 
 
+    }
 
-
+    private var geographyInterface = object : GeographyInterface {
+        override fun onGeographyItemClickListener(position: Int) {
+            Log.e("block", blockList[position].blockName)
+            (activity as SearchInterface).getTitle("" + position, blockList[position].blockName, 3)
+        }
     }
 
 }

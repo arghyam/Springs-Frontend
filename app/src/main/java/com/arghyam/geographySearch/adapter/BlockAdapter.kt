@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
+import com.arghyam.geographySearch.interfaces.GeographyInterface
 import com.arghyam.geographySearch.model.BlockModel
 import kotlinx.android.synthetic.main.list_state.view.*
 
-class BlockAdapter(val BlockList : ArrayList<BlockModel>, context: Context):RecyclerView.Adapter<BlockAdapter.BlockViewHolder>(){
+class BlockAdapter(val BlockList: ArrayList<BlockModel>, context: Context, val geographyInterface: GeographyInterface) :
+    RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+
+    var mContext = context
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_state,parent,false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_state, parent, false)
         return BlockViewHolder(v)
     }
 
@@ -22,11 +27,15 @@ class BlockAdapter(val BlockList : ArrayList<BlockModel>, context: Context):Recy
     override fun onBindViewHolder(holder: BlockViewHolder, position: Int) {
         val blocks: BlockModel = BlockList[position]
         holder.blockName.text = blocks.blockName
+        holder.itemView.setOnClickListener {
+            geographyInterface.onGeographyItemClickListener(position)
+        }
     }
 
+    class BlockViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    class BlockViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val blockName = view.state_name
+
     }
 
 

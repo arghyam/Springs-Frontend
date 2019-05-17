@@ -3,6 +3,7 @@ package com.arghyam.geographySearch.ui.fragment
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.arghyam.R
 import com.arghyam.geographySearch.adapter.StateAdapter
+import com.arghyam.geographySearch.interfaces.GeographyInterface
+import com.arghyam.geographySearch.interfaces.SearchInterface
 import com.arghyam.geographySearch.model.StateModel
 import com.bumptech.glide.Glide.init
 import kotlinx.android.synthetic.main.content_state.*
@@ -56,7 +59,7 @@ class StateFragment : Fragment() {
 
     private fun initRecyclerView() {
         stateRecyclerView.layoutManager = LinearLayoutManager(activity)
-            val adapter = activity?.let { StateAdapter(stateList, it) }
+            val adapter = activity?.let { StateAdapter(stateList, it,geographyInterface) }
             stateRecyclerView.adapter = adapter
 
         stateList.add(StateModel("Andra Pradesh"))
@@ -72,6 +75,13 @@ class StateFragment : Fragment() {
 
 
 
+    }
+
+    private var geographyInterface = object : GeographyInterface {
+        override fun onGeographyItemClickListener(position: Int) {
+            Log.e("state", stateList[position].stateName)
+            (activity as SearchInterface).getTitle("" + position, stateList[position].stateName, 1)
+        }
     }
 
 }

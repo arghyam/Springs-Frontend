@@ -28,6 +28,17 @@
                         android:textColor="#595958"
                         android:text="State"/>
 
+                <TextView
+                        android:id="@+id/state_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Gujarat"/>
+
                 <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -59,6 +70,17 @@
                         android:textSize="16sp"
                         android:textColor="#595958"
                         android:text="District"/>
+
+                <TextView
+                        android:id="@+id/district_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Amreli"/>
 
                 <ImageView
 
@@ -92,6 +114,17 @@
                         android:textSize="16sp"
                         android:textColor="#595958"
                         android:text="Block"/>
+
+                <TextView
+                        android:id="@+id/block_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Block 1"/>
 
                 <ImageView
                         android:layout_width="24dp"
@@ -139,12 +172,12 @@
                             android:id="@+id/search_town"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:gravity="right"
                             android:layout_centerVertical="true"
                             android:paddingRight="32dp"
                             android:layout_toRightOf="@+id/radioPublic"
-                            android:textColor="#595958"
+                            android:textColor="#8C8C8B"
                             android:text="Town"/>
 
                     <ImageView
@@ -187,12 +220,12 @@
                             android:id="@+id/search_panchayat"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
                             android:gravity="right"
                             android:layout_centerVertical="true"
                             android:paddingRight="32dp"
                             android:layout_toRightOf="@+id/radioPrivate"
-                            android:textColor="#595958"
+                            android:textColor="#8C8C8B"
                             android:text="Gram panchayat"/>
 
                     <ImageView
