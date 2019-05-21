@@ -37,6 +37,8 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="and">&#032; and &#032;</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="new_spring">New Spring</string>
+    <string name="search_geography">Search by Geography</string>
     <string name="title_activity_spring_detials">Arghyam</string>
     <string name="add_discharge_data">ADD DISCHARGE DATA</string>
     <string name="details">Details</string>

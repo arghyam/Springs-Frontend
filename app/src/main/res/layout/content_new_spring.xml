@@ -172,7 +172,6 @@
                     android:orientation="vertical"
                     android:layout_marginRight="50dp"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginBottom="16dp"
                     android:background="@drawable/image_border">
 
                 <ImageView
@@ -193,6 +192,10 @@
             </LinearLayout>
 
         <androidx.cardview.widget.CardView
+                android:id="@+id/card_device"
+                android:visibility="gone"
+                android:layout_marginTop="16dp"
+                android:elevation="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
         >
@@ -204,12 +207,14 @@
 
             <LinearLayout
                     android:id="@+id/layout_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+            android:layout_weight="1">
 
                 <TextView
+                        android:id="@+id/tv_accuracy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Device accuracy  : 150mts"
@@ -219,6 +224,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/tv_reposition"
                         android:text="Click on to reposition your gps"
                         android:textSize="12sp"
                         android:textColor="#8C8C8B"/>
@@ -234,6 +240,8 @@
             </LinearLayout>
 
             <ImageView
+                    android:id="@+id/img_GPS"
+                    android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -245,31 +253,35 @@
         </androidx.cardview.widget.CardView>
 
 
-
         <TextView
+                android:id="@+id/tv_coordinates"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:visibility="gone"
                 android:textColor="#595958"
                 android:paddingTop="16dp"
                 android:text="Coordinates"/>
 
         <TextView
+                android:id="@+id/latitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:visibility="gone"
                 android:textColor="#262524"
-                android:paddingTop="16dp"
-                android:text="Latitude     : 13.6675"/>
+                android:paddingTop="16dp"/>
 
 
         <TextView
+                android:id="@+id/longitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:visibility="gone"
                 android:textColor="#262524"
                 android:paddingTop="16dp"
-                android:text="Longitude  : 17.9971"/>
+                />
 
         </LinearLayout>
         <View

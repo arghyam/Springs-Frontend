@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/geography_search">
+
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/search_layout">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                     >
+
+
+            <RelativeLayout
+                    android:id="@+id/search_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="16dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="#595958"
+                        android:text="State"/>
+
+                <TextView
+                        android:id="@+id/state_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Gujarat"/>
+
+                <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="5dp"
+                        app:srcCompat="@drawable/ic_next"/>
+            </RelativeLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#e6e6e6" />
+
+            <RelativeLayout
+                    android:id="@+id/search_district"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="16dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="#595958"
+                        android:text="District"/>
+
+                <TextView
+                        android:id="@+id/district_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Amreli"/>
+
+                <ImageView
+
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="5dp"
+                        app:srcCompat="@drawable/ic_next"/>
+            </RelativeLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#e6e6e6" />
+
+            <RelativeLayout
+                    android:id="@+id/search_block"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="16dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="#595958"
+                        android:text="Block"/>
+
+                <TextView
+                        android:id="@+id/block_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="right"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="32dp"
+                        android:textColor="#8C8C8B"
+                        android:text="Block 1"/>
+
+                <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="7dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="5dp"
+                        app:srcCompat="@drawable/ic_next"/>
+            </RelativeLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#e6e6e6" />
+
+
+
+            <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                <RadioButton
+                        android:id="@+id/radioPublic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:paddingLeft="16dp"
+                        android:textColor="#595958"
+                        android:text="Urban"/>
+
+
+
+                    <TextView
+                            android:id="@+id/town_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:gravity="right"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="32dp"
+                            android:layout_toRightOf="@+id/radioPublic"
+                            android:textColor="#8C8C8B"
+                            android:text="Town"/>
+
+                    <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="5dp"
+                            app:srcCompat="@drawable/ic_next"/>
+
+                </RelativeLayout>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="65dp"
+                        android:background="#e6e6e6" />
+
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                       android:padding="16dp">
+
+                <RadioButton
+                        android:id="@+id/radioPrivate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:textSize="16sp"
+                        android:textColor="#595958"
+                        android:text="Rural"/>
+
+
+
+                    <TextView
+                            android:id="@+id/panchayat_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:gravity="right"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="32dp"
+                            android:layout_toRightOf="@+id/radioPrivate"
+                            android:textColor="#8C8C8B"
+                            android:text="Gram panchayat"/>
+
+                    <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="5dp"
+                            app:srcCompat="@drawable/ic_next"/>
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="#e6e6e6" />
+
+
+
+            </RadioGroup>
+
+
+
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+    <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:layout_alignParentBottom="true"
+            android:padding="16dp">
+
+
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="#0D65D9"
+                android:text="SEARCH"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+</RelativeLayout>
