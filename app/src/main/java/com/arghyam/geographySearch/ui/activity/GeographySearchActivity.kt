@@ -42,12 +42,12 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
 
         }
 
-        search_town.setOnClickListener {
+        town_name.setOnClickListener {
             val fragment = TownFragment.newInstance()
             addFragment(fragment)
         }
 
-        search_panchayat.setOnClickListener {
+        panchayat_name.setOnClickListener {
             val fragment = PanchayatFragment.newInstance()
             addFragment(fragment)
         }
@@ -63,10 +63,31 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
     }
 
     override fun getTitle(id: String, title: String, type : Int) {
-        Log.e("stefy", title)
-           state_name.text = title
-           block_name.text = title
-           district_name.text = title
+        Log.e("stefy", title +" "+ type)
+        if(type == 1){
+            state_name.text = title
+
+        } else if(type == 2){
+            district_name.text = title
+
+        } else if (type == 3){
+            block_name.text = title
+
+        }else if (type == 4){
+            town_name.text = title
+
+        }else if (type == 5){
+            panchayat_name.text = title
+        }
+        else {
+            state_name.text = ""
+            district_name.text = ""
+            block_name.text = ""
+            town_name.text = ""
+            panchayat_name.text = ""
+
+        }
+
        }
 
 }

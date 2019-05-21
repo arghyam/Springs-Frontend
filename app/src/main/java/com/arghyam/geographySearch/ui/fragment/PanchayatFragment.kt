@@ -3,6 +3,7 @@ package com.arghyam.geographySearch.ui.fragment
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.arghyam.R
 import com.arghyam.geographySearch.adapter.PanchyatAdapter
+import com.arghyam.geographySearch.interfaces.GeographyInterface
+import com.arghyam.geographySearch.interfaces.SearchInterface
 import com.arghyam.geographySearch.model.PanchayatModel
 import kotlinx.android.synthetic.main.content_state.*
 
@@ -56,7 +59,7 @@ class PanchayatFragment : Fragment() {
 
     private fun initRecyclerView() {
         stateRecyclerView.layoutManager = LinearLayoutManager(activity)
-        val adapter = activity?.let { PanchyatAdapter(panchayatList, it) }
+        val adapter = activity?.let { PanchyatAdapter(panchayatList, it,geographyInterface) }
         stateRecyclerView.adapter = adapter
 
         panchayatList.add(PanchayatModel("Gram Panchayat 1"))
@@ -75,8 +78,12 @@ class PanchayatFragment : Fragment() {
         panchayatList.add(PanchayatModel("Gram Panchayat 8"))
 
 
-
-
     }
 
+    private var geographyInterface = object : GeographyInterface {
+        override fun onGeographyItemClickListener(position: Int) {
+            Log.e("panchayat", panchayatList[position].panchayatName)
+            (activity as SearchInterface).getTitle("" + position, panchayatList[position].panchayatName, 5)
+        }
+    }
 }

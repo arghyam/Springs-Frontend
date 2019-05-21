@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
+import com.arghyam.geographySearch.interfaces.GeographyInterface
 import com.arghyam.geographySearch.model.TownModel
 import kotlinx.android.synthetic.main.list_state.view.*
 
-class TownAdapter(val TownList : ArrayList<TownModel>, context: Context):RecyclerView.Adapter<TownAdapter.TownViewHolder>(){
+class TownAdapter(val TownList : ArrayList<TownModel>, context: Context, val geographyInterface: GeographyInterface):RecyclerView.Adapter<TownAdapter.TownViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TownViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_state,parent,false)
         return TownViewHolder(v)
@@ -22,6 +23,9 @@ class TownAdapter(val TownList : ArrayList<TownModel>, context: Context):Recycle
     override fun onBindViewHolder(holder: TownViewHolder, position: Int) {
         val town: TownModel = TownList[position]
         holder.townName.text = town.townName
+        holder.itemView.setOnClickListener {
+            geographyInterface.onGeographyItemClickListener(position)
+        }
     }
 
 

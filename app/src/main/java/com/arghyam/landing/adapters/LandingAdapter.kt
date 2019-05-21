@@ -30,7 +30,6 @@ class LandingAdapter(val springList : ArrayList<LandingModel>,val context: Conte
 
     }
 
-
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
         val springNameText = view.spring_name

@@ -3,6 +3,7 @@ package com.arghyam.geographySearch.ui.fragment
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.arghyam.R
 import com.arghyam.geographySearch.adapter.TownAdapter
+import com.arghyam.geographySearch.interfaces.GeographyInterface
+import com.arghyam.geographySearch.interfaces.SearchInterface
 import com.arghyam.geographySearch.model.TownModel
 import kotlinx.android.synthetic.main.content_state.*
 
@@ -56,7 +59,7 @@ class TownFragment : Fragment() {
 
     private fun initRecyclerView() {
         stateRecyclerView.layoutManager = LinearLayoutManager(activity)
-        val adapter = activity?.let { TownAdapter(townList, it) }
+        val adapter = activity?.let { TownAdapter(townList, it,geographyInterface) }
         stateRecyclerView.adapter = adapter
 
         townList.add(TownModel("Town 1"))
@@ -75,8 +78,13 @@ class TownFragment : Fragment() {
         townList.add(TownModel("Town 8"))
 
 
+    }
 
-
+    private var geographyInterface = object : GeographyInterface {
+        override fun onGeographyItemClickListener(position: Int) {
+            Log.e("town", townList[position].townName)
+            (activity as SearchInterface).getTitle("" + position, townList[position].townName, 4)
+        }
     }
 
 }
