@@ -11,7 +11,7 @@
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
@@ -20,12 +20,16 @@
 
         </activity>
         <activity
-                android:name=".addspring.ui.NewSpringActivity"
-                android:label="@string/new_spring">
+                android:name=".springdetails.ui.activity.SpringDetailsActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".addspring.ui.NewSpringActivity">
         </activity>
         <activity
                 android:name=".iam.ui.OtpVerifyActivity"
-                android:label="@string/title_activity_otp_verify"
+                android:label="@string/app_name"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -34,6 +38,11 @@
                 android:label="@string/title_activity_splash"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
 
         </activity>
         <activity
@@ -45,13 +54,10 @@
         <activity
                 android:name=".landing.ui.activity.LandingActivity"
                 android:label="@string/app_name"
+
                 android:theme="@style/AppTheme.NoActionBar"
                 android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <uses-library

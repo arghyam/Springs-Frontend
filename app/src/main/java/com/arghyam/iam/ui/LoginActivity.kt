@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.R
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.landing.ui.activity.LandingActivity
 import kotlinx.android.synthetic.main.content_login.*
 
 
@@ -20,7 +21,7 @@ class LoginActivity : AppCompatActivity() {
         init()
     }
 
-    private fun init () {
+    private fun init() {
         initMobileInput()
         initGetOtp()
     }
@@ -31,16 +32,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initGetOtp() {
         sendOtpButton.setOnClickListener(getOtpOnClickListener())
+        guestBrowse.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, LandingActivity::class.java))
+        }
     }
 
-    private fun mobileNumberInputListener() : TextWatcher {
+    private fun mobileNumberInputListener(): TextWatcher {
         return object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s.toString().length == 10) {
+                if (s.toString().length == 10) {
                     sendOtpButton.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                 } else {
                     sendOtpButton.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
@@ -50,9 +56,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun getOtpOnClickListener() : View.OnClickListener {
+    private fun getOtpOnClickListener(): View.OnClickListener {
         return View.OnClickListener {
-            if(inputNumber.text.toString().length == 10) {
+            if (inputNumber.text.toString().length == 10) {
                 var intent = Intent(this@LoginActivity, OtpVerifyActivity::class.java)
                 intent.putExtra(PHONE_NUMBER, inputNumber.text.toString().trim())
                 startActivity(intent)

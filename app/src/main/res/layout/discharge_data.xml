@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="3.5"
+                    android:background="@drawable/background_border_head"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/ship_grey"
+                    android:paddingLeft="48dp"
+                    android:text="@string/date"
+                    android:layout_height="fill_parent"/>
+
+            <TextView
+                    android:padding="16dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/background_border_head"
+                    android:textColor="@color/ship_grey"
+                    android:gravity="center_vertical"
+                    android:text="@string/discharge_lpm"
+                    android:layout_height="fill_parent"/>
+
+            <TextView
+                    android:padding="16dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="3.5"
+                    android:background="@color/snow"
+                    android:textColor="@color/ship_grey"
+                    android:gravity="center_vertical"
+                    android:text="@string/submitted_by"
+                    android:layout_height="fill_parent"/>
+
+
+
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gainsboro_50"
+        >
+
+        </View>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/discharge_data_recyclerView"
+                android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

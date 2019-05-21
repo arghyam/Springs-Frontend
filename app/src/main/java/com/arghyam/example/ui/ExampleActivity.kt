@@ -39,7 +39,6 @@ class ExampleActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        exampleRecyclerView.layoutManager = LinearLayoutManager(this)
         exampleRecyclerView.layoutManager = GridLayoutManager(this, 2)
     }
 

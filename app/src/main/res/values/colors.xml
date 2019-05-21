@@ -6,5 +6,10 @@
     <color name="bokara_grey">#262524</color>
     <color name="cornflower_blue">#6BA5F2</color>
     <color name="colorAccent">#6BA5F2</color>
-    <color name="colorBackButton">#595958</color>
+    <color name="ship_grey">#595958</color>
+    <color name="gainsboro">#D8D8D8</color>
+    <color name="gainsboro_50">#80D8D8D8</color>
+    <color name="snow">#fbfbfb</color>
+    <color name="jumbo">#8b8b8c</color>
+    <color name="black">#000000</color>
 </resources>
