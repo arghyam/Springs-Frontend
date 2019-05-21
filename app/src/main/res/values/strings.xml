@@ -37,4 +37,18 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="and">&#032; and &#032;</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="title_activity_spring_detials">Arghyam</string>
+    <string name="add_discharge_data">ADD DISCHARGE DATA</string>
+    <string name="details">Details</string>
+    <string name="location">Location</string>
+    <string name="spring_name">Spring Name</string>
+    <string name="ownership">Ownership</string>
+    <string name="spring_id">Spring ID</string>
+    <string name="submitted_by">Submitted by</string>
+    <string name="seasonality_of_the_spring">Seasonality of the Spring</string>
+    <string name="spring_water_use">Spring Water Use</string>
+    <string name="household_dependency">Household Dependency</string>
+    <string name="add_additional_details">Add Additional Details</string>
+    <string name="date">Date</string>
+    <string name="discharge_lpm">Discharge (lpm)</string>
 </resources>
