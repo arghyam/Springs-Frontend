@@ -11,4 +11,5 @@
     <color name="gainsboro_50">#80D8D8D8</color>
     <color name="snow">#fbfbfb</color>
     <color name="jumbo">#8b8b8c</color>
+    <color name="black">#000000</color>
 </resources>
