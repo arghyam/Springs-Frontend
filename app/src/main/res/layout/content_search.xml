@@ -8,7 +8,7 @@
                 android:layout_marginTop="?attr/actionBarSize"
                 android:layout_below="@+id/app_bar">
 
-    <ScrollView android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/search_layout">
 
@@ -79,7 +79,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
             android:id="@+id/search_layout"

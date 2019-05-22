@@ -23,10 +23,15 @@
             <EditText
                     android:id="@+id/search_input"
                     android:layout_toRightOf="@+id/back_icon"
-                    android:hint="Seach by spring name,location or ID"
+                    android:hint="@string/search_hint"
                     android:padding="10dp"
+                    android:textSize="14sp"
                     android:textColorHint="#e6e6e6"
                     android:textColor="#595958"
+                  android:layout_marginTop="4dp"
+                    android:background="@android:color/transparent"
+                   android:layout_marginRight="40dp"
+                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -44,40 +49,11 @@
                     app:srcCompat="@drawable/ic_search"
                     android:layout_width="24dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="10dp"
+                    android:layout_margin="12dp"
                     android:layout_height="24dp" />
 
         </RelativeLayout>
 
-
-        <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="Seach by spring name,location or ID"-->
-                <!--android:background="@color/white"-->
-                <!--android:paddingTop="9dp"-->
-                <!--android:textSize="14sp"-->
-                <!--android:drawableRight="@drawable/ic_search"-->
-                <!--android:drawableLeft="@drawable/ic_go"-->
-                <!--android:paddingLeft="16dp"-->
-                <!--android:paddingRight="16dp"-->
-                <!--android:paddingBottom="6dp"-->
-                <!--android:layout_margin="8dp"-->
-                <!--android:drawablePadding="16dp"-->
-                <!--android:textColor="#595958"-->
-                <!--android:textColorHint="#e6e6e6"-->
-                <!--/>-->
-
-        <!--<androidx.appcompat.widget.SearchView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:searchIcon="@drawable/ic_search"-->
-                <!--app:closeIcon="@drawable/ic_close"-->
-                <!--app:goIcon="@drawable/ic_go"-->
-                <!--app:queryHint="Seach by spring name,location or ID"-->
-                <!--app:queryBackground="@color/white">-->
-
-        <!--</androidx.appcompat.widget.SearchView>-->
 
     </com.google.android.material.appbar.AppBarLayout>
 

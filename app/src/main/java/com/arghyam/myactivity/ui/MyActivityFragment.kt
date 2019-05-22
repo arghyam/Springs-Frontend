@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.arghyam.R
 import com.arghyam.myactivity.adapter.MyActivityAdapter
@@ -48,7 +49,7 @@ class MyActivityFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        myActivityRecyclerView.layoutManager = LinearLayoutManager(activity)
+        myActivityRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         val adapter = activity?.let { MyActivityAdapter(myActivityList, it) }
         myActivityRecyclerView.adapter = adapter
 

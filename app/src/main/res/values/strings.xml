@@ -53,4 +53,5 @@
     <string name="add_additional_details">Add Additional Details</string>
     <string name="date">Date</string>
     <string name="discharge_lpm">Discharge (lpm)</string>
+    <string name="search_hint">Search by spring name,location or ID</string>
 </resources>
