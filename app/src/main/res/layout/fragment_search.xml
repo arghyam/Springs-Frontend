@@ -13,16 +13,60 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             tools:ignore="MissingConstraints">
 
-        <EditText
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Seach by spring name,location or ID"
                 android:background="@color/white"
-                android:paddingTop="9dp"
-                android:textSize="16sp"
-                android:paddingBottom="6dp"
-                android:layout_margin="8dp"
-                android:gravity="center"/>
+                android:layout_margin="5dp">
+
+            <!-- INPUT -->
+            <EditText
+                    android:id="@+id/search_input"
+                    android:layout_toRightOf="@+id/back_icon"
+                    android:hint="Seach by spring name,location or ID"
+                    android:padding="10dp"
+                    android:textColorHint="#e6e6e6"
+                    android:textColor="#595958"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <!-- ICON -->
+            <ImageView
+                    android:id="@+id/back_icon"
+                    app:srcCompat="@drawable/ic_go"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="14dp"
+            />
+
+            <ImageView
+                    android:id="@+id/search_icon"
+                    app:srcCompat="@drawable/ic_search"
+                    android:layout_width="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="10dp"
+                    android:layout_height="24dp" />
+
+        </RelativeLayout>
+
+
+        <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Seach by spring name,location or ID"-->
+                <!--android:background="@color/white"-->
+                <!--android:paddingTop="9dp"-->
+                <!--android:textSize="14sp"-->
+                <!--android:drawableRight="@drawable/ic_search"-->
+                <!--android:drawableLeft="@drawable/ic_go"-->
+                <!--android:paddingLeft="16dp"-->
+                <!--android:paddingRight="16dp"-->
+                <!--android:paddingBottom="6dp"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:drawablePadding="16dp"-->
+                <!--android:textColor="#595958"-->
+                <!--android:textColorHint="#e6e6e6"-->
+                <!--/>-->
 
         <!--<androidx.appcompat.widget.SearchView-->
                 <!--android:layout_width="match_parent"-->

@@ -53,6 +53,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
+
         if (isLocationPermission) {
             initRecyclerView()
         } else {
