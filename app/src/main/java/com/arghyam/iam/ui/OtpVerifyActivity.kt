@@ -150,7 +150,7 @@ class OtpVerifyActivity : AppCompatActivity() {
          **/
 
         var appSignature = AppSignatureHelper(this)
-        appSignature.appSignatures
+        Log.e("ste",appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {

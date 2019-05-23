@@ -96,7 +96,6 @@
                 android:background="#0D65D9"
                 android:text="SEARCH"
                 android:textSize="18sp"
-                android:layout_alignParentBottom="true"
                 android:textColor="#FFFFFF"/>
 
     </LinearLayout>
