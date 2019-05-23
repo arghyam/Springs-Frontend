@@ -47,7 +47,7 @@
 
                 <ImageView
                         android:layout_width="80dp"
-                        android:src="@drawable/ic_drops"
+                        app:srcCompat="@drawable/ic_drops"
                         android:layout_height="80dp"/>
 
                 <TextView
@@ -97,7 +97,7 @@
 
                     <ImageView
                             android:layout_width="24dp"
-                            android:src="@drawable/ic_search"
+                            app:srcCompat="@drawable/ic_search"
                             android:layout_height="24dp"/>
 
                     <TextView
@@ -124,7 +124,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/springs"
-                        android:gravity="center_horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:orientation="horizontal">
 
                     <ImageView
@@ -143,9 +144,18 @@
                             android:layout_gravity="center_horizontal"
                             android:gravity="center_vertical"
                             android:textColor="#262524"
-                            android:text="Springs near me">
+                            android:layout_weight="1"
+                            android:text="Springs nearby">
 
                     </TextView>
+
+                    <ImageView
+                            android:id="@+id/refresh_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_refresh"
+                            android:layout_gravity="center"
+                            android:paddingRight="16dp"/>
 
                 </LinearLayout>
 

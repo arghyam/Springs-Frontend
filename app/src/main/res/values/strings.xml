@@ -13,14 +13,14 @@
 
     <string name="splash_text">Springs Inventory</string>
     <string name="title_activity_splash">Arghyam</string>
-    <string name="welcome_to_springs">Welcome to \n Springs Inventory</string>
+    <string name="welcome_to_springs">Welcome to \n Springs of India</string>
     <string name="sign_in">Sign In</string>
     <string name="hint_mobile">Mobile Number</string>
     <string name="send_otp">Send Otp</string>
     <string name="browse_as_guest">Browse as Guest</string>
     <string name="title_activity_otp_verify">OtpVerifyActivity</string>
     <string name="four_digit_code">Enter 4 Digit Code</string>
-    <string name="sms_was_sent">It was sent in an SMS message to + 91</string>
+    <string name="sms_was_sent">A 4 digit code is sent in an SMS to\n</string>
     <string name="resend">Resend code</string>
     <string name="verify">Verify</string>
 
@@ -28,14 +28,14 @@
     <string name="phone">Phone</string>
     <string name="full_name">Full name</string>
     <string name="continue_button">continue</string>
-    <string name="profile_details">PROFILE DETAILS</string>
+    <string name="profile_details">Profile Details</string>
     <string name="profile_phone">phone</string>
     <string name="no_springs_nearby">No Springs Nearby</string>
     <string name="allow_location_permission">Please allow location permission to view springs near you</string>
     <string name="search_for_springs">Search for Springs</string>
     <string name="i_agree_to">I agree to &#032;</string>
-    <string name="terms_and_conditions">Terms and Conditions</string>
-    <string name="and">&#032; and &#032;</string>
+    <string name="terms_and_conditions">Terms and Conditions &#032;</string>
+    <string name="and"> and &#032;</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="new_spring">New Spring</string>
     <string name="search_geography">Search by Geography</string>
@@ -57,4 +57,5 @@
     <string name="logout">Sign Out</string>
     <string name="FAQ">Frequently asked questions (FAQ)</string>
     <string name="signin_option">Sign in to have additional functions</string>
+    <string name="or">OR</string>
 </resources>

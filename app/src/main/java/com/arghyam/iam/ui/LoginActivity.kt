@@ -11,6 +11,7 @@ import com.arghyam.R
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.landing.ui.activity.LandingActivity
 import kotlinx.android.synthetic.main.content_login.*
+import android.text.Selection
 
 
 class LoginActivity : AppCompatActivity() {
@@ -27,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initMobileInput() {
+        inputNumber.setText("+91 ")
         inputNumber.addTextChangedListener(mobileNumberInputListener())
     }
 
@@ -40,13 +42,17 @@ class LoginActivity : AppCompatActivity() {
     private fun mobileNumberInputListener(): TextWatcher {
         return object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if (!s.toString().startsWith("+91 ")){
+                    inputNumber.setText("+91 ")
+                    inputNumber.text?.length?.let { Selection.setSelection(inputNumber.text, it) }
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().length == 10) {
+                if (s.toString().length == 14) {
                     sendOtpButton.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                 } else {
                     sendOtpButton.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
@@ -58,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun getOtpOnClickListener(): View.OnClickListener {
         return View.OnClickListener {
-            if (inputNumber.text.toString().length == 10) {
+            if (inputNumber.text.toString().length == 14) {
                 var intent = Intent(this@LoginActivity, OtpVerifyActivity::class.java)
                 intent.putExtra(PHONE_NUMBER, inputNumber.text.toString().trim())
                 startActivity(intent)

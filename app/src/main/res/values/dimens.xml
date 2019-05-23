@@ -24,4 +24,5 @@
     <dimen name="image_16">16dp</dimen>
     <dimen name="image_100">100dp</dimen>
     <dimen name="margin_24">24dp</dimen>
+    <dimen name="image_200">200dp</dimen>
 </resources>
