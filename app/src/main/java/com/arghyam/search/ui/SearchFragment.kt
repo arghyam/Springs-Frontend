@@ -4,6 +4,8 @@ package com.arghyam.search.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -24,7 +26,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.content_search.*
 import androidx.core.view.MenuItemCompat.getActionView
-
+import kotlinx.android.synthetic.main.fragment_search.*
 
 
 /**
@@ -67,7 +69,31 @@ class SearchFragment : Fragment() {
     private fun init() {
         initRecyclerview()
         initClick()
+        initSearch()
     }
+
+    private fun initSearch() {
+        search_input.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(s?.length!! > 0){
+                    search_icon.setImageResource(R.drawable.ic_close)
+
+                } else {
+                    search_icon.setImageResource(R.drawable.ic_search)
+                }
+
+            }
+
+        })
+    }
+
+
 
     private fun initRecyclerview() {
         if(recentSearchRecyclerView.visibility == VISIBLE) {
@@ -125,6 +151,13 @@ class SearchFragment : Fragment() {
             recent_search.text = "Search results"
             initRecyclerview()
         }
+
+        search_icon.setOnClickListener {
+            if(search_input.text.length > 0){
+                search_input.setText("")
+            }
+        }
+
     }
 
     private var recentSearchInterface = object : RecentSearchInterface {
