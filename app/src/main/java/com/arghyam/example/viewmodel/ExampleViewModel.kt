@@ -1,12 +1,12 @@
 package com.arghyam.example.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arghyam.commons.di.ResponseListener
 import com.arghyam.commons.entities.ExampleEntity
 import com.arghyam.commons.utils.SingleLiveEvent
 import com.arghyam.example.repository.ExampleRepository
+import com.arghyam.iam.model.LoginRequestModel
 
 class ExampleViewModel : ViewModel() {
 
@@ -20,8 +20,7 @@ class ExampleViewModel : ViewModel() {
 
     fun getImagesApi() {
         exampleRepository!!.getDogImages(object : ResponseListener<ExampleEntity> {
-
-            override fun onSuccess(successResponse: ExampleEntity?) {
+            override fun onSuccess(successResponse: ExampleEntity) {
                 exampleData.value =successResponse
             }
 
