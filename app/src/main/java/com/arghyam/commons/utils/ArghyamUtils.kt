@@ -9,6 +9,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
 import com.arghyam.commons.interfaces.LocationInterface
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -84,6 +85,11 @@ class ArghyamUtils {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
+    }
+
+    fun convertToString(data: Any) : String{
+        val ow = ObjectMapper().writer().withDefaultPrettyPrinter()
+        return ow.writeValueAsString(data)
     }
 
 }

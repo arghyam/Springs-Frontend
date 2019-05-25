@@ -21,9 +21,9 @@ class IamViewModel  : ViewModel() {
 
     fun userLoginApi(mContext:Context, requestModel: RequestModel) {
         iamRepository!!.LoginApiRequest(mContext, requestModel, object : ResponseListener<ResponseModel> {
-            override fun onSuccess(successResponse: ResponseModel) {
-            Log.d("success",successResponse.toString())
-                iamLoginData.value=successResponse
+            override fun onSuccess(response: ResponseModel) {
+            Log.d("success",response.toString())
+                iamLoginData.value=response
             }
 
             override fun onError(error: String?) {

@@ -12,4 +12,7 @@ object Constants {
     var LOCATION_PERMISSION_NOT_GRANTED = "Please grant permissions to see nearby springs"
     var PERMISSION_LOCATION_RESULT_CODE : Int = 1217
     var PERMISSION_LOCATION_ON_RESULT_CODE : Int = 1112
+    var VERIFY_OTP_ID : String = "forWater.user.verifyOtp"
+    var ACCESS_TOKEN: String = "accessToken"
+    var IS_NEW_USER: String = "isNewUser"
 }
