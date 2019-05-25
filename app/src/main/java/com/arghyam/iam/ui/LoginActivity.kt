@@ -28,7 +28,7 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var iamRepositry: IamRepository
+    lateinit var iamRepository: IamRepository
 
     private var iamViewModel: IamViewModel? = null
 
@@ -61,11 +61,11 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun saveUserData(it: LoginResponseModel) {
+    private fun saveUserData(responseModel: ResponseModel) {
         //TODO("Please check the null for the below code @Karthik")
-        val sharedPreference =  getSharedPreferences(Constants.APPLICATION_PREFERENCE, Context.MODE_PRIVATE)
+        val sharedPreference = getSharedPreferences(Constants.APPLICATION_PREFERENCE, Context.MODE_PRIVATE)
         var editor = sharedPreference.edit()
-        editor.putBoolean(Constants.IS_USER_CREATED,it.response?.responseObject?.newUserCreated)
+        editor.putBoolean(Constants.IS_USER_CREATED, responseModel.response.responseObject.newUserCreated)
         editor.commit()
     }
 
@@ -107,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
     private fun getOtpOnClickListener(): View.OnClickListener {
         return View.OnClickListener {
             if (inputNumber.text.toString().length == 14) {
-                var loginObject = LoginRequestModel(
+                var loginObject = RequestModel(
                     id = BuildConfig.ID,
                     ver = BuildConfig.VER,
                     ets = BuildConfig.ETS,
@@ -116,8 +116,8 @@ class LoginActivity : AppCompatActivity() {
                         key = "",
                         msgid = ""
                     ),
-                    request = Request(
-                        person = Person(
+                    request = RequestPersonDataModel(
+                        person = PersonModel(
                             username = inputNumber.text.toString().substring(
                                 4,
                                 inputNumber.text!!.length
@@ -134,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initRepository() {
         iamViewModel = ViewModelProviders.of(this).get(IamViewModel::class.java)
-        iamViewModel?.setIamRepository(iamRepositry)
+        iamViewModel?.setIamRepository(iamRepository)
     }
 
 }

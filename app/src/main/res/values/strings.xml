@@ -35,7 +35,7 @@
     <string name="search_for_springs">Search for Springs</string>
     <string name="i_agree_to">I agree to &#032;</string>
     <string name="terms_and_conditions">Terms and Conditions &#032;</string>
-    <string name="and"> and &#032;</string>
+    <string name="and">and &#032;</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="new_spring">New Spring</string>
     <string name="search_geography">Search by Geography</string>
@@ -58,4 +58,5 @@
     <string name="FAQ">Frequently asked questions (FAQ)</string>
     <string name="signin_option">Sign in to have additional functions</string>
     <string name="or">OR</string>
+    <string name="turn_on_location_desc">Please turn on location services to get the springs nearby</string>
 </resources>

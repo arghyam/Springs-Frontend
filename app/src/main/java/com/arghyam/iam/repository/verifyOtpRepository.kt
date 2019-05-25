@@ -14,9 +14,9 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class IamRepository @Inject constructor() {
+class verifyOtpRepository @Inject constructor() {
 
-    fun LoginApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+    fun verifyOtpRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
         val loginCall = RestClient.getWebServiceData()?.userLogin(requestModel)
         loginCall?.enqueue(object : Callback<ResponseModel> {
 
@@ -34,13 +34,13 @@ class IamRepository @Inject constructor() {
             }
 
             override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                when (t) {
-                    is SocketTimeoutException -> {
-                        Log.d("failure","failure")
-                        responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
-                    }
-                    is UnknownHostException -> responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
-                    else -> responseListener.onFailure(t.message)
+                if (t is SocketTimeoutException) {
+                    Log.d("failure","failure")
+                    responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
+                } else if (t is UnknownHostException) {
+                    responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
+                } else {
+                    responseListener.onFailure(t.message)
                 }
             }
 
@@ -48,5 +48,4 @@ class IamRepository @Inject constructor() {
 
         })
     }
-
 }

@@ -6,7 +6,6 @@ import com.arghyam.commons.di.ResponseListener
 import com.arghyam.commons.entities.ExampleEntity
 import com.arghyam.commons.utils.SingleLiveEvent
 import com.arghyam.example.repository.ExampleRepository
-import com.arghyam.iam.model.LoginRequestModel
 
 class ExampleViewModel : ViewModel() {
 

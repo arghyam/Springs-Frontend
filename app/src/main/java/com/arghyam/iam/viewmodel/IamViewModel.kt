@@ -6,22 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arghyam.commons.di.ResponseListener
 import com.arghyam.commons.utils.SingleLiveEvent
-import com.arghyam.iam.model.LoginRequestModel
-import com.arghyam.iam.model.LoginResponseModel
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.repository.IamRepository
 
 class IamViewModel  : ViewModel() {
     private var iamRepository: IamRepository? = null
-    val iamLoginData = MutableLiveData<LoginResponseModel>()
+    val iamLoginData = MutableLiveData<ResponseModel>()
     val iamLoginError: SingleLiveEvent<String> = SingleLiveEvent()
 
     fun setIamRepository(iamRepository: IamRepository) {
         this.iamRepository = iamRepository
     }
 
-    fun userLoginApi(mContext:Context, requestModel: LoginRequestModel) {
-        iamRepository!!.LoginApiRequest(mContext, requestModel, object : ResponseListener<LoginResponseModel> {
-            override fun onSuccess(successResponse: LoginResponseModel) {
+    fun userLoginApi(mContext:Context, requestModel: RequestModel) {
+        iamRepository!!.LoginApiRequest(mContext, requestModel, object : ResponseListener<ResponseModel> {
+            override fun onSuccess(successResponse: ResponseModel) {
             Log.d("success",successResponse.toString())
                 iamLoginData.value=successResponse
             }
@@ -37,7 +37,7 @@ class IamViewModel  : ViewModel() {
         })
     }
 
-    fun getLoginResponse(): MutableLiveData<LoginResponseModel> {
+    fun getLoginResponse(): MutableLiveData<ResponseModel> {
         return iamLoginData
     }
 

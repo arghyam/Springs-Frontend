@@ -1,8 +1,8 @@
 package com.arghyam.commons.network
 
 import com.arghyam.commons.entities.ExampleEntity
-import com.arghyam.iam.model.LoginRequestModel
-import com.arghyam.iam.model.LoginResponseModel
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,6 +13,9 @@ interface ApiInterface {
 
 
     @POST("api/v1/user/login")
-    fun userLogin(@Body requestModel: LoginRequestModel): Call<LoginResponseModel>
+    fun userLogin(@Body requestModel: RequestModel): Call<ResponseModel>
+
+    @POST("api/v1/user/verifyOtp")
+    fun verifyOtp(@Body verifyOtpRequestModel: RequestModel) : Call<ResponseModel>
 
 }
