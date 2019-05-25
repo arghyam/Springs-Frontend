@@ -53,4 +53,5 @@
     <string name="add_additional_details">Add Additional Details</string>
     <string name="date">Date</string>
     <string name="discharge_lpm">Discharge (lpm)</string>
+    <string name="turn_on_location_desc">Please turn on location services to get the springs nearby</string>
 </resources>
