@@ -1,5 +1,6 @@
 package com.arghyam.iam.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -8,21 +9,31 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
-import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
+import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
 import com.arghyam.iam.model.*
-import com.arghyam.iam.repository.IamRepository
-import com.arghyam.profile.ui.ProfileActivity
+import com.arghyam.iam.repository.VerifyOtpRepository
+import com.arghyam.iam.viewmodel.VerifyOtpViewModel
 import com.arghyam.landing.services.SmsListener
 import com.arghyam.landing.services.SmsReceiver
+import com.arghyam.profile.ui.ProfileActivity
 import com.google.android.gms.auth.api.phone.SmsRetriever
-import kotlinx.android.synthetic.main.content_login.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_otp_verify.*
 import javax.inject.Inject
 
@@ -30,14 +41,16 @@ class OtpVerifyActivity : AppCompatActivity() {
 
 
     @Inject
-    lateinit var iamRepositry: IamRepository
+    lateinit var verifyOtpRepository: VerifyOtpRepository
 
+    private var verifyOtpViewModel: VerifyOtpViewModel? = null
 
     private lateinit var phoneNumber: String
     private var resendOtpCount: Int = 0
     private var maxTime = 30
     private var isCounterRunning: Boolean = false
-    private lateinit var countDownTimer : CountDownTimer
+    private var isTermsChecked: Boolean = false
+    private lateinit var countDownTimer: CountDownTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_otp_verify)
@@ -45,6 +58,8 @@ class OtpVerifyActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initComponent()
+        initRepository()
         setPhoneNumberText()
         implementTextWatcher()
         startSmsRetriever()
@@ -53,24 +68,55 @@ class OtpVerifyActivity : AppCompatActivity() {
         initTermsCheckBox()
         initResendCodeButton()
         initResendTimer()
+        initApiCalls()
     }
 
 
-    private fun initResendCodeButton() {
-        resendCode.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                if (resendOtpCount < 4) {
-                    initResendTimer()
-                } else {
-                    Toast.makeText(
-                        this@OtpVerifyActivity,
-                        "You have reached the maximum limit, Please try again",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+    private fun initComponent() {
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
 
+    private fun initRepository() {
+        verifyOtpViewModel = ViewModelProviders.of(this).get(VerifyOtpViewModel::class.java)
+        verifyOtpViewModel?.setRepository(verifyOtpRepository)
+    }
+
+    private fun initApiCalls() {
+        verifyOtpViewModel?.verifyOtpResponse()?.observe(this, Observer {
+            saveAccessToken(it)
+            val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
+            intent.putExtra(PHONE_NUMBER, phoneNumber)
+            startActivity(intent)
         })
+        verifyOtpViewModel?.verifyOtpError()?.observe(this, Observer {
+            ArghyamUtils().longToast(this@OtpVerifyActivity, it)
+        })
+    }
+
+    private fun saveAccessToken(it: ResponseModel) {
+        val sharedPreference = getSharedPreferences(Constants.APPLICATION_PREFERENCE, Context.MODE_PRIVATE)
+        var editor = sharedPreference.edit()
+        var accessTokenResponse: AccessTokenModel = Gson().fromJson(
+            ArghyamUtils().convertToString(it.response.responseObject),
+            object : TypeToken<AccessTokenModel>() {}.type
+        )
+        Log.e("karthik", it.toString())
+        editor.putString(ACCESS_TOKEN, accessTokenResponse?.accessToken?.access_token)
+        editor.commit()
+    }
+
+    private fun initResendCodeButton() {
+        resendCode.setOnClickListener {
+            if (resendOtpCount < 4) {
+                initResendTimer()
+            } else {
+                Toast.makeText(
+                    this@OtpVerifyActivity,
+                    "You have reached the maximum limit, Please try again",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun initResendTimer() {
@@ -95,11 +141,18 @@ class OtpVerifyActivity : AppCompatActivity() {
     }
 
     private fun initTermsCheckBox() {
-        termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && isOtpEditTextFilled()) {
-                btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-            } else {
-                btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+        isTermsChecked = !getIntentBooleanData(IS_NEW_USER)
+        if (isTermsChecked) {
+            layout_checkbox.visibility = GONE
+        } else {
+            layout_checkbox.visibility = VISIBLE
+            termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                isTermsChecked = isChecked
+                if (isChecked && isOtpEditTextFilled()) {
+                    btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+                } else {
+                    btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+                }
             }
         }
     }
@@ -116,15 +169,30 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initClickListener(): View.OnClickListener {
         return View.OnClickListener {
-            if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
-
-                /*iamRepositry.verifyOtp()*/
-
-                val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
-                intent.putExtra(PHONE_NUMBER, phoneNumber)
-                startActivity(intent)
+            if (isOtpEditTextFilled() && isTermsChecked) {
+                verifyOtpApiCall()
             }
         }
+    }
+
+    private fun verifyOtpApiCall() {
+        var requestModel = RequestModel(
+            id = VERIFY_OTP_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestPersonDataModel(
+                person = VerifyOtpRequestModel(
+                    phoneNumber = phoneNumber.substring(4, phoneNumber.length),
+                    otp = getOtp()
+                )
+            )
+        )
+        verifyOtpViewModel?.verifyOtpApi(this@OtpVerifyActivity, requestModel)
     }
 
     private fun setPhoneNumberText() {
@@ -132,8 +200,16 @@ class OtpVerifyActivity : AppCompatActivity() {
         displayNumber.text = "${getText(R.string.sms_was_sent)} $phoneNumber"
     }
 
+    private fun getOtp(): String {
+        return "${otp_1.text}${otp_2.text}${otp_3.text}${otp_4.text}"
+    }
+
     private fun getIntentStringData(key: String): String {
         return intent.getStringExtra(key)
+    }
+
+    private fun getIntentBooleanData(key: String): Boolean {
+        return intent.getBooleanExtra(key, false)
     }
 
     private fun implementTextWatcher() {
@@ -162,8 +238,8 @@ class OtpVerifyActivity : AppCompatActivity() {
          * Print it for app signature and put it in the message receiving it from the server
          **/
 
-        var appSignature = AppSignatureHelper(this)
-        Log.e("ste",appSignature.appSignatures.toString())
+//        var appSignature = AppSignatureHelper(this)
+//        Log.e("ste",appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {
@@ -199,7 +275,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                 if (from.text.toString().isEmpty()) {
                     to.requestFocus()
                     to.setSelection(to.text.toString().length)
-                    if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
+                    if (isOtpEditTextFilled() && isTermsChecked) {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
@@ -224,7 +300,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                 if (s.length == 1) {
                     to.requestFocus()
                     to.setSelection(to.text.toString().length)
-                    if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
+                    if (isOtpEditTextFilled() && isTermsChecked) {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     } else {
                         btnVerify.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
