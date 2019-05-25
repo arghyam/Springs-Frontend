@@ -28,21 +28,10 @@
             android:layout_weight="1">
 
         <ImageView
-                android:layout_width="@dimen/image_100"
+                android:layout_width="@dimen/image_200"
                 android:layout_height="@dimen/image_100"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/ic_for_water"
                 android:layout_marginBottom="@dimen/margin_24"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:textSize="@dimen/splash_text"
-                android:id="@+id/title_name"
-                android:textAlignment="center"
-                android:text="@string/splash_text"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content">
-
-        </TextView>
 
     </LinearLayout>
 

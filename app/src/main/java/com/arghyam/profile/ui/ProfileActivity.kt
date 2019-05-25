@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.R
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.landing.ui.activity.LandingActivity
+import kotlinx.android.synthetic.main.content_otp_verify.*
 import kotlinx.android.synthetic.main.content_profile.*
 
 class ProfileActivity : AppCompatActivity() {
@@ -23,9 +24,16 @@ class ProfileActivity : AppCompatActivity() {
         extractBundle()
         initSubmit()
         initNameEditText()
+        initBackPressListener()
+
     }
 
 
+    private fun initBackPressListener() {
+        back_icon.setOnClickListener {
+            finish()
+        }
+    }
     private fun initNameEditText() {
         fullName.addTextChangedListener(textChangedListener())
     }

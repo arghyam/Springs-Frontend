@@ -11,17 +11,27 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.iam.model.*
+import com.arghyam.iam.repository.IamRepository
 import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.landing.services.SmsListener
 import com.arghyam.landing.services.SmsReceiver
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import kotlinx.android.synthetic.main.content_login.*
 import kotlinx.android.synthetic.main.content_otp_verify.*
+import javax.inject.Inject
 
 class OtpVerifyActivity : AppCompatActivity() {
+
+
+    @Inject
+    lateinit var iamRepositry: IamRepository
+
 
     private lateinit var phoneNumber: String
     private var resendOtpCount: Int = 0
@@ -107,6 +117,9 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun initClickListener(): View.OnClickListener {
         return View.OnClickListener {
             if (isOtpEditTextFilled() && termsCheckBox.isChecked) {
+
+                /*iamRepositry.verifyOtp()*/
+
                 val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
                 intent.putExtra(PHONE_NUMBER, phoneNumber)
                 startActivity(intent)
@@ -150,7 +163,7 @@ class OtpVerifyActivity : AppCompatActivity() {
          **/
 
         var appSignature = AppSignatureHelper(this)
-        appSignature.appSignatures
+        Log.e("ste",appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {

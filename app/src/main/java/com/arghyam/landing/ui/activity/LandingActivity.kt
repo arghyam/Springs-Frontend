@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.arghyam.R
-import com.arghyam.commons.LocationInterface
+import com.arghyam.commons.interfaces.LocationInterface
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE

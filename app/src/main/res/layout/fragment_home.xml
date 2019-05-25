@@ -19,6 +19,7 @@
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+                app:title="@string/app_name"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
@@ -58,7 +59,8 @@
 
                     <TextView
                             android:id="@+id/spring_near"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/text_size_14"
                             android:layout_gravity="center_horizontal"
@@ -67,6 +69,12 @@
                             android:text="Springs near me">
 
                     </TextView>
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_refresh"
+                            android:padding="15dp"/>
 
                 </LinearLayout>
 
@@ -124,7 +132,6 @@
 
 
             </LinearLayout>
-
 
 
         </FrameLayout>

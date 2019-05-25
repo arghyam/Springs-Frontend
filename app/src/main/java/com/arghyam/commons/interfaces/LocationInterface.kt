@@ -1,4 +1,4 @@
-package com.arghyam.commons
+package com.arghyam.commons.interfaces
 
 interface LocationInterface {
     fun turnedLocationOn()

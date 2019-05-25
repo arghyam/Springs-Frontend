@@ -8,7 +8,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
-import com.arghyam.commons.LocationInterface
+import com.arghyam.commons.interfaces.LocationInterface
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices

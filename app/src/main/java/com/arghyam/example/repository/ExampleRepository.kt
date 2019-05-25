@@ -20,7 +20,7 @@ class ExampleRepository @Inject constructor() {
                 if (response.isSuccessful) {
                     if (null != response.body()) {
                         if (200 == response.code()) {
-                            responseListener.onSuccess(response.body())
+//                            responseListener.onSuccess(response.body())
                         } else {
                             responseListener.onError(response.code().toString() + "")
                         }
