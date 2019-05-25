@@ -2,8 +2,8 @@ package com.arghyam.landing.ui.fragment
 
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
+import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -25,8 +26,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 class HomeFragment : Fragment() {
     private var springsList = ArrayList<LandingModel>()
     private var count: Int = 1
-
-    private var isLocationPermission: Boolean = true
     private var itemsAvailable: Boolean = true
 
     /**
@@ -53,27 +52,33 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
-        if (isLocationPermission) {
+        if (ArghyamUtils().permissionGranted(
+                context!!,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             initRecyclerView()
-        } else {
-            initLocationPermission()
+            if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
+                initApiCall()
+            } else {
+                errorItems.visibility = VISIBLE
+                errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+                springsLocation.visibility = GONE
+            }
         }
-
         initFab()
     }
 
-    private fun initLocationPermission() {
-        springs.visibility = GONE
-        errorScreen.visibility = VISIBLE
-        locationPermission.visibility = VISIBLE
-        springSearch.visibility = GONE
-    }
-
-    private fun initNoSpringsFound() {
-        springs.visibility = GONE
-        errorScreen.visibility = VISIBLE
-        locationPermission.visibility = GONE
-        springSearch.visibility = VISIBLE
+    private fun initApiCall() {
+        if (itemsAvailable) {
+            errorItems.visibility = GONE
+            springsLocation.visibility = VISIBLE
+            pagination()
+        } else {
+            errorItems.visibility = VISIBLE
+            errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+            springsLocation.visibility = GONE
+        }
     }
 
     private fun initFab() {
@@ -83,27 +88,24 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun getRecyclerView() {
+        initApiCall()
+    }
+
     private fun initRecyclerView() {
-        springs.visibility = VISIBLE
-        errorScreen.visibility = GONE
+        springsLocation.visibility = VISIBLE
         springRecyclerView.layoutManager = LinearLayoutManager(activity)
         val adapter = activity?.let { LandingAdapter(springsList, it) }
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-
                 if (!recyclerView.canScrollVertically(1)) {
                     count++
                     pagination()
                 }
             }
         })
-        if(itemsAvailable) {
-            pagination()
-        } else {
-            initNoSpringsFound()
-        }
     }
 
     fun pagination() {
