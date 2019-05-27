@@ -1,6 +1,5 @@
 package com.arghyam.iam.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -21,16 +20,18 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.ArghyamUtils
-import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.commons.utils.Constants.REFRESH_TOKEN
 import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
 import com.arghyam.iam.repository.VerifyOtpRepository
 import com.arghyam.iam.viewmodel.VerifyOtpViewModel
 import com.arghyam.landing.services.SmsListener
 import com.arghyam.landing.services.SmsReceiver
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.profile.ui.ProfileActivity
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.gson.Gson
@@ -51,6 +52,7 @@ class OtpVerifyActivity : AppCompatActivity() {
     private var maxTime = 30
     private var isCounterRunning: Boolean = false
     private var isTermsChecked: Boolean = false
+    private var isAlreadyVerified: Boolean = false
     private lateinit var countDownTimer: CountDownTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,9 +87,15 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun initApiCalls() {
         verifyOtpViewModel?.verifyOtpResponse()?.observe(this, Observer {
             saveAccessToken(it)
-            val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
-            intent.putExtra(PHONE_NUMBER, phoneNumber)
-            startActivity(intent)
+            if (isAlreadyVerified) {
+                val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
+                intent.putExtra(PHONE_NUMBER, phoneNumber)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this@OtpVerifyActivity, LandingActivity::class.java)
+                startActivity(intent)
+            }
+
         })
         verifyOtpViewModel?.verifyOtpError()?.observe(this, Observer {
             ArghyamUtils().longToast(this@OtpVerifyActivity, it)
@@ -95,15 +103,21 @@ class OtpVerifyActivity : AppCompatActivity() {
     }
 
     private fun saveAccessToken(it: ResponseModel) {
-        val sharedPreference = getSharedPreferences(Constants.APPLICATION_PREFERENCE, Context.MODE_PRIVATE)
-        var editor = sharedPreference.edit()
         var accessTokenResponse: AccessTokenModel = Gson().fromJson(
             ArghyamUtils().convertToString(it.response.responseObject),
             object : TypeToken<AccessTokenModel>() {}.type
         )
-        Log.e("karthik", it.toString())
-        editor.putString(ACCESS_TOKEN, accessTokenResponse?.accessToken?.access_token)
-        editor.commit()
+
+        Log.e("karthik", accessTokenResponse.accessTokenResponseDTO.access_token)
+
+        SharedPreferenceFactory(this@OtpVerifyActivity).setString(
+            ACCESS_TOKEN,
+            accessTokenResponse.accessTokenResponseDTO.access_token
+        )
+        SharedPreferenceFactory(this@OtpVerifyActivity).setString(
+            REFRESH_TOKEN,
+            accessTokenResponse.accessTokenResponseDTO.refresh_token
+        )
     }
 
     private fun initResendCodeButton() {
@@ -143,6 +157,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initTermsCheckBox() {
         isTermsChecked = !getIntentBooleanData(IS_NEW_USER)
+        isAlreadyVerified = isTermsChecked
         if (isTermsChecked) {
             layout_checkbox.visibility = GONE
         } else {
@@ -240,7 +255,7 @@ class OtpVerifyActivity : AppCompatActivity() {
          **/
 
         var appSignature = AppSignatureHelper(this)
-        Log.e("ste",appSignature.appSignatures.toString())
+        Log.e("ste", appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {

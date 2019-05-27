@@ -18,4 +18,8 @@ interface ApiInterface {
     @POST("api/v1/user/verifyOtp")
     fun verifyOtp(@Body verifyOtpRequestModel: RequestModel) : Call<ResponseModel>
 
+    @POST("/api/v1/user/updateUserProfile")
+    fun updateUserProfile(@Body updateProfileRequestModel: RequestModel) : Call<ResponseModel>
+
+
 }

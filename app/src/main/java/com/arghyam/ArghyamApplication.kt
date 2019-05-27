@@ -3,20 +3,16 @@ package com.arghyam
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.arghyam.commons.di.AppComponent
 import com.arghyam.commons.di.AppModule
 import com.arghyam.commons.di.DaggerAppComponent
 import com.arghyam.commons.interfaces.NetworkStateReceiverListener
 import com.arghyam.commons.utils.ArghyamUtils
-import android.content.IntentFilter
 import com.arghyam.commons.utils.NetworkStateReceiver
-
-
-
 
 
 class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks, NetworkStateReceiverListener {
@@ -26,6 +22,7 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
     private var activityReferences = 0
     private var isActivityChangingConfigurations = false
     private var networkStateReceiver: NetworkStateReceiver? = null
+    private var isOffline: Boolean = false
 
     private val appModule: AppModule
         get() = AppModule(this)
@@ -44,7 +41,6 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
         networkStateReceiver?.addListener(this)
         this.registerReceiver(networkStateReceiver, IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION))
     }
-
 
 
     fun getmAppComponent(): AppComponent? {
@@ -97,12 +93,15 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
 
 
     override fun networkAvailable() {
-     ArghyamUtils().longToast(applicationContext,"Network Available")
+        if (isOffline) {
+            ArghyamUtils().longToast(applicationContext, "Network Available")
+            isOffline = false
+        }
     }
 
     override fun networkUnavailable() {
-        ArghyamUtils().longToast(applicationContext,"Poor internet connection")
-
+        ArghyamUtils().longToast(applicationContext, "Poor internet connection")
+        isOffline = true
     }
 
 }

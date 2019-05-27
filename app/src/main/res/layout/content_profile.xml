@@ -71,7 +71,7 @@
                     android:id="@+id/fullName"
                     android:layout_width="match_parent"
                     android:singleLine="true"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                     android:layout_height="wrap_content"
                     android:hint="@string/full_name"
                     android:textSize="14sp"

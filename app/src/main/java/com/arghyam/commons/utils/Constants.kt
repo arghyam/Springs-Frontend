@@ -1,6 +1,7 @@
 package com.arghyam.commons.utils
 
 object Constants {
+    val USER_ID: String = "userId"
     val IS_USER_CREATED: String ="newUserCreated"
     var POOR_INTERNET_CONNECTION : String = "22"
     var PHONE_NUMBER : String = "phoneNumber"
@@ -14,5 +15,7 @@ object Constants {
     var PERMISSION_LOCATION_ON_RESULT_CODE : Int = 1112
     var VERIFY_OTP_ID : String = "forWater.user.verifyOtp"
     var ACCESS_TOKEN: String = "accessToken"
+    var REFRESH_TOKEN: String = "refreshToken"
     var IS_NEW_USER: String = "isNewUser"
+    var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
 }
