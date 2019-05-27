@@ -53,6 +53,8 @@
                     android:hint="@string/phone"
                     android:drawableRight="@drawable/approved_ick"
                     android:textSize="14sp"
+                    android:editable="false"
+                    android:focusable="false"
                     android:textColor="#de000000"/>
 
 
@@ -69,6 +71,7 @@
                     android:id="@+id/fullName"
                     android:layout_width="match_parent"
                     android:singleLine="true"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:layout_height="wrap_content"
                     android:hint="@string/full_name"
                     android:textSize="14sp"

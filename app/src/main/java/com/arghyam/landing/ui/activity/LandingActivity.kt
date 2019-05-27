@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.arghyam.R
-import com.arghyam.commons.interfaces.LocationInterface
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
+import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
 import com.arghyam.commons.utils.Constants.TAG_HOME
 import com.arghyam.commons.utils.Constants.TAG_MORE
@@ -31,7 +31,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 
-class LandingActivity : AppCompatActivity(), PermissionInterface, LocationInterface {
+class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     var CURRENT_TAG: String = TAG_HOME
     lateinit var navView: BottomNavigationView
@@ -122,10 +122,6 @@ class LandingActivity : AppCompatActivity(), PermissionInterface, LocationInterf
     private val permissionListener = object : PermissionListener {
         override fun onPermissionGranted(response: PermissionGrantedResponse) {
             showHome()
-            if (!ArghyamUtils().isLocationEnabled(this@LandingActivity)) {
-                ArghyamUtils().turnOnLocation(this@LandingActivity)
-            }
-
         }
 
         override fun onPermissionDenied(response: PermissionDeniedResponse) {
@@ -145,11 +141,17 @@ class LandingActivity : AppCompatActivity(), PermissionInterface, LocationInterf
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             PERMISSION_LOCATION_RESULT_CODE -> showHome()
+            PERMISSION_LOCATION_ON_RESULT_CODE -> {
+                when (resultCode) {
+                    -1 -> {
+                        showHome()
+                    }
+                    0 -> {
+                        ArghyamUtils().turnOnLocation(this@LandingActivity)
+                    }
+                }
+            }
         }
-    }
-
-    override fun turnedLocationOn() {
-        HomeFragment().getRecyclerView()
     }
 
 }

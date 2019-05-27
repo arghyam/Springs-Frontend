@@ -7,8 +7,10 @@ import android.content.IntentSender
 import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import com.arghyam.commons.interfaces.LocationInterface
+import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
@@ -58,15 +60,16 @@ class ArghyamUtils {
             builder.setAlwaysShow(true)
             var result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
             result.setResultCallback {
+                Log.e("location", "" + it.status.statusCode)
                 when (it.status.statusCode) {
                     LocationSettingsStatusCodes.SUCCESS -> {
-                        (activity as LocationInterface).turnedLocationOn()
+
                     }
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             it.status.startResolutionForResult(
                                 activity,
-                                Constants.PERMISSION_LOCATION_ON_RESULT_CODE
+                                PERMISSION_LOCATION_ON_RESULT_CODE
                             )
                         } catch (e: IntentSender.SendIntentException) {
 
@@ -87,7 +90,7 @@ class ArghyamUtils {
         )
     }
 
-    fun convertToString(data: Any) : String{
+    fun convertToString(data: Any): String {
         val ow = ObjectMapper().writer().withDefaultPrettyPrinter()
         return ow.writeValueAsString(data)
     }

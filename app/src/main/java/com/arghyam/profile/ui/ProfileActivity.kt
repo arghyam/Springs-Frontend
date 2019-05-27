@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.R
+import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.landing.ui.activity.LandingActivity
 import kotlinx.android.synthetic.main.content_otp_verify.*
@@ -44,6 +46,8 @@ class ProfileActivity : AppCompatActivity() {
                 val intent = Intent(this@ProfileActivity, LandingActivity::class.java)
                 startActivity(intent)
                 finish()
+            } else {
+                ArghyamUtils().longToast(this@ProfileActivity,"Please enter atleast 3 characters")
             }
         }
     }

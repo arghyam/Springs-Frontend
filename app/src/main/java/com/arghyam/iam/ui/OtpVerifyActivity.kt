@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
+import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
@@ -238,8 +239,8 @@ class OtpVerifyActivity : AppCompatActivity() {
          * Print it for app signature and put it in the message receiving it from the server
          **/
 
-//        var appSignature = AppSignatureHelper(this)
-//        Log.e("ste",appSignature.appSignatures.toString())
+        var appSignature = AppSignatureHelper(this)
+        Log.e("ste",appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {

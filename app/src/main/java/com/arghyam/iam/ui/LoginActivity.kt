@@ -64,7 +64,6 @@ class LoginActivity : AppCompatActivity() {
         intent.putExtra(PHONE_NUMBER, inputNumber.text.toString().trim())
         intent.putExtra(IS_NEW_USER, isNewUser)
         startActivity(intent)
-        finish()
     }
 
     private fun saveUserData(responseModel: ResponseModel) {
