@@ -55,4 +55,46 @@ class VerifyOtpRepository @Inject constructor() {
 
         })
     }
+
+
+    fun resendOtpRequest(
+        context: Context,
+        requestModel: RequestModel,
+        responseListener: ResponseListener<ResponseModel>
+    ) {
+        val loginCall = RestClient.getWebServiceData()?.resendOtp(requestModel)
+        loginCall?.enqueue(object : Callback<ResponseModel> {
+
+            override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                if (null != response.body()) {
+                    if (200 == response.code()) {
+                        Log.d("success--", "response code")
+                        if (response.body()?.response?.responseCode == "200") {
+                            responseListener.onSuccess(response.body()!!)
+                        } else {
+                            responseListener.onError("Please enter correct Otp")
+                        }
+
+                    } else {
+                        Log.d("error---", response.code().toString())
+                        responseListener.onError(response.code().toString() + "")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                when (t) {
+                    is SocketTimeoutException -> {
+                        Log.d("failure", "failure")
+                        responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
+                    }
+                    is UnknownHostException -> responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
+                    else -> responseListener.onFailure(t.message)
+                }
+            }
+
+
+        })
+    }
+
 }

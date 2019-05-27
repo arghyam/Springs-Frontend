@@ -100,6 +100,18 @@ class OtpVerifyActivity : AppCompatActivity() {
         verifyOtpViewModel?.verifyOtpError()?.observe(this, Observer {
             ArghyamUtils().longToast(this@OtpVerifyActivity, it)
         })
+
+        verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
+            if (it?.response?.responseCode.equals("200")) {
+                ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
+            }
+        })
+        verifyOtpViewModel?.resendOtpError()?.observe(this@OtpVerifyActivity, Observer {
+            ArghyamUtils().longToast(
+                this@OtpVerifyActivity,
+                "There has been some error while resending the otp, Please try again"
+            )
+        })
     }
 
     private fun saveAccessToken(it: ResponseModel) {
@@ -123,7 +135,9 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun initResendCodeButton() {
         resendCode.setOnClickListener {
             if (resendOtpCount < 4) {
-                initResendTimer()
+                if (!isCounterRunning) {
+                    makeResendOtpCall()
+                }
             } else {
                 Toast.makeText(
                     this@OtpVerifyActivity,
@@ -134,25 +148,43 @@ class OtpVerifyActivity : AppCompatActivity() {
         }
     }
 
-    private fun initResendTimer() {
-        if (!isCounterRunning) {
-            resendCode.alpha = 0.5f
-            isCounterRunning = true
-            countDownTimer = object : CountDownTimer(30000, 1000) {
-                override fun onFinish() {
-                    resendCode.text = "${getString(R.string.resend)}"
-                    maxTime = 30
-                    resendOtpCount++
-                    isCounterRunning = false
-                    resendCode.alpha = 1.0f
-                }
+    private fun makeResendOtpCall() {
+        var requestModel = RequestModel(
+            id = VERIFY_OTP_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestPersonDataModel(
+                person = PersonModel(
+                    username = phoneNumber.substring(4, phoneNumber.length)
+                )
+            )
+        )
+        verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
+        initResendTimer()
+    }
 
-                override fun onTick(millisUntilFinished: Long) {
-                    resendCode.text = "${getString(R.string.resend)} (00:${ArghyamUtils().checkDigit(maxTime)})"
-                    maxTime--
-                }
-            }.start()
-        }
+    private fun initResendTimer() {
+        resendCode.alpha = 0.5f
+        isCounterRunning = true
+        countDownTimer = object : CountDownTimer(30000, 1000) {
+            override fun onFinish() {
+                resendCode.text = "${getString(R.string.resend)}"
+                maxTime = 30
+                resendOtpCount++
+                isCounterRunning = false
+                resendCode.alpha = 1.0f
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                resendCode.text = "${getString(R.string.resend)} (00:${ArghyamUtils().checkDigit(maxTime)})"
+                maxTime--
+            }
+        }.start()
     }
 
     private fun initTermsCheckBox() {
