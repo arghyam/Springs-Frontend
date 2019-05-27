@@ -15,6 +15,9 @@ class VerifyOtpViewModel : ViewModel() {
     val verifyOtpData = MutableLiveData<ResponseModel>()
     val verifyOtpError: SingleLiveEvent<String> = SingleLiveEvent()
 
+    val resendOtpData = MutableLiveData<ResponseModel>()
+    val resendOtpError: SingleLiveEvent<String> = SingleLiveEvent()
+
     fun setRepository(repository: VerifyOtpRepository) {
         this.repository = repository
     }
@@ -42,6 +45,32 @@ class VerifyOtpViewModel : ViewModel() {
 
     fun verifyOtpError(): SingleLiveEvent<String> {
         return verifyOtpError
+    }
+
+
+    fun resendOtpApi(context: Context, request: RequestModel) {
+        repository!!.resendOtpRequest(context, request, object : ResponseListener<ResponseModel> {
+            override fun onSuccess(response: ResponseModel) {
+                resendOtpData.value = response
+            }
+
+            override fun onError(error: String?) {
+                resendOtpError.value = error
+            }
+
+            override fun onFailure(message: String?) {
+                resendOtpError.value = message
+            }
+
+        })
+    }
+
+    fun resendOtpResponse(): MutableLiveData<ResponseModel> {
+        return resendOtpData
+    }
+
+    fun resendOtpError(): SingleLiveEvent<String> {
+        return resendOtpError
     }
 
 }

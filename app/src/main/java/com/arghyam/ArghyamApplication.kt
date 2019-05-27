@@ -3,18 +3,26 @@ package com.arghyam
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.arghyam.commons.di.AppComponent
 import com.arghyam.commons.di.AppModule
 import com.arghyam.commons.di.DaggerAppComponent
+import com.arghyam.commons.interfaces.NetworkStateReceiverListener
+import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.NetworkStateReceiver
 
-class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks {
+
+class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks, NetworkStateReceiverListener {
+
 
     private var mAppComponent: AppComponent? = null
     private var activityReferences = 0
     private var isActivityChangingConfigurations = false
+    private var networkStateReceiver: NetworkStateReceiver? = null
+    private var isOffline: Boolean = false
 
     private val appModule: AppModule
         get() = AppModule(this)
@@ -29,8 +37,10 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
         mAppComponent = DaggerAppComponent.builder()
             .appModule(appModule)
             .build()
+        networkStateReceiver = NetworkStateReceiver()
+        networkStateReceiver?.addListener(this)
+        this.registerReceiver(networkStateReceiver, IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION))
     }
-
 
 
     fun getmAppComponent(): AppComponent? {
@@ -68,7 +78,8 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-
+//        networkStateReceiver?.removeListener(this);
+//        this.unregisterReceiver(networkStateReceiver);
     }
 
     override fun attachBaseContext(base: Context) {
@@ -78,6 +89,19 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
             base = base.createConfigurationContext(config)
         }
         super.attachBaseContext(base)
+    }
+
+
+    override fun networkAvailable() {
+        if (isOffline) {
+            ArghyamUtils().longToast(applicationContext, "Network Available")
+            isOffline = false
+        }
+    }
+
+    override fun networkUnavailable() {
+        ArghyamUtils().longToast(applicationContext, "Poor internet connection")
+        isOffline = true
     }
 
 }

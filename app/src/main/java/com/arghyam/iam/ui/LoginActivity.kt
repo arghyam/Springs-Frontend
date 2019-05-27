@@ -15,8 +15,10 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
 import com.arghyam.iam.repository.IamRepository
 import com.arghyam.iam.viewmodel.IamViewModel
@@ -64,7 +66,6 @@ class LoginActivity : AppCompatActivity() {
         intent.putExtra(PHONE_NUMBER, inputNumber.text.toString().trim())
         intent.putExtra(IS_NEW_USER, isNewUser)
         startActivity(intent)
-        finish()
     }
 
     private fun saveUserData(responseModel: ResponseModel) {
@@ -72,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<LoginResponseObject>() {}.type
         )
+        SharedPreferenceFactory(this@LoginActivity).setString(Constants.USER_ID,loginResponseObject?.userId)
         gotoOtpActivity(loginResponseObject.newUserCreated)
     }
 

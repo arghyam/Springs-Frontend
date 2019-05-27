@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  *
  */
 class HomeFragment : Fragment() {
+
     private var springsList = ArrayList<LandingModel>()
     private var count: Int = 1
     private var itemsAvailable: Boolean = true
@@ -61,6 +62,7 @@ class HomeFragment : Fragment() {
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                 initApiCall()
             } else {
+                activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
                 errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
                 springsLocation.visibility = GONE
@@ -69,10 +71,11 @@ class HomeFragment : Fragment() {
         initFab()
     }
 
+
     private fun initApiCall() {
         if (itemsAvailable) {
-            errorItems.visibility = GONE
-            springsLocation.visibility = VISIBLE
+            errorItems?.visibility = GONE
+            springsLocation?.visibility = VISIBLE
             pagination()
         } else {
             errorItems.visibility = VISIBLE
@@ -88,7 +91,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun getRecyclerView() {
+    fun showRecyclerView() {
         initApiCall()
     }
 
@@ -125,8 +128,7 @@ class HomeFragment : Fragment() {
                 springsList.add(LandingModel("Spring 10", "Village 10", "https://picsum.photos/200/300"))
             }
         }
-        springRecyclerView.adapter?.notifyDataSetChanged()
+        springRecyclerView?.adapter?.notifyDataSetChanged()
     }
-
 
 }

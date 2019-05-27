@@ -28,7 +28,6 @@ class SmsReceiver : BroadcastReceiver() {
                     }
                 }
                 CommonStatusCodes.TIMEOUT -> {
-                    smsListener.onError()
                 }
             }
 
