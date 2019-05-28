@@ -191,9 +191,9 @@ class OtpVerifyActivity : AppCompatActivity() {
         isTermsChecked = !getIntentBooleanData(IS_NEW_USER)
         isAlreadyVerified = isTermsChecked
         if (isTermsChecked) {
-            layout_checkbox.visibility = GONE
-        } else {
             layout_checkbox.visibility = VISIBLE
+        } else {
+            layout_checkbox.visibility = GONE
             termsCheckBox.setOnCheckedChangeListener { _, isChecked ->
                 isTermsChecked = isChecked
                 if (isChecked && isOtpEditTextFilled()) {
