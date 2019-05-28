@@ -36,6 +36,8 @@ class LoginActivity : AppCompatActivity() {
 
     private var iamViewModel: IamViewModel? = null
 
+    private var phoneNumber: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -44,16 +46,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initArgs()
         initMobileInput()
         initGetOtp()
         initRepository()
         initApiCalls()
     }
 
+
+    private fun initArgs() {
+        phoneNumber = if (intent.hasExtra(PHONE_NUMBER)) {
+            intent.getStringExtra(PHONE_NUMBER)
+        } else {
+            ""
+        }
+    }
+
+
     private fun initApiCalls() {
         iamViewModel?.getLoginResponse()?.observe(this, Observer {
             //TODO( "Please fix me create shared preference manager @karthik and @stefy ")
             saveUserData(it)
+            if (iamViewModel?.getLoginResponse()?.hasObservers()!!) {
+                iamViewModel?.getLoginResponse()?.removeObservers(this@LoginActivity)
+            }
         })
         iamViewModel?.getLoginError()?.observe(this, Observer {
             Log.e("error", it)
@@ -66,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
         intent.putExtra(PHONE_NUMBER, inputNumber.text.toString().trim())
         intent.putExtra(IS_NEW_USER, isNewUser)
         startActivity(intent)
+        finish()
     }
 
     private fun saveUserData(responseModel: ResponseModel) {
@@ -73,12 +90,13 @@ class LoginActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<LoginResponseObject>() {}.type
         )
-        SharedPreferenceFactory(this@LoginActivity).setString(Constants.USER_ID,loginResponseObject?.userId)
+        SharedPreferenceFactory(this@LoginActivity).setString(Constants.USER_ID, loginResponseObject.userId)
         gotoOtpActivity(loginResponseObject.newUserCreated)
     }
 
     private fun initMobileInput() {
-        inputNumber.setText("+91 ")
+        inputNumber.setText("+91 $phoneNumber")
+        inputNumber.setSelection(4)
         inputNumber.addTextChangedListener(mobileNumberInputListener())
     }
 
