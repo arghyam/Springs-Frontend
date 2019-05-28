@@ -154,4 +154,5 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         }
     }
 
+
 }

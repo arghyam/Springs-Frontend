@@ -21,7 +21,7 @@ interface ApiInterface {
     @POST("/api/v1/user/updateUserProfile")
     fun updateUserProfile(@Body updateProfileRequestModel: RequestModel) : Call<ResponseModel>
 
-    @POST("api/v1/user/sendOTP")
+    @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel) : Call<ResponseModel>
 
 
