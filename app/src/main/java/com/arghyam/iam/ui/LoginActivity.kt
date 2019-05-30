@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initComponenet() {
-        inputNumber?.setSelection(inputNumber.text!!.length)
+
     }
 
     private fun initApiCalls() {
@@ -84,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initMobileInput() {
         inputNumber.setText("+91 ")
+        inputNumber.setSelection(4)
         inputNumber.addTextChangedListener(mobileNumberInputListener())
     }
 
@@ -100,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.toString().startsWith("+91 ")) {
                     inputNumber.setText("+91 ")
+                    inputNumber.setSelection(4)
                     inputNumber.text?.length?.let { Selection.setSelection(inputNumber.text, it) }
                 }
             }

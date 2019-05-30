@@ -24,7 +24,6 @@ import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.REFRESH_TOKEN
-import com.arghyam.commons.utils.Constants.RESEND_OTP_ID
 import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
@@ -54,6 +53,7 @@ class OtpVerifyActivity : AppCompatActivity() {
     private var isCounterRunning: Boolean = false
     private var isTermsChecked: Boolean = false
     private var isAlreadyVerified: Boolean = false
+
     private lateinit var countDownTimer: CountDownTimer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,9 +92,11 @@ class OtpVerifyActivity : AppCompatActivity() {
                 val intent = Intent(this@OtpVerifyActivity, ProfileActivity::class.java)
                 intent.putExtra(PHONE_NUMBER, phoneNumber)
                 startActivity(intent)
+                finish()
             } else {
                 val intent = Intent(this@OtpVerifyActivity, LandingActivity::class.java)
                 startActivity(intent)
+                finish()
             }
 
         })
@@ -104,7 +106,6 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
             if (it?.response?.responseCode.equals("200")) {
-                initResendTimer()
                 ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
             }
         })
@@ -121,9 +122,6 @@ class OtpVerifyActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(it.response.responseObject),
             object : TypeToken<AccessTokenModel>() {}.type
         )
-
-        Log.e("karthik", accessTokenResponse.accessTokenResponseDTO.access_token)
-
         SharedPreferenceFactory(this@OtpVerifyActivity).setString(
             ACCESS_TOKEN,
             accessTokenResponse.accessTokenResponseDTO.access_token
@@ -138,12 +136,9 @@ class OtpVerifyActivity : AppCompatActivity() {
         resendCode.setOnClickListener {
             if (resendOtpCount < 4) {
                 if (!isCounterRunning) {
-                    Log.d("initResendCodeButton","initResendCodeButton")
                     makeResendOtpCall()
                 }
             } else {
-                Log.d("isCounterRunning","initResendCodeButton")
-
                 Toast.makeText(
                     this@OtpVerifyActivity,
                     "You have reached the maximum limit, Please try again",
@@ -155,7 +150,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun makeResendOtpCall() {
         var requestModel = RequestModel(
-            id = RESEND_OTP_ID,
+            id = VERIFY_OTP_ID,
             ver = BuildConfig.VER,
             ets = BuildConfig.ETS,
             params = Params(
@@ -170,6 +165,7 @@ class OtpVerifyActivity : AppCompatActivity() {
             )
         )
         verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
+        initResendTimer()
     }
 
     private fun initResendTimer() {
@@ -193,7 +189,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initTermsCheckBox() {
         isTermsChecked = !getIntentBooleanData(IS_NEW_USER)
-        isAlreadyVerified = isTermsChecked
+        isAlreadyVerified = getIntentBooleanData(IS_NEW_USER)
         if (isTermsChecked) {
             layout_checkbox.visibility = GONE
         } else {
@@ -290,8 +286,8 @@ class OtpVerifyActivity : AppCompatActivity() {
          * Print it for app signature and put it in the message receiving it from the server
          **/
 
-        var appSignature = AppSignatureHelper(this)
-        Log.e("ste", appSignature.appSignatures.toString())
+//        var appSignature = AppSignatureHelper(this)
+//        Log.e("ste", appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {
@@ -316,6 +312,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         otp_3.setText("${code[2]}")
         otp_4.setText("${code[3]}")
         countDownTimer.cancel()
+        isCounterRunning = false
         resendCode.text = "${getString(R.string.resend)}"
         resendCode.alpha = 1.0f
     }
@@ -367,6 +364,14 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun isOtpEditTextFilled(): Boolean {
         return otp_1.text.toString().isNotEmpty() && otp_2.text.toString().isNotEmpty()
                 && otp_3.text.toString().isNotEmpty() && otp_4.text.toString().isNotEmpty()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        var intent = Intent(this@OtpVerifyActivity, LoginActivity::class.java)
+        intent.putExtra(PHONE_NUMBER, phoneNumber)
+        startActivity(intent)
+        finish()
     }
 
 }
