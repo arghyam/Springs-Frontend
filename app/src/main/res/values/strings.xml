@@ -59,4 +59,12 @@
     <string name="signin_option">Sign in to have additional functions</string>
     <string name="or">OR</string>
     <string name="turn_on_location_desc">Please turn on location services to get the springs nearby</string>
+    <string name="title_activity_add_discharge">AddDischargeActivity</string>
+    <string name="stopwatch">Stopwatch</string>
+    <string name="discharge_data">Discharge Data</string>
+    <string name="title_activity_timer">TimerActivity</string>
+    <string name="stop_watch">Stopwatch</string>
+    <string name="average">Average</string>
+    <string name="stop">Stop</string>
+    <string name="start">START</string>
 </resources>

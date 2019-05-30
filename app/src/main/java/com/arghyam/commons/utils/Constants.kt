@@ -18,4 +18,5 @@ object Constants {
     var REFRESH_TOKEN: String = "refreshToken"
     var IS_NEW_USER: String = "isNewUser"
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
+    var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
 }

@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
-import com.arghyam.commons.utils.AppSignatureHelper
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
@@ -144,6 +143,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                     "You have reached the maximum limit, Please try again",
                     Toast.LENGTH_LONG
                 ).show()
+                onBackPressed()
             }
         }
     }
@@ -211,7 +211,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initBackPressListener() {
         backPressed.setOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
