@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -34,6 +35,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     var CURRENT_TAG: String = TAG_HOME
+    var isAccepted: Boolean = false
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +123,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     private val permissionListener = object : PermissionListener {
         override fun onPermissionGranted(response: PermissionGrantedResponse) {
-            showHome()
+            isAccepted = true
         }
 
         override fun onPermissionDenied(response: PermissionDeniedResponse) {
@@ -139,6 +141,8 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.e("karthik req", "" + requestCode)
+        Log.e("karthik", "" + resultCode)
         when (requestCode) {
             PERMISSION_LOCATION_RESULT_CODE -> showHome()
             PERMISSION_LOCATION_ON_RESULT_CODE -> {
@@ -151,6 +155,13 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isAccepted) {
+            showHome()
         }
     }
 

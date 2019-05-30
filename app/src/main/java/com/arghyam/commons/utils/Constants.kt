@@ -14,6 +14,7 @@ object Constants {
     var PERMISSION_LOCATION_RESULT_CODE : Int = 1217
     var PERMISSION_LOCATION_ON_RESULT_CODE : Int = 1112
     var VERIFY_OTP_ID : String = "forWater.user.verifyOtp"
+    var RESEND_OTP_ID : String = "forWater.user.sendOTP"
     var ACCESS_TOKEN: String = "accessToken"
     var REFRESH_TOKEN: String = "refreshToken"
     var IS_NEW_USER: String = "isNewUser"

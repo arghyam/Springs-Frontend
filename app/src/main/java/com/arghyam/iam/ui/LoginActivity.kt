@@ -44,10 +44,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initComponenet()
         initMobileInput()
         initGetOtp()
         initRepository()
         initApiCalls()
+    }
+
+    private fun initComponenet() {
+        inputNumber?.setSelection(inputNumber.text!!.length)
     }
 
     private fun initApiCalls() {

@@ -24,6 +24,7 @@ import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.REFRESH_TOKEN
+import com.arghyam.commons.utils.Constants.RESEND_OTP_ID
 import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
@@ -103,6 +104,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
             if (it?.response?.responseCode.equals("200")) {
+                initResendTimer()
                 ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
             }
         })
@@ -136,9 +138,12 @@ class OtpVerifyActivity : AppCompatActivity() {
         resendCode.setOnClickListener {
             if (resendOtpCount < 4) {
                 if (!isCounterRunning) {
+                    Log.d("initResendCodeButton","initResendCodeButton")
                     makeResendOtpCall()
                 }
             } else {
+                Log.d("isCounterRunning","initResendCodeButton")
+
                 Toast.makeText(
                     this@OtpVerifyActivity,
                     "You have reached the maximum limit, Please try again",
@@ -150,7 +155,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun makeResendOtpCall() {
         var requestModel = RequestModel(
-            id = VERIFY_OTP_ID,
+            id = RESEND_OTP_ID,
             ver = BuildConfig.VER,
             ets = BuildConfig.ETS,
             params = Params(
@@ -165,7 +170,6 @@ class OtpVerifyActivity : AppCompatActivity() {
             )
         )
         verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
-        initResendTimer()
     }
 
     private fun initResendTimer() {

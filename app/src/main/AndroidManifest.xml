@@ -15,15 +15,17 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".geographySearch.ui.activity.GeographySearchActivity"
-                  android:label="@string/search_geography">
+        <activity android:name=".additionalDetails.ui.AddAdditionalDetailsActivity">
 
+        </activity>
+        <activity
+                android:name=".geographySearch.ui.activity.GeographySearchActivity"
+                android:label="@string/search_geography">
         </activity>
         <activity
                 android:name=".springdetails.ui.activity.SpringDetailsActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity android:name=".addspring.ui.NewSpringActivity">
         </activity>
@@ -43,7 +45,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
         <activity
                 android:name=".profile.ui.ProfileActivity"
@@ -54,9 +55,8 @@
         <activity
                 android:name=".landing.ui.activity.LandingActivity"
                 android:label="@string/app_name"
-
-                android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
 
