@@ -16,11 +16,11 @@
                 android:id="@+id/bt_jan"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:textColor="#ffffff"
+                android:textColor="@color/ship_grey"
                 android:layout_gravity="bottom"
                 android:text="@string/Jan"
                 android:textAllCaps="false"
-                android:background="@color/light_grey"/>
+                android:background="@drawable/selector_row_calender"/>
 
     </LinearLayout>
 
