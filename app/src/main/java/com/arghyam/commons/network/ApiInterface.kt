@@ -26,5 +26,4 @@ interface ApiInterface {
     @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel): Call<ResponseModel>
 
-
 }

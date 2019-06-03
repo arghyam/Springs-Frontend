@@ -48,9 +48,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     private fun showHome() {
         if (ArghyamUtils().permissionGranted(
-                this@LandingActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+                        this@LandingActivity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
         ) {
             val fragment = HomeFragment.newInstance()
             addFragment(fragment)
@@ -97,10 +97,10 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
      */
     private fun addFragment(fragment: Fragment) {
         supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
-            .addToBackStack(fragment.javaClass.simpleName)
-            .commit()
+                .beginTransaction()
+                .replace(R.id.content, fragment, fragment.javaClass.simpleName)
+                .addToBackStack(fragment.javaClass.simpleName)
+                .commit()
     }
 
 
@@ -117,8 +117,8 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     override fun permissionClick() {
         Dexter.withActivity(this)
-            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            .withListener(permissionListener).check()
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(permissionListener).check()
     }
 
     private val permissionListener = object : PermissionListener {
