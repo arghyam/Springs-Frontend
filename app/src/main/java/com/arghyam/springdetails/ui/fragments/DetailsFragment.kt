@@ -1,6 +1,7 @@
 package com.arghyam.springdetails.ui.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.R
+import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
+import com.arghyam.geographySearch.ui.activity.GeographySearchActivity
 import com.arghyam.springdetails.adapter.ImageAdapter
 import kotlinx.android.synthetic.main.spring_details.*
 
@@ -27,7 +30,15 @@ class DetailsFragment : Fragment() {
     }
 
     private fun init() {
+        initClick()
         initImageAdapter()
+    }
+
+    private fun initClick() {
+        additional_details_layout.setOnClickListener {
+            val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

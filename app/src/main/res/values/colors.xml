@@ -12,4 +12,6 @@
     <color name="snow">#fbfbfb</color>
     <color name="jumbo">#8b8b8c</color>
     <color name="black">#000000</color>
+    <color name="light_grey">#cccccc</color>
+
 </resources>

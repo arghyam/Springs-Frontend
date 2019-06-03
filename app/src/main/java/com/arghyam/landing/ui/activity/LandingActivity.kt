@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -34,6 +35,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     var CURRENT_TAG: String = TAG_HOME
+    var isAccepted: Boolean = false
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     private fun showHome() {
         if (ArghyamUtils().permissionGranted(
-                this@LandingActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+                        this@LandingActivity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
         ) {
             val fragment = HomeFragment.newInstance()
             addFragment(fragment)
@@ -95,10 +97,10 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
      */
     private fun addFragment(fragment: Fragment) {
         supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
-            .addToBackStack(fragment.javaClass.simpleName)
-            .commit()
+                .beginTransaction()
+                .replace(R.id.content, fragment, fragment.javaClass.simpleName)
+                .addToBackStack(fragment.javaClass.simpleName)
+                .commit()
     }
 
 
@@ -115,13 +117,13 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     override fun permissionClick() {
         Dexter.withActivity(this)
-            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            .withListener(permissionListener).check()
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(permissionListener).check()
     }
 
     private val permissionListener = object : PermissionListener {
         override fun onPermissionGranted(response: PermissionGrantedResponse) {
-            showHome()
+            isAccepted = true
         }
 
         override fun onPermissionDenied(response: PermissionDeniedResponse) {
@@ -139,6 +141,8 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.e("karthik req", "" + requestCode)
+        Log.e("karthik", "" + resultCode)
         when (requestCode) {
             PERMISSION_LOCATION_RESULT_CODE -> showHome()
             PERMISSION_LOCATION_ON_RESULT_CODE -> {
@@ -154,5 +158,11 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (isAccepted) {
+            showHome()
+        }
+    }
 
 }

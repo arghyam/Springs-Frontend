@@ -33,6 +33,9 @@ class LandingAdapter(val springList: ArrayList<LandingModel>, val context: Conte
         holder.itemView.setOnClickListener {
             context.startActivity(Intent(context, SpringDetailsActivity::class.java))
         }
+        holder.favourite.setOnClickListener {
+//                holder.favourite.setBackgroundResource(R.drawable.ic_fav_fill)
+        }
 
     }
 
@@ -41,6 +44,7 @@ class LandingAdapter(val springList: ArrayList<LandingModel>, val context: Conte
         val springNameText = view.spring_name
         val villageNameText = view.village_name
         val springImage = view.img_spring
+        val favourite = view.fav_icon
 
     }
 }

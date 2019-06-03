@@ -59,4 +59,19 @@
     <string name="signin_option">Sign in to have additional functions</string>
     <string name="or">OR</string>
     <string name="turn_on_location_desc">Please turn on location services to get the springs nearby</string>
+    <string name="submit">SUBMIT</string>
+    <string name="perennial">Perennial</string>
+    <string name="seasonal">Seasonal</string>
+    <string name="domestic">Domestic</string>
+    <string name="irrigation">Irrigation</string>
+    <string name="industrial">Industrial</string>
+    <string name="livestock">Livestock</string>
+    <string name="number_household">Number of households</string>
+    <string name="Jan">Jan</string>
+    <string name="others">Others</string>
+    <string name="max_image">Maximum 2 images</string>
+    <string name="address">Address</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="altitude">Altitude</string>
 </resources>

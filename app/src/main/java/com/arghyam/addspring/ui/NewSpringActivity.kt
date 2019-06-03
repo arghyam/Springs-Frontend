@@ -43,7 +43,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var googleApiClient: GoogleApiClient? = null
     private var mLocationManager: LocationManager? = null
     lateinit var mLocation: Location
-    var count: Int = 0
+    var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
     lateinit var locationManager: LocationManager
@@ -70,6 +70,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         Log.i(TAG, "Connection Suspended")
         mGoogleApiClient!!.connect()
 
+
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -88,9 +89,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun init() {
+        initToolbar()
         initRecyclerView()
         initLocation()
         initLocationClick()
+    }
+
+    private fun initToolbar() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 
     private fun initLocationClick() {
@@ -110,8 +117,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun toggleLocation() {
         card_device.visibility = View.VISIBLE
         tv_coordinates.visibility = View.VISIBLE
-        latitude.visibility = View.VISIBLE
-        longitude.visibility = View.VISIBLE
+        tv_address.visibility = View.VISIBLE
+        address_layout.visibility = View.VISIBLE
+//        latitude.visibility = View.VISIBLE
+//        longitude.visibility = View.VISIBLE
+        tv_address.visibility=View.VISIBLE
+        address_layout.visibility=View.VISIBLE
+        tl_cooridinates.visibility=View.VISIBLE
         location_layout.visibility = View.GONE
     }
 
@@ -209,8 +221,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     toggleLocation()
                     // Logic to handle location object
                     mLocation = location
-                    latitude.text = "Latitude     : ${mLocation.latitude}"
-                    longitude.text = "Longitude  : ${mLocation.longitude}"
+                    latitude.text = ": ${mLocation.latitude}"
+                    longitude.text = ": ${mLocation.longitude}"
                     tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
                     tv_reposition.text = "Click on to reposition your gps"
                 }
@@ -230,7 +242,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             123 -> {
                 var bmp = data!!.extras.get("data") as Bitmap
                 compressBitmap(bmp, 5)
-                imageList.add(ImageEntity(count, bmp, "springName" + String.format("%04d", count) + ".jpg", 0))
+                imageList.add(ImageEntity(count, bmp, "Image" + String.format("%04d", count) + ".jpg", 0))
                 count++
             }
             PERMISSION_LOCATION_RESULT_CODE,
