@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+    <TextView
+            android:layout_width="50dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_18"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:id="@+id/timer_counter"
+            android:layout_height="50dp"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:textSize="@dimen/text_size_18"
+            android:textColor="@color/bokara_grey"
+            android:text="@string/average"
+            android:id="@+id/attempt_counter"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_timer"
+            android:textSize="@dimen/text_size_18"
+            android:textColor="@color/bokara_grey"
+            android:text="00:00"
+    />
+
+    <ImageView
+            android:layout_width="@dimen/image_12"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:id="@+id/timer_delete"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_height="@dimen/image_12"/>
+
+
+</LinearLayout>
+

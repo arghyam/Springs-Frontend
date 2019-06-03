@@ -85,7 +85,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initSubmit() {
         submit.setOnClickListener {
-            if (fullName.text.length >= 3) {
+            if (fullName.text.trim().length >= 3) {
                 updateUserProfileOnClickListener()
             } else {
                 ArghyamUtils().longToast(this@ProfileActivity, "Please enter atleast 3 characters")
@@ -106,7 +106,7 @@ class ProfileActivity : AppCompatActivity() {
             ),
             request = RequestPersonDataModel(
                 person = UserProfileModel(
-                    name = fullName.text.toString(),
+                    name = fullName.text.toString().trim(),
                     phonenumber = mobile.text.toString().substring(
                         4,
                         mobile.text!!.length

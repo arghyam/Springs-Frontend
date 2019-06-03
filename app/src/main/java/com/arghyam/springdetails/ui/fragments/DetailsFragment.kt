@@ -12,6 +12,8 @@ import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.geographySearch.ui.activity.GeographySearchActivity
 import com.arghyam.springdetails.adapter.ImageAdapter
+import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
 
 /**
@@ -32,12 +34,19 @@ class DetailsFragment : Fragment() {
     private fun init() {
         initClick()
         initImageAdapter()
+        initAddDischargeData()
     }
 
     private fun initClick() {
         additional_details_layout.setOnClickListener {
             val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun initAddDischargeData() {
+        add_discharge_data.setOnClickListener {
+            activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
         }
     }
 

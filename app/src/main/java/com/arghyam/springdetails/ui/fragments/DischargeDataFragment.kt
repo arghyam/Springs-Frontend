@@ -1,6 +1,7 @@
 package com.arghyam.springdetails.ui.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.R
 import com.arghyam.springdetails.adapter.DischargeDataAdapter
 import com.arghyam.springdetails.models.DischargeDataModal
+import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import kotlinx.android.synthetic.main.discharge_data.*
 
 
@@ -33,11 +35,16 @@ class DischargeDataFragment : Fragment() {
     private fun init() {
         initRecyclerView()
         initDischargeData()
+        initDischargeDataButton()
     }
 
     private fun initRecyclerView() {
         discharge_data_recyclerView.layoutManager = LinearLayoutManager(activity)
         discharge_data_recyclerView.adapter = context?.let { DischargeDataAdapter(dischargeData, it) }
+    }
+
+    private fun initDischargeDataButton() {
+        activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
     }
 
     private fun initDischargeData() {

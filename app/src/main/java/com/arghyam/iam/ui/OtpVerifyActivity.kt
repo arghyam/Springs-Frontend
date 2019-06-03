@@ -105,6 +105,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
             if (it?.response?.responseCode.equals("200")) {
+                initResendTimer()
                 ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
             }
         })
@@ -143,6 +144,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                         "You have reached the maximum limit, Please try again",
                         Toast.LENGTH_LONG
                 ).show()
+                onBackPressed()
             }
         }
     }
@@ -164,7 +166,6 @@ class OtpVerifyActivity : AppCompatActivity() {
                 )
         )
         verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
-        initResendTimer()
     }
 
     private fun initResendTimer() {
@@ -210,7 +211,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initBackPressListener() {
         backPressed.setOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
