@@ -53,7 +53,6 @@ class LoginActivity : AppCompatActivity() {
         initApiCalls()
     }
 
-
     private fun initArgs() {
         phoneNumber = if (intent.hasExtra(PHONE_NUMBER)) {
             intent.getStringExtra(PHONE_NUMBER)
@@ -113,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 if (!s.toString().startsWith("+91 ")) {
                     inputNumber.setText("+91 ")
+                    inputNumber.setSelection(4)
                     inputNumber.text?.length?.let { Selection.setSelection(inputNumber.text, it) }
                 }
             }

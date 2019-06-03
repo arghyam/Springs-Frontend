@@ -100,7 +100,7 @@ class ArghyamApplication : Application(), Application.ActivityLifecycleCallbacks
     }
 
     override fun networkUnavailable() {
-        ArghyamUtils().longToast(applicationContext, "Poor internet connection")
+        ArghyamUtils().longToast(applicationContext, "Poor network connection detected. Please check your connectivity")
         isOffline = true
     }
 

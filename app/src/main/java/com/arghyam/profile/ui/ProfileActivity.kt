@@ -145,6 +145,7 @@ class ProfileActivity : AppCompatActivity() {
         if (null != intent.extras) {
             val phone = intent.getStringExtra(PHONE_NUMBER)
             mobile.setText(phone)
+
         }
     }
 

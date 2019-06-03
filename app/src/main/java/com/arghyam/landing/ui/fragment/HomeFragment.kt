@@ -28,6 +28,7 @@ class HomeFragment : Fragment() {
     private var springsList = ArrayList<LandingModel>()
     private var count: Int = 1
     private var itemsAvailable: Boolean = true
+    private lateinit var adapter: LandingAdapter
 
     /**
      * Initialize newInstance for passing paameters
@@ -54,9 +55,9 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         if (ArghyamUtils().permissionGranted(
-                context!!,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+                        context!!,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
         ) {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
@@ -95,7 +96,7 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE
         springRecyclerView.layoutManager = LinearLayoutManager(activity)
-        val adapter = activity?.let { LandingAdapter(springsList, it) }
+        adapter = activity?.let { LandingAdapter(springsList, it) }!!
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -125,7 +126,7 @@ class HomeFragment : Fragment() {
                 springsList.add(LandingModel("Spring 10", "Village 10", "https://picsum.photos/200/300"))
             }
         }
-        springRecyclerView?.adapter?.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
 }
