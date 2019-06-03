@@ -27,7 +27,9 @@
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".addspring.ui.NewSpringActivity">
+        <activity android:name=".addspring.ui.NewSpringActivity"
+                  android:label="@string/new_spring">
+
         </activity>
         <activity
                 android:name=".iam.ui.OtpVerifyActivity"

@@ -69,4 +69,9 @@
     <string name="number_household">Number of households</string>
     <string name="Jan">Jan</string>
     <string name="others">Others</string>
+    <string name="max_image">Maximum 2 images</string>
+    <string name="address">Address</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="altitude">Altitude</string>
 </resources>

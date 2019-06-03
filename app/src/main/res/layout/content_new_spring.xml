@@ -50,6 +50,8 @@
                 android:layout_height="wrap_content"
                 android:text="Ownership type"
                 android:textColor="#595958"
+                android:drawablePadding="2dp"
+                android:drawableRight="@drawable/ic_mandatory"
                 android:textSize="14sp"/>
 
         <RadioGroup
@@ -101,6 +103,8 @@
                 android:textColor="#595958"
                 android:textSize="14sp"
                 android:text="Image"
+                android:drawablePadding="2dp"
+                android:drawableRight="@drawable/ic_mandatory"
                 android:paddingBottom="16dp"/>
 
             <LinearLayout
@@ -116,7 +120,7 @@
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_icon_shape"/>
+                        app:srcCompat="@drawable/ic_camera"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -127,6 +131,16 @@
                         android:text="Capture"/>
 
             </LinearLayout>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#8C8C8B"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:text="@string/max_image"
+                    android:paddingTop="8dp"
+                   />
 
             <!--<ImageView-->
                     <!--android:id="@+id/image_load"-->
@@ -159,6 +173,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="#595958"
                 android:textSize="14sp"
+                android:drawablePadding="2dp"
+                android:drawableRight="@drawable/ic_mandatory"
                 android:text="Location"
                 android:paddingBottom="16dp"
 
@@ -177,7 +193,7 @@
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_icon_shape"/>
+                        app:srcCompat="@drawable/ic_location"/>
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -211,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp"
-            android:layout_weight="1">
+                    android:layout_weight="1">
 
                 <TextView
                         android:id="@+id/tv_accuracy"
@@ -246,12 +262,50 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:padding="16dp"
-                    app:srcCompat="@drawable/ic_icon_shape"/>
+                    app:srcCompat="@drawable/ic_location"/>
 
         </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
+            <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    android:textColor="#595958"
+                    android:paddingTop="16dp"
+                    android:text="@string/address"/>
+
+            <LinearLayout
+                    android:id="@+id/address_layout"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="21dp"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        app:srcCompat="@drawable/ic_address"
+                />
+
+                <TextView
+                        android:id="@+id/tv_address_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="16dp"
+                        android:gravity="center"
+                        android:textColor="#262524"
+                        android:text="Gaurikund, near Mandakni River, Uttarakhand"/>
+
+            </LinearLayout>
 
         <TextView
                 android:id="@+id/tv_coordinates"
@@ -260,28 +314,125 @@
                 android:textSize="14sp"
                 android:visibility="gone"
                 android:textColor="#595958"
-                android:paddingTop="16dp"
                 android:text="Coordinates"/>
 
-        <TextView
-                android:id="@+id/latitude"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                android:textColor="#262524"
-                android:paddingTop="16dp"/>
+
+            <TableLayout
+                    android:id="@+id/tl_cooridinates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                <TableRow
+                android:paddingTop="16dp">
 
 
-        <TextView
-                android:id="@+id/longitude"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                android:textColor="#262524"
-                android:paddingTop="16dp"
-                />
+                    <ImageView
+                            android:layout_gravity="center"
+                            android:layout_width="21dp"
+                            android:paddingRight="5dp"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_latitude"
+                    />
+
+                    <TextView
+                            android:text="@string/latitude"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/ship_grey"
+                            android:layout_marginLeft="16dp"
+                            android:layout_weight="1"
+                    />
+
+                    <TextView
+                            android:id="@+id/latitude"
+                            android:text=":  13.6675"
+                            android:layout_weight="4"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"/>
+
+                </TableRow>
+
+                <TableRow
+                        android:paddingTop="16dp">
+
+
+                    <ImageView
+                            android:layout_gravity="center"
+                            android:layout_width="21dp"
+                            android:paddingRight="5dp"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_latitude"
+                    />
+
+                    <TextView
+                            android:text="@string/longitude"
+                            android:textSize="@dimen/text_size_16"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="16dp"
+                            android:textColor="@color/ship_grey"
+
+                    />
+
+                    <TextView
+                            android:id="@+id/longitude"
+                            android:text=":  13.6675"
+                            android:layout_weight="4"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"/>
+
+                </TableRow>
+
+                <TableRow
+                        android:paddingTop="16dp">
+
+
+                    <ImageView
+                            android:layout_gravity="center"
+                            android:layout_width="21dp"
+                            android:paddingRight="5dp"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_altitude"
+                    />
+
+                    <TextView
+                            android:text="@string/altitude"
+                            android:textSize="@dimen/text_size_16"
+                            android:layout_marginLeft="16dp"
+                            android:textColor="@color/ship_grey"
+                            android:layout_weight="1"
+
+                    />
+
+                    <TextView
+                            android:id="@+id/altitude"
+                            android:text=":  13.6675"
+                            android:layout_weight="4"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+        <!--<TextView-->
+                <!--android:id="@+id/latitude"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="14sp"-->
+                <!--android:visibility="gone"-->
+                <!--android:textColor="#262524"-->
+                <!--android:paddingTop="16dp"/>-->
+
+
+        <!--<TextView-->
+                <!--android:id="@+id/longitude"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="14sp"-->
+                <!--android:visibility="gone"-->
+                <!--android:textColor="#262524"-->
+                <!--android:paddingTop="16dp"-->
+                <!--/>-->
 
         </LinearLayout>
         <View

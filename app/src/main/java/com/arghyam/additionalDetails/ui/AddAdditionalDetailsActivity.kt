@@ -32,6 +32,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity() {
     }
 
     private fun initComponenet() {
+
         selectedItemCount = 0
     }
 
