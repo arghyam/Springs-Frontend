@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initMobileInput() {
-        inputNumber.setText("+91 $phoneNumber")
+        inputNumber.setText("+91 ")
         inputNumber.setSelection(4)
         inputNumber.addTextChangedListener(mobileNumberInputListener())
     }

@@ -9,7 +9,6 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import com.arghyam.commons.interfaces.LocationInterface
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
@@ -95,4 +94,9 @@ class ArghyamUtils {
         return ow.writeValueAsString(data)
     }
 
+    fun secondsToMinutes(timeInSeconds: Int): String {
+        var minutes = timeInSeconds / 60
+        var seconds = timeInSeconds % 60
+        return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
+    }
 }

@@ -105,6 +105,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
             if (it?.response?.responseCode.equals("200")) {
+                initResendTimer()
                 ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
             }
         })
@@ -165,7 +166,6 @@ class OtpVerifyActivity : AppCompatActivity() {
             )
         )
         verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
-        initResendTimer()
     }
 
     private fun initResendTimer() {

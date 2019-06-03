@@ -91,9 +91,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun showRecyclerView() {
-        initApiCall()
-    }
 
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE

@@ -32,4 +32,7 @@
     <dimen name="margin_40">40dp</dimen>
     <dimen name="image_12">12dp</dimen>
     <dimen name="margin_44">44dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_80">80dp</dimen>
 </resources>
