@@ -1,5 +1,6 @@
 package com.arghyam.springdetails.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.springdetails.adapter.TimerAdapter
 import com.arghyam.springdetails.interfaces.TimerInterface
 import com.arghyam.springdetails.models.TimerModel
@@ -15,12 +17,12 @@ import kotlinx.android.synthetic.main.content_timer.*
 
 class TimerActivity : AppCompatActivity() {
 
-    var milliSecondTime: Long = 0L
-    var startTime: Long = 0L
-    lateinit var handler: Handler
-    var seconds: Int = 0
-    var minutes: Int = 0
-    var isTimerRunning: Boolean = false
+    private var milliSecondTime: Long = 0L
+    private var startTime: Long = 0L
+    private lateinit var handler: Handler
+    private var seconds: Int = 0
+    private var minutes: Int = 0
+    private var isTimerRunning: Boolean = false
     private var timerList: ArrayList<TimerModel> = ArrayList()
     private lateinit var timerAdapter: TimerAdapter
 
@@ -37,6 +39,23 @@ class TimerActivity : AppCompatActivity() {
         initToolbar()
         initStartButton()
         initRecyclerView()
+        initTimerDone()
+    }
+
+    private fun initTimerDone() {
+        timerDone.setOnClickListener {
+            if (!isTimerSetEmpty()) {
+                var intent: Intent = Intent().apply {
+                    putExtra("timerList", timerList)
+                }
+                setResult(Constants.STOP_WATCH_TIMER_RESULT_CODE, intent)
+                finish()
+            }
+        }
+    }
+
+    private fun isTimerSetEmpty(): Boolean {
+        return timerList.any { t -> t.seconds == 0 }
     }
 
     private fun initRecyclerView() {
