@@ -119,8 +119,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         tv_coordinates.visibility = View.VISIBLE
         tv_address.visibility = View.VISIBLE
         address_layout.visibility = View.VISIBLE
-//        latitude.visibility = View.VISIBLE
-//        longitude.visibility = View.VISIBLE
         tv_address.visibility=View.VISIBLE
         address_layout.visibility=View.VISIBLE
         tl_cooridinates.visibility=View.VISIBLE
@@ -180,7 +178,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             }
         }
     }
-
 
 
     private fun getLocation() {
