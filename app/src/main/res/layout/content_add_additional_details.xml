@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                        android:visibility="gone"
-                        android:text="4 selected"
+                        android:text="0 selected"
                         android:paddingLeft="52dp"
                         android:paddingTop="16dp"
                         android:textColor="#8C8C8B"

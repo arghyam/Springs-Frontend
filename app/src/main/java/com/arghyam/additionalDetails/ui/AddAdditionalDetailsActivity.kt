@@ -1,22 +1,23 @@
 package com.arghyam.additionalDetails.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ActionMode
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.additionalDetails.adapter.CalenderAdapter
 import kotlinx.android.synthetic.main.content_add_additional_details.*
 
-class AddAdditionalDetailsActivity : AppCompatActivity() {
+class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecyclerViewItemClickListener {
 
-    val calender:ArrayList<String> = ArrayList()
-    internal var actionMode: ActionMode? = null
-    internal var selectedItemCount: Int = 0
+
+    internal var calender: ArrayList<String> = ArrayList()
+
+
+    internal var selectedMonth: ArrayList<Int> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,26 +26,50 @@ class AddAdditionalDetailsActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        initComponenet()
+        initToolbar()
         addCalender()
         initRecyclerview()
         initClick()
     }
 
-    private fun initComponenet() {
+    private fun initToolbar() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        selectedItemCount = 0
     }
 
+    override fun selectedMonth(position: Int) {
+        if (selectedMonth.contains(position+1)) {
+            selectedMonth.remove(position+1)
+        } else {
+            selectedMonth.add(position+1)
+        }
+        select_month_count.text = "${selectedMonth.size} selected"
+        Log.d("month",""+select_month_count.text)
+    }
+
+
     private fun initClick() {
-        radioGroup_character?.setOnCheckedChangeListener{group, checkedId ->
-            if(R.id.radioButton_seasonal1 == checkedId){
-                calenderRecyclerview.visibility=VISIBLE
-                radioButton_seasonal1?.setCompoundDrawablesWithIntrinsicBounds(null,null,resources.getDrawable(R.drawable.ic_collapse_up),null)
+        radioGroup_character?.setOnCheckedChangeListener { group, checkedId ->
+            if (R.id.radioButton_seasonal1 == checkedId) {
+                calenderRecyclerview.visibility = VISIBLE
+                select_month_count.visibility = VISIBLE
+                select_month_count.text = "${selectedMonth.size} selected"
+                radioButton_seasonal1?.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    resources.getDrawable(R.drawable.ic_collapse_up),
+                    null
+                )
 
             } else {
-                calenderRecyclerview.visibility=GONE
-                radioButton_seasonal1?.setCompoundDrawablesWithIntrinsicBounds(null,null,resources.getDrawable(R.drawable.ic_collapse_down),null)
+                calenderRecyclerview.visibility = GONE
+                select_month_count.visibility = GONE
+                radioButton_seasonal1?.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    resources.getDrawable(R.drawable.ic_collapse_down),
+                    null
+                )
 
             }
 
@@ -53,11 +78,14 @@ class AddAdditionalDetailsActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerview() {
-        calenderRecyclerview.layoutManager = GridLayoutManager(this, 4) as RecyclerView.LayoutManager?
-        calenderRecyclerview.adapter = CalenderAdapter(calender, this)
+
+        var recyclerViewAdapter = CalenderAdapter(calender, this@AddAdditionalDetailsActivity, this)
+        val linearLayoutManager = GridLayoutManager(this, 4)
+        calenderRecyclerview.layoutManager = linearLayoutManager
+        calenderRecyclerview.setHasFixedSize(true)
+        calenderRecyclerview.adapter = recyclerViewAdapter
 
     }
-
     private fun addCalender() {
         calender.add("Jan")
         calender.add("Feb")
@@ -73,3 +101,4 @@ class AddAdditionalDetailsActivity : AppCompatActivity() {
         calender.add("Dec")
     }
 }
+

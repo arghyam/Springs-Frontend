@@ -82,6 +82,7 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="altitude">Altitude</string>
+    <string name="additional_details">Additional Details</string>
     <string name="view_attempts">View Attempts</string>
     <string name="capture">Capture</string>
 </resources>
