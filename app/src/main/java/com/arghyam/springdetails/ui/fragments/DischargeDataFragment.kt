@@ -13,6 +13,7 @@ import com.arghyam.springdetails.adapter.DischargeDataAdapter
 import com.arghyam.springdetails.models.DischargeDataModal
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import kotlinx.android.synthetic.main.discharge_data.*
+import kotlinx.android.synthetic.main.fragment_discharge_data.*
 
 
 /**
@@ -44,7 +45,9 @@ class DischargeDataFragment : Fragment() {
     }
 
     private fun initDischargeDataButton() {
-        activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
+        dischargeDataButton.setOnClickListener {
+            activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
+        }
     }
 
     private fun initDischargeData() {

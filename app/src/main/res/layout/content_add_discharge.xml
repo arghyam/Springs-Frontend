@@ -10,7 +10,8 @@
         tools:context=".springdetails.ui.activity.AddDischargeActivity">
 
 
-    <LinearLayout android:layout_width="match_parent" android:orientation="vertical"
+    <LinearLayout android:layout_width="match_parent"
+                  android:orientation="vertical"
                   android:layout_height="match_parent">
 
         <TextView
@@ -82,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:layout_marginBottom="@dimen/margin_32"
+                android:layout_marginBottom="@dimen/margin_16"
                 android:layout_marginRight="50dp"
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/image_border">
@@ -99,6 +100,175 @@
                     android:textSize="@dimen/text_size_14"
                     android:textColor="#262524"
                     android:text="@string/stopwatch"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:background="@color/snow"
+                android:visibility="gone"
+                android:layout_margin="@dimen/margin_16"
+                android:id="@+id/attempt_details"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/padding_20"
+                    android:id="@+id/average_body"
+                    android:paddingBottom="@dimen/padding_20"
+                    android:paddingRight="@dimen/padding_24"
+                    android:paddingLeft="@dimen/padding_24"
+                    android:layout_height="wrap_content">
+
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/text_size_16"
+                        android:textColor="@color/bokara_grey"
+                        android:text="@string/average"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/text_size_16"
+                        android:textColor="@color/bokara_grey"
+                        android:text="00:00"
+                        android:id="@+id/averageTimer"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:paddingTop="@dimen/padding_20"
+                  android:paddingBottom="@dimen/padding_20"
+                  android:background="@color/gainsboro">
+
+            </View>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/padding_24"
+                    android:id="@+id/view_attempts"
+                    android:paddingLeft="@dimen/padding_24"
+                    android:paddingTop="@dimen/padding_20"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:text="@string/view_attempts"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_height="wrap_content"/>
+
+                <ImageView
+                        android:layout_width="9dp"
+                        android:layout_marginLeft="@dimen/margin_12"
+                        android:tint="@color/colorPrimary"
+                        android:src="@drawable/ic_collapse_down"
+                        android:layout_height="6dp"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/attempts"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/padding_20"
+                        android:paddingBottom="@dimen/padding_20"
+                        android:paddingRight="@dimen/padding_24"
+                        android:paddingLeft="@dimen/padding_24"
+                        android:layout_height="wrap_content">
+
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="Attempt 1"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="00:00"
+                            android:id="@+id/attempt1"
+                            android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/padding_20"
+                        android:paddingBottom="@dimen/padding_20"
+                        android:paddingRight="@dimen/padding_24"
+                        android:paddingLeft="@dimen/padding_24"
+                        android:layout_height="wrap_content">
+
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="Attempt 2"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="00:00"
+                            android:id="@+id/attempt2"
+                            android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/padding_20"
+                        android:paddingBottom="@dimen/padding_20"
+                        android:paddingRight="@dimen/padding_24"
+                        android:paddingLeft="@dimen/padding_24"
+                        android:layout_height="wrap_content">
+
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="Attempt 3"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/text_size_16"
+                            android:textColor="@color/bokara_grey"
+                            android:text="00:00"
+                            android:id="@+id/attempt3"
+                            android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -139,7 +309,7 @@
                     android:paddingTop="8dp"
                     android:textSize="@dimen/text_size_14"
                     android:textColor="#262524"
-                    android:text="@string/stopwatch"/>
+                    android:text="@string/capture"/>
 
         </LinearLayout>
 
