@@ -21,7 +21,7 @@
             android:padding="16dp">
 
         <EditText
-                android:id="@+id/mobile"
+                android:id="@+id/spring_name"
                 android:layout_width="match_parent"
                 android:singleLine="true"
                 android:layout_height="wrap_content"
@@ -462,6 +462,7 @@
             android:layout_height="45dp"
             android:background="#0D65D9"
             android:text="SUBMIT"
+            android:id="@+id/add_spring_submit"
             android:textSize="18sp"
             android:layout_alignParentBottom="true"
             android:textColor="#FFFFFF"/>

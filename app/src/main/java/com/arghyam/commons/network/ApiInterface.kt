@@ -26,4 +26,7 @@ interface ApiInterface {
     @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel): Call<ResponseModel>
 
+    @POST("api/v1/createSpring")
+    fun createSpring(@Body createSpringRequestModel: RequestModel): Call<ResponseModel>
+
 }
