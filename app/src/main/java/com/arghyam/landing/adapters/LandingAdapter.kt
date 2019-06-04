@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_spring.view.*
 
 class LandingAdapter(val springList: ArrayList<LandingModel>, val context: Context) :
-        RecyclerView.Adapter<LandingAdapter.ViewHolder>() {
+    RecyclerView.Adapter<LandingAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
         return ViewHolder(v)
@@ -32,17 +32,20 @@ class LandingAdapter(val springList: ArrayList<LandingModel>, val context: Conte
         holder.springNameText.text = springs.springName
         holder.villageNameText.text = springs.villageName
         Glide.with(context)
-                .load(springs.springImage)
-                .into(holder.springImage)
-        holder.itemView.setOnClickListener {
+            .load(springs.springImage)
+            .into(holder.springImage)
+        holder.springBody.setOnClickListener(View.OnClickListener {
             context.startActivity(Intent(context, SpringDetailsActivity::class.java))
-        }
+            return@OnClickListener
+        })
+        holder.springItemADD.setOnClickListener(View.OnClickListener {
+            context.startActivity(Intent(context, AddDischargeActivity::class.java))
+            return@OnClickListener
+        })
         holder.favourite.setOnClickListener {
             //                holder.favourite.setBackgroundResource(R.drawable.ic_fav_fill)
         }
-        holder.springItemADD.setOnClickListener {
-            context.startActivity(Intent(context, AddDischargeActivity::class.java))
-        }
+
 
     }
 
@@ -53,6 +56,7 @@ class LandingAdapter(val springList: ArrayList<LandingModel>, val context: Conte
         val springImage: ImageView = view.img_spring
         val favourite: ImageView = view.fav_icon
         val springItemADD: LinearLayout = view.springItemADD
+        val springBody: LinearLayout = view.spring_body
 
     }
 }

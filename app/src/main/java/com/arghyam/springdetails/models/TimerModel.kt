@@ -1,3 +1,5 @@
 package com.arghyam.springdetails.models
 
-data class TimerModel (var seconds: Int)
+import java.io.Serializable
+
+data class TimerModel (var seconds: Int) : Serializable
