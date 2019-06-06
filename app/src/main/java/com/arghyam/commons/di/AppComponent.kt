@@ -1,5 +1,6 @@
 package com.arghyam.commons.di
 
+import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.example.ui.ExampleActivity
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.iam.ui.OtpVerifyActivity
@@ -17,4 +18,7 @@ interface AppComponent {
     fun inject(otpVerifyActivity: OtpVerifyActivity)
 
     fun inject(profileActivity: ProfileActivity)
+
+    fun inject(newSpringActivity: NewSpringActivity)
+
 }
