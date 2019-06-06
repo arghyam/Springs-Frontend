@@ -34,6 +34,8 @@ import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.PendingResult
@@ -123,12 +125,23 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initApiResponseCalls() {
         createSpringViewModel?.getCreateSpringResponse()?.observe(this@NewSpringActivity, Observer {
             Log.e("karthik", it?.response?.responseCode)
+            saveCreateSpringData(it)
         })
 
         createSpringViewModel?.getSpringError()?.observe(this@NewSpringActivity, Observer {
-            Log.e("karthik error", it)
+            Log.e("error", it)
         })
     }
+
+    private fun saveCreateSpringData(responseModel: ResponseModel) {
+        Log.d("saveUserProfileData", "saveUserProfileData")
+        if (responseModel.response.responseCode.equals("200")) {
+            val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
 
     private fun initComponent() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
