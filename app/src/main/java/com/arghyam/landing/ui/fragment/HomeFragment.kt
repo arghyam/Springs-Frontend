@@ -10,6 +10,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
@@ -17,6 +18,7 @@ import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
+import com.arghyam.landing.viewmodel.LandingViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -29,6 +31,8 @@ class HomeFragment : Fragment() {
     private var count: Int = 1
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
+    var landingViewModel: LandingViewModel? = null
+
 
     /**
      * Initialize newInstance for passing paameters
@@ -45,7 +49,14 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setObserver()
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    private fun setObserver() {
+        landingViewModel?.getIsGpsEnabled()?.observe(this, Observer {
+            initApiCall()
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,9 +66,9 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         if (ArghyamUtils().permissionGranted(
-                        context!!,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+                context!!,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
