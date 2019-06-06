@@ -13,15 +13,29 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
+import com.arghyam.addspring.model.RequestSpringDataModel
+import com.arghyam.addspring.model.SpringModel
+import com.arghyam.addspring.repository.CreateSpringRepository
+import com.arghyam.addspring.viewmodel.CreateSpringViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants.CREATE_SPRING_ID
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.PendingResult
@@ -34,9 +48,17 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
+
+    @Inject
+    lateinit var createSpringRepository: CreateSpringRepository
+
+    private var createSpringViewModel: CreateSpringViewModel? = null
+
+    private var imagesList: ArrayList<String> = ArrayList()
 
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -89,10 +111,79 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun init() {
+        initComponent()
         initToolbar()
         initRecyclerView()
         initLocation()
         initLocationClick()
+        initRepository()
+        initCreateSpringSubmit()
+        initApiResponseCalls()
+    }
+
+    private fun initApiResponseCalls() {
+        createSpringViewModel?.getCreateSpringResponse()?.observe(this@NewSpringActivity, Observer {
+            Log.e("karthik", it?.response?.responseCode)
+            saveCreateSpringData(it)
+        })
+
+        createSpringViewModel?.getSpringError()?.observe(this@NewSpringActivity, Observer {
+            Log.e("error", it)
+        })
+    }
+
+    private fun saveCreateSpringData(responseModel: ResponseModel) {
+        Log.d("saveUserProfileData", "saveUserProfileData")
+        if (responseModel.response.responseCode.equals("200")) {
+            val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+
+    private fun initComponent() {
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
+
+    private fun initCreateSpringSubmit() {
+        add_spring_submit.setOnClickListener {
+            if(radioGroup.getCheckedRadioButtonId() == -1){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            } else {
+                createSpringOnClick()
+
+            }
+        }
+    }
+
+
+    private fun createSpringOnClick() {
+        imagesList.add("Image 1")
+        imagesList.add("Image 2")
+        var createSpringObject = RequestModel(
+            id = CREATE_SPRING_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringDataModel(
+                springs = SpringModel(
+
+                    springName = spring_name.text.toString(),
+                    ownership = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
+                    images = imagesList,
+                    latitude = "${mLocation.latitude}",
+                    longitude = "${mLocation.longitude}"
+
+                )
+            )
+        )
+        createSpringViewModel?.createSpringApi(this, createSpringObject)
+
     }
 
     private fun initToolbar() {
@@ -119,9 +210,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         tv_coordinates.visibility = View.VISIBLE
         tv_address.visibility = View.VISIBLE
         address_layout.visibility = View.VISIBLE
-        tv_address.visibility=View.VISIBLE
-        address_layout.visibility=View.VISIBLE
-        tl_cooridinates.visibility=View.VISIBLE
+        tv_address.visibility = View.VISIBLE
+        address_layout.visibility = View.VISIBLE
+        tl_cooridinates.visibility = View.VISIBLE
         location_layout.visibility = View.GONE
     }
 
@@ -226,6 +317,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             }
     }
 
+
     private fun initRecyclerView() {
 
         imageRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -254,6 +346,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         bmp.compress(Bitmap.CompressFormat.JPEG, quality, stream)
         val byteArray = stream.toByteArray()
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+
+    private fun initRepository() {
+        createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
+        createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
     }
 
 }
