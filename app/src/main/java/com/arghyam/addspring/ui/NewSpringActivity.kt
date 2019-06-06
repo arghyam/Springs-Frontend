@@ -117,7 +117,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocation()
         initLocationClick()
         initRepository()
-
         initCreateSpringSubmit()
         initApiResponseCalls()
     }
@@ -149,7 +148,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            createSpringOnClick()
+            if(radioGroup.getCheckedRadioButtonId() == -1){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            } else {
+                createSpringOnClick()
+
+            }
         }
     }
 
