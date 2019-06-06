@@ -81,6 +81,7 @@ class StateFragment : Fragment() {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("state", stateList[position].stateName)
             (activity as SearchInterface).getTitle("" + position, stateList[position].stateName, 1)
+            activity!!.supportFragmentManager.popBackStack()
         }
     }
 
