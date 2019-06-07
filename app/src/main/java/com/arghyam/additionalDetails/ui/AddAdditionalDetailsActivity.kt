@@ -37,14 +37,19 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun selectedMonth(position: Int) {
-        if (selectedMonth.contains(position+1)) {
-            selectedMonth.remove(position+1)
+        if (selectedMonth.contains(position + 1)) {
+            selectedMonth.remove(position + 1)
         } else {
-            selectedMonth.add(position+1)
+            selectedMonth.add(position + 1)
         }
         select_month_count.text = "${selectedMonth.size} selected"
-        Log.d("month",""+select_month_count.text)
+        Log.d("month", "" + select_month_count.text)
     }
 
 
@@ -86,6 +91,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calenderRecyclerview.adapter = recyclerViewAdapter
 
     }
+
     private fun addCalender() {
         calender.add("Jan")
         calender.add("Feb")

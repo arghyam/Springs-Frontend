@@ -100,6 +100,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun initLocationClick() {
         img_GPS.setOnClickListener {
             getGoogleClient()
