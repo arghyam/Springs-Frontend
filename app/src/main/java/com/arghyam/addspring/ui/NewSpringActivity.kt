@@ -2,6 +2,7 @@ package com.arghyam.addspring.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -9,6 +10,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -23,15 +25,20 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
+import com.arghyam.addspring.interfaces.ImageUploadInterface
+import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.model.RequestSpringDataModel
 import com.arghyam.addspring.model.SpringModel
 import com.arghyam.addspring.repository.CreateSpringRepository
+import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.CreateSpringViewModel
+import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.CREATE_SPRING_ID
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
+import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -40,6 +47,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.location.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -47,7 +56,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
@@ -56,9 +70,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
 
+    @Inject
+    lateinit var uploadImageRepository: UploadImageRepository
+
     private var createSpringViewModel: CreateSpringViewModel? = null
 
+    private lateinit var uploadImageViewModel: UploadImageViewModel
+
     private var imagesList: ArrayList<String> = ArrayList()
+    private var photoFile: File? = null
 
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -68,7 +88,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
-    lateinit var locationManager: LocationManager
+    lateinit var imageUploaderAdapter: ImageUploaderAdapter
 
     override fun onStart() {
         super.onStart()
@@ -103,10 +123,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
-        image_upload_layout.setOnClickListener {
-            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(i, 123)
-        }
         init()
     }
 
@@ -117,30 +133,63 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocation()
         initLocationClick()
         initRepository()
+        initUploadImageClick()
         initCreateSpringSubmit()
         initApiResponseCalls()
+        initUploadImageApis()
+    }
+
+    private fun initUploadImageClick() {
+        image_upload_layout.setOnClickListener {
+            var cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (cameraIntent.resolveActivity(packageManager) != null) {
+                try {
+                    photoFile = ArghyamUtils().createImageFile()
+                } catch (ex: IOException) {
+                    Log.i(TAG, "IOException")
+                }
+                if (photoFile != null) {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile))
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
+        }
+    }
+
+    private fun initUploadImageApis() {
+        uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
+            Log.e("stefy", it?.responseCode)
+        })
+        uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
+            Log.e("stefy error", it)
+        })
     }
 
     private fun initApiResponseCalls() {
         createSpringViewModel?.getCreateSpringResponse()?.observe(this@NewSpringActivity, Observer {
-            Log.e("karthik", it?.response?.responseCode)
             saveCreateSpringData(it)
+            if (createSpringViewModel?.getCreateSpringResponse()?.hasObservers()!!) {
+                createSpringViewModel?.getCreateSpringResponse()?.removeObservers(this@NewSpringActivity)
+            }
         })
-
         createSpringViewModel?.getSpringError()?.observe(this@NewSpringActivity, Observer {
             Log.e("error", it)
         })
     }
 
     private fun saveCreateSpringData(responseModel: ResponseModel) {
-        Log.d("saveUserProfileData", "saveUserProfileData")
-        if (responseModel.response.responseCode.equals("200")) {
-            val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        var createSpringResponseObject: CreateSpringResponseObject = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<CreateSpringResponseObject>() {}.type
+        )
+        gotoLandingActivity(createSpringResponseObject)
     }
 
+    private fun gotoLandingActivity(createSpringResponseObject: CreateSpringResponseObject) {
+        val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
     private fun initComponent() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
@@ -148,7 +197,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if(radioGroup.getCheckedRadioButtonId() == -1){
+            if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
             } else {
                 createSpringOnClick()
@@ -311,6 +360,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     mLocation = location
                     latitude.text = ": ${mLocation.latitude}"
                     longitude.text = ": ${mLocation.longitude}"
+                    altitude.text = ": ${mLocation.altitude}"
                     tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
                     tv_reposition.text = "Click on to reposition your gps"
                 }
@@ -319,26 +369,78 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
 
     private fun initRecyclerView() {
-
         imageRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = ImageUploaderAdapter(imageList)
-        imageRecyclerView.adapter = adapter
+        imageUploaderAdapter = ImageUploaderAdapter(this@NewSpringActivity, imageList, imageUploadInterface)
+        imageRecyclerView.adapter = imageUploaderAdapter
+    }
+
+    private val imageUploadInterface = object : ImageUploadInterface {
+        override fun onCancel(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun retry(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onRemove(position: Int) {
+            onImageRemove(position)
+        }
+    }
+
+
+    private fun onImageRemove(position: Int) {
+        imageList.removeAt(position)
+        imageUploaderAdapter.notifyItemRemoved(position)
+        imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            123 -> {
-                var bmp = data!!.extras.get("data") as Bitmap
-                compressBitmap(bmp, 5)
-                imageList.add(ImageEntity(count, bmp, "Image" + String.format("%04d", count) + ".jpg", 0))
-                count++
+            REQUEST_IMAGE_CAPTURE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    extractBitMap()
+                }
+
             }
             PERMISSION_LOCATION_RESULT_CODE,
             PERMISSION_LOCATION_ON_RESULT_CODE -> {
                 getGoogleClient()
             }
         }
+    }
+
+    private fun extractBitMap() {
+        if (photoFile != null) {
+            var bitmap: Bitmap? =
+                ArghyamUtils().getBitmapFromUri(this@NewSpringActivity, Uri.parse(photoFile?.absolutePath))
+            bitmap = compressBitmap(bitmap!!, 20)
+            bitmap.let {
+                initImageUploadApi(it)
+                addBitmapToList(it)
+            }
+        } else {
+            ArghyamUtils().shortToast(
+                this@NewSpringActivity,
+                "Error while selecting the image, Please try again"
+            )
+        }
+    }
+
+    private fun addBitmapToList(bitmap: Bitmap?) {
+        imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
+        imageUploaderAdapter.notifyDataSetChanged()
+        count++
+    }
+
+    private fun initImageUploadApi(bitmap: Bitmap) {
+        var filePath: String? = null
+        filePath = ArghyamUtils().getDataUriForImages(this@NewSpringActivity, bitmap)
+        val file = File(filePath)
+        val mFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val fileToUpload = MultipartBody.Part.createFormData("file", file.name, mFile)
+        uploadImageViewModel.uploadImageApi(this@NewSpringActivity, fileToUpload)
     }
 
     private fun compressBitmap(bmp: Bitmap, quality: Int): Bitmap {
@@ -351,6 +453,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
         createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
+        uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
+        uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
     }
 
 }
+

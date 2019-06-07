@@ -1,12 +1,12 @@
 package com.arghyam.commons.network
 
+import com.arghyam.addspring.model.UploadImageResponseModel
 import com.arghyam.commons.entities.ExampleEntity
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiInterface {
 
@@ -28,5 +28,8 @@ interface ApiInterface {
 
     @POST("api/v1/createSpring")
     fun createSpring(@Body createSpringRequestModel: RequestModel): Call<ResponseModel>
+
+    @PUT("api/v1/user/profilePicture")
+    fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
 }
