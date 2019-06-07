@@ -10,6 +10,8 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.springdetails.models.TimerModel
+import kotlinx.android.synthetic.main.activity_add_discharge.*
+import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
 
 class AddDischargeActivity : AppCompatActivity() {
@@ -25,6 +27,17 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun init() {
         initViewComponents()
         initClicks()
+        initToolbar()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun initClicks() {
