@@ -1,5 +1,6 @@
 package com.arghyam.springdetails.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
-import com.arghyam.commons.utils.Constants
 import com.arghyam.springdetails.adapter.TimerAdapter
 import com.arghyam.springdetails.interfaces.TimerInterface
 import com.arghyam.springdetails.models.TimerModel
@@ -55,13 +55,20 @@ class TimerActivity : AppCompatActivity() {
 
     private fun initTimerDone() {
         timerDone.setOnClickListener {
-            if (!isTimerSetEmpty()) {
-                var intent: Intent = Intent().apply {
-                    putExtra("timerList", timerList)
-                }
-                setResult(Constants.STOP_WATCH_TIMER_RESULT_CODE, intent)
-                finish()
-            }
+            returnIntent()
+        }
+    }
+
+    private fun returnIntent() {
+        var dataIntent: Intent = Intent().apply {
+            putExtra("timerList", timerList)
+        }
+        if (!isTimerSetEmpty()) {
+            setResult(Activity.RESULT_OK, dataIntent)
+            finish()
+        } else {
+            setResult(Activity.RESULT_CANCELED, dataIntent)
+            finish()
         }
     }
 
@@ -156,8 +163,12 @@ class TimerActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        returnIntent()
         return true
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        returnIntent()
+    }
 }
