@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
+    private var goBack: Boolean = false
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
     private var googleApiClient: GoogleApiClient? = null
@@ -69,8 +71,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onConnectionSuspended(p0: Int) {
         Log.i(TAG, "Connection Suspended")
         mGoogleApiClient!!.connect()
-
-
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -101,8 +101,20 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (goBack) {
+            onBackPressed()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back?")
+            startTimer()
+        }
+        goBack = true
         return true
+    }
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
     }
 
     private fun initLocationClick() {
@@ -124,9 +136,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         tv_coordinates.visibility = View.VISIBLE
         tv_address.visibility = View.VISIBLE
         address_layout.visibility = View.VISIBLE
-        tv_address.visibility=View.VISIBLE
-        address_layout.visibility=View.VISIBLE
-        tl_cooridinates.visibility=View.VISIBLE
+        tv_address.visibility = View.VISIBLE
+        address_layout.visibility = View.VISIBLE
+        tl_cooridinates.visibility = View.VISIBLE
         location_layout.visibility = View.GONE
     }
 
