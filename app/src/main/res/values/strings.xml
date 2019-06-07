@@ -85,4 +85,5 @@
     <string name="additional_details">Additional Details</string>
     <string name="view_attempts">View Attempts</string>
     <string name="capture">Capture</string>
+    <string name="back_confirmation">Are you sure you want to go back?</string>
 </resources>

@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -60,6 +61,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private var imagesList: ArrayList<String> = ArrayList()
 
+    private var goBack : Boolean = false;
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
     private var googleApiClient: GoogleApiClient? = null
@@ -189,6 +191,22 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initToolbar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        if (goBack) {
+            onBackPressed()
+        } else {
+            ArghyamUtils().longToast(this, getString(R.string.back_confirmation))
+            startTimer()
+        }
+        goBack = true
+        return true
+    }
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
     }
 
     private fun initLocationClick() {
