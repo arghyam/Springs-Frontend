@@ -84,6 +84,7 @@ class PanchayatFragment : Fragment() {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("panchayat", panchayatList[position].panchayatName)
             (activity as SearchInterface).getTitle("" + position, panchayatList[position].panchayatName, 5)
+            activity!!.supportFragmentManager.popBackStack()
         }
     }
 }

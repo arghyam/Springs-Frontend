@@ -11,7 +11,7 @@
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                     >
+        >
 
 
             <RelativeLayout
@@ -55,7 +55,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#e6e6e6" />
+                    android:background="#e6e6e6"/>
 
             <RelativeLayout
                     android:id="@+id/search_district"
@@ -99,7 +99,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#e6e6e6" />
+                    android:background="#e6e6e6"/>
 
             <RelativeLayout
                     android:id="@+id/search_block"
@@ -142,8 +142,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#e6e6e6" />
-
+                    android:background="#e6e6e6"/>
 
 
             <RadioGroup
@@ -157,15 +156,16 @@
                         android:layout_height="wrap_content"
                         android:padding="16dp">
 
-                <RadioButton
-                        android:id="@+id/radioPublic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:paddingLeft="16dp"
-                        android:textColor="#595958"
-                        android:text="Urban"/>
-
+                    <RadioButton
+                            android:id="@+id/radioPublic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:checked="true"
+                            android:onClick="onRadioButtonClicked"
+                            android:paddingLeft="16dp"
+                            android:textColor="#595958"
+                            android:text="Urban"/>
 
 
                     <TextView
@@ -197,23 +197,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginLeft="65dp"
-                        android:background="#e6e6e6" />
+                        android:background="#e6e6e6"/>
 
 
                 <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                       android:padding="16dp">
+                        android:padding="16dp">
 
-                <RadioButton
-                        android:id="@+id/radioPrivate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:textSize="16sp"
-                        android:textColor="#595958"
-                        android:text="Rural"/>
-
+                    <RadioButton
+                            android:id="@+id/radioPrivate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="16dp"
+                            android:textSize="16sp"
+                            android:textColor="#595958"
+                            android:text="Rural"
+                            android:onClick="onRadioButtonClicked"/>
 
 
                     <TextView
@@ -244,17 +244,13 @@
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="#e6e6e6" />
-
+                        android:background="#e6e6e6"/>
 
 
             </RadioGroup>
 
 
-
-
         </LinearLayout>
-
 
 
     </ScrollView>
@@ -266,7 +262,6 @@
             android:background="#fff"
             android:layout_alignParentBottom="true"
             android:padding="16dp">
-
 
 
         <Button
