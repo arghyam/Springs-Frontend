@@ -1,16 +1,19 @@
 package com.arghyam.springdetails.ui.fragments
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
-import com.arghyam.geographySearch.ui.activity.GeographySearchActivity
 import com.arghyam.springdetails.adapter.ImageAdapter
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -21,6 +24,13 @@ import kotlinx.android.synthetic.main.spring_details.*
  *
  */
 class DetailsFragment : Fragment() {
+
+    val REQUEST_CODE = 3
+    internal var selectedMonthNames: ArrayList<String> = ArrayList()
+    internal lateinit var seasonality: String
+    private var houseHoldNumber: Int = 0
+
+    private var waterUse: ArrayList<String> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
@@ -40,8 +50,45 @@ class DetailsFragment : Fragment() {
     private fun initClick() {
         additional_details_layout.setOnClickListener {
             val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                var bundle = data?.getBundleExtra("DataBundle")
+                if (bundle?.get("SelectedMonths") != null)
+                    selectedMonthNames = bundle?.get("SelectedMonths") as ArrayList<String>
+                waterUse = bundle?.get("WaterUse") as ArrayList<String>
+                seasonality = bundle.get("Seasonality") as String
+                houseHoldNumber = bundle.get("HouseHoldNumbers") as Int
+
+                Log.e("Water use", waterUse.toString())
+                showAdditionalData()
+
+            }
+        }
+    }
+
+    private fun showAdditionalData() {
+        additional_details_layout.visibility = GONE
+        additional_data.visibility = VISIBLE
+        if (seasonality.equals("Perennial")) {
+            tv_seasonality.text = seasonality
+        } else {
+            tv_seasonality.text = "$seasonality $selectedMonthNames"
+        }
+        var usages: StringBuffer = StringBuffer()
+        for (usage in waterUse) {
+            usages.append(usage)
+            if (waterUse.indexOf(usage) != waterUse.size - 1)
+                usages.append(", ")
+        }
+        tv_water_use.text = usages.toString()
+        tv_household_dependency.text = houseHoldNumber.toString()
+
     }
 
     private fun initAddDischargeData() {
