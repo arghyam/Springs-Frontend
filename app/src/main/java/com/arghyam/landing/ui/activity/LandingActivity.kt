@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
@@ -25,6 +27,7 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
+import com.arghyam.profile.viewmodel.ProfileViewModel
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.karumi.dexter.Dexter
@@ -45,7 +48,13 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         setContentView(R.layout.activity_landing)
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        initViewModel()
         showHome()
+
+    }
+
+    private fun initViewModel() {
+        landingViewModel = ViewModelProviders.of(this).get(LandingViewModel::class.java)
     }
 
     private fun showHome() {
@@ -145,15 +154,15 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         super.onActivityResult(requestCode, resultCode, data)
         Log.e("karthik req", "" + requestCode)
         Log.e("karthik", "" + resultCode)
+
         when (requestCode) {
             PERMISSION_LOCATION_RESULT_CODE -> showHome()
             PERMISSION_LOCATION_ON_RESULT_CODE -> {
                 when (resultCode) {
-                    -1 -> {
+                    Constants.GPS_ENABLED -> {
                         landingViewModel?.checkGpsStatus(resultCode)
-//                        showHome()
                     }
-                    0 -> {
+                    Constants.GPS_DISABLED -> {
                         ArghyamUtils().turnOnLocation(this@LandingActivity)
                     }
                 }

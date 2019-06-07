@@ -4,6 +4,7 @@ package com.arghyam.landing.ui.fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -11,13 +12,16 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.landing.viewmodel.LandingViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -31,7 +35,8 @@ class HomeFragment : Fragment() {
     private var count: Int = 1
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
-    var landingViewModel: LandingViewModel? = null
+    private lateinit var landingViewModel: LandingViewModel
+
 
 
     /**
@@ -49,14 +54,21 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        getViewModel()
         setObserver()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    private fun getViewModel() {
+        landingViewModel = ViewModelProviders.of(activity!!).get(LandingViewModel::class.java)
+    }
+
     private fun setObserver() {
-        landingViewModel?.getIsGpsEnabled()?.observe(this, Observer {
+        landingViewModel.getIsGpsEnabled().observe(this, Observer {
+            Log.e("Api","Called")
             initApiCall()
         })
+        Log.e("abc","Called")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
