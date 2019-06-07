@@ -53,6 +53,7 @@
                         android:layout_height="wrap_content"/>
 
                 <EditText
+                        android:inputType="number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
@@ -344,7 +345,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="#0D65D9"
-                android:text="SEARCH"
+                android:text="SUBMIT"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"
                 android:textColor="#FFFFFF"/>
