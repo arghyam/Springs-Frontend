@@ -1,10 +1,12 @@
 package com.arghyam.springdetails.ui.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
@@ -97,6 +99,8 @@ class TimerActivity : AppCompatActivity() {
         startTime = SystemClock.uptimeMillis()
         handler.postDelayed(runnable, 0)
         timerButton.text = resources.getText(R.string.stop)
+        timerButton.background = ContextCompat.getDrawable(this, R.drawable.stop_button)
+        timerButton.setTextColor(Color.parseColor("#0D65D9"))
     }
 
     private fun resetTimer() {
@@ -108,6 +112,9 @@ class TimerActivity : AppCompatActivity() {
         seconds = 0
         minutes = 0
         timer.text = "00:00"
+        timerButton.background = ContextCompat.getDrawable(this, R.drawable.start_button)
+        timerButton.setTextColor(Color.parseColor("#ffffff"))
+
     }
 
     private fun updateCurrentTimer() {
@@ -139,8 +146,21 @@ class TimerActivity : AppCompatActivity() {
 
     private var timerInterface = object : TimerInterface {
         override fun onItemSelected(position: Int) {
-            selectedTimerItem = position
+            if (!isTimerRunning) {
+                selectedTimerItem = position
+                timerAdapter.updateSelectedItem(position)
+            }
+
         }
+
+        override fun onRemoveClicked(position: Int) {
+            if (!isTimerRunning) {
+                timerList[position].seconds = 0
+                timerAdapter.notifyDataSetChanged()
+                updateAverage()
+            }
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

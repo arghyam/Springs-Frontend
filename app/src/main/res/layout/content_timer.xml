@@ -18,23 +18,49 @@
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:background="@color/white"
                 android:paddingBottom="@dimen/margin_80"
                 android:layout_height="wrap_content">
 
             <TextView
                     android:layout_width="match_parent"
                     android:gravity="center"
-                    android:padding="@dimen/padding_54"
+                    android:paddingTop="@dimen/padding_54"
                     android:textSize="@dimen/test_size_60"
                     android:text="00:00"
                     android:id="@+id/timer"
                     android:textColor="@color/white_80"
                     android:background="@color/colorPrimary"
                     android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/padding_54"
+                    android:orientation="horizontal">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/test_size_16"
+                        android:text="MIN"
+                        android:id="@+id/min"
+                        android:textColor="@color/white_80"
+                        android:background="@color/colorPrimary"
+                        android:layout_marginRight="50dp"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:textSize="@dimen/test_size_16"
+                        android:text="SEC"
+                        android:id="@+id/sec"
+                        android:textColor="@color/white_80"
+                        android:background="@color/colorPrimary"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
 
 
             <Button android:layout_width="wrap_content"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@drawable/start_button"
                     android:textColor="@color/white"
                     android:id="@+id/timerButton"
                     android:text="@string/start"
@@ -65,6 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:background="@color/selected"
                     android:layout_margin="@dimen/margin_16"
                     android:padding="@dimen/padding_16"
                     android:orientation="horizontal">
@@ -116,7 +143,7 @@
                 android:id="@+id/timerDone"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="#0D65D9"
+                android:background="@color/blue"
                 android:text="DONE"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"
