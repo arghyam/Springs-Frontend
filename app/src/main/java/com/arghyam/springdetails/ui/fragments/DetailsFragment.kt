@@ -105,6 +105,7 @@ class DetailsFragment : Fragment() {
         images_view_pager.adapter = adapter
     }
 
+
     private fun imageSample(): ArrayList<String> {
         var images: ArrayList<String> = ArrayList()
         images.add("https://picsum.photos/200/300")
