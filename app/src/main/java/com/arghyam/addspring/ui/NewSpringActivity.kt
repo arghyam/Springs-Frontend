@@ -2,11 +2,10 @@ package com.arghyam.addspring.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -24,23 +23,30 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
+import com.arghyam.addspring.interfaces.ImageUploadInterface
+import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.model.RequestSpringDataModel
 import com.arghyam.addspring.model.SpringModel
 import com.arghyam.addspring.repository.CreateSpringRepository
+import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.CreateSpringViewModel
+import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.CREATE_SPRING_ID
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
+import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.ui.activity.LandingActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.PendingResult
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -48,7 +54,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
@@ -57,20 +68,28 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
 
+    @Inject
+    lateinit var uploadImageRepository: UploadImageRepository
+
     private var createSpringViewModel: CreateSpringViewModel? = null
 
+    private lateinit var uploadImageViewModel: UploadImageViewModel
+
     private var imagesList: ArrayList<String> = ArrayList()
+    private var photoFile: File? = null
 
     private var goBack : Boolean = false;
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
     private var googleApiClient: GoogleApiClient? = null
     private var mLocationManager: LocationManager? = null
+    private var isLocationTurnedOn: Boolean = false
+    private var isLocationNotAccepted: Boolean = false
     lateinit var mLocation: Location
     var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
-    lateinit var locationManager: LocationManager
+    lateinit var imageUploaderAdapter: ImageUploaderAdapter
 
     override fun onStart() {
         super.onStart()
@@ -105,10 +124,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
-        image_upload_layout.setOnClickListener {
-            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(i, 123)
-        }
         init()
     }
 
@@ -116,33 +131,62 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initComponent()
         initToolbar()
         initRecyclerView()
+        initDefaultLocation()
         initLocation()
         initLocationClick()
         initRepository()
+        initUploadImageClick()
         initCreateSpringSubmit()
         initApiResponseCalls()
+        initUploadImageApis()
+    }
+
+    private fun initDefaultLocation() {
+        tv_reposition.text = "Click on to reposition your gps"
+        img_GPS.setImageResource(R.drawable.ic_location)
+    }
+
+    private fun initUploadImageClick() {
+        image_upload_layout.setOnClickListener {
+            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    private fun initUploadImageApis() {
+        uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
+            Log.e("stefy", it?.responseCode)
+        })
+        uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
+            Log.e("stefy error", it)
+        })
     }
 
     private fun initApiResponseCalls() {
         createSpringViewModel?.getCreateSpringResponse()?.observe(this@NewSpringActivity, Observer {
-            Log.e("karthik", it?.response?.responseCode)
             saveCreateSpringData(it)
+            if (createSpringViewModel?.getCreateSpringResponse()?.hasObservers()!!) {
+                createSpringViewModel?.getCreateSpringResponse()?.removeObservers(this@NewSpringActivity)
+            }
         })
-
         createSpringViewModel?.getSpringError()?.observe(this@NewSpringActivity, Observer {
             Log.e("error", it)
         })
     }
 
     private fun saveCreateSpringData(responseModel: ResponseModel) {
-        Log.d("saveUserProfileData", "saveUserProfileData")
-        if (responseModel.response.responseCode.equals("200")) {
-            val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        var createSpringResponseObject: CreateSpringResponseObject = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<CreateSpringResponseObject>() {}.type
+        )
+        gotoLandingActivity(createSpringResponseObject)
     }
 
+    private fun gotoLandingActivity(createSpringResponseObject: CreateSpringResponseObject) {
+        val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
     private fun initComponent() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
@@ -150,7 +194,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if(radioGroup.getCheckedRadioButtonId() == -1){
+            if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
             } else {
                 createSpringOnClick()
@@ -175,11 +219,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    springName = spring_name.text.toString(),
-                    ownership = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
-                    images = imagesList,
-                    latitude = "${mLocation.latitude}",
-                    longitude = "${mLocation.longitude}"
+                    tenantId = "",
+                    orgId = "",
+                    latitude = mLocation.latitude,
+                    longitude = mLocation.longitude,
+                    elevation = mLocation.altitude,
+                    accuracy = mLocation.accuracy,
+                    village = "",
+                    ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
+                    images = imagesList
 
                 )
             )
@@ -209,10 +257,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }, 2000)
     }
 
+
     private fun initLocationClick() {
         img_GPS.setOnClickListener {
             getGoogleClient()
-            tv_reposition.text = "fetching information..."
+            tv_reposition.text = "fetching location information..."
+            img_GPS.setImageResource(R.drawable.ic_location_refresh)
+            img_GPS.setBackgroundResource(R.drawable.circle_border)
         }
     }
 
@@ -220,16 +271,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         location_layout.setOnClickListener {
             getGoogleClient()
         }
-
     }
 
     private fun toggleLocation() {
         card_device.visibility = View.VISIBLE
         tv_coordinates.visibility = View.VISIBLE
-        tv_address.visibility = View.VISIBLE
-        address_layout.visibility = View.VISIBLE
-        tv_address.visibility = View.VISIBLE
-        address_layout.visibility = View.VISIBLE
+//        tv_address.visibility = View.VISIBLE
+//        address_layout.visibility = View.VISIBLE
+//        tv_address.visibility = View.VISIBLE
+//        address_layout.visibility = View.VISIBLE
         tl_cooridinates.visibility = View.VISIBLE
         location_layout.visibility = View.GONE
     }
@@ -248,47 +298,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
 
-    private fun turnOnLocation() {
-        if (googleApiClient == null) {
-            googleApiClient = GoogleApiClient.Builder(applicationContext).addApi(LocationServices.API).build()
-            googleApiClient?.connect()
-            var locationRequest: LocationRequest = LocationRequest.create()
-            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            locationRequest.interval = 30 * 1000
-            locationRequest.fastestInterval = 5 * 1000
-            var builder: LocationSettingsRequest.Builder =
-                LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-            builder.setAlwaysShow(true)
-            var result: PendingResult<LocationSettingsResult> =
-                LocationServices.SettingsApi
-                    .checkLocationSettings(googleApiClient, builder.build())
-            result.setResultCallback {
-                when (it.status.statusCode) {
-                    LocationSettingsStatusCodes.SUCCESS -> {
-                        getGoogleClient()
-                    }
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            // Ask to turn on GPS automatically
-                            it.status.startResolutionForResult(
-                                this@NewSpringActivity,
-                                PERMISSION_LOCATION_ON_RESULT_CODE
-                            )
-                        } catch (e: IntentSender.SendIntentException) {
-                            // Ignore the error.
-                        }
-                    }
-                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-
-                    }
-                }
-            }
-        }
-    }
-
-
     private fun getLocation() {
         Dexter.withActivity(this)
             .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -300,7 +309,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             if (ArghyamUtils().isLocationEnabled(this@NewSpringActivity)) {
                 getFusedClient()
             } else {
-                turnOnLocation()
+                ArghyamUtils().turnOnLocation(this@NewSpringActivity)
             }
         }
 
@@ -329,46 +338,147 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     mLocation = location
                     latitude.text = ": ${mLocation.latitude}"
                     longitude.text = ": ${mLocation.longitude}"
+                    altitude.text = ": ${mLocation.altitude} mts"
                     tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
-                    tv_reposition.text = "Click on to reposition your gps"
+
+                    if (mLocation.accuracy < 50) {
+                        tv_reposition.text = "Done"
+                        img_GPS.setImageResource(R.drawable.ic_location_done)
+                        img_GPS.setBackgroundResource(0)
+
+                    } else {
+                        tv_reposition.text = "Click on to reposition your gps"
+                        img_GPS.setImageResource(R.drawable.ic_location)
+                        ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 50mts")
+
+                    }
+
+                } else {
+                    getFusedClient()
                 }
             }
     }
 
 
     private fun initRecyclerView() {
-
         imageRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = ImageUploaderAdapter(imageList)
-        imageRecyclerView.adapter = adapter
+        imageUploaderAdapter = ImageUploaderAdapter(this@NewSpringActivity, imageList, imageUploadInterface)
+        imageRecyclerView.adapter = imageUploaderAdapter
+    }
+
+    private val imageUploadInterface = object : ImageUploadInterface {
+        override fun onCancel(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun retry(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onRemove(position: Int) {
+            onImageRemove(position)
+        }
+    }
+
+
+    private fun onImageRemove(position: Int) {
+        imageList.removeAt(position)
+        imageUploaderAdapter.notifyItemRemoved(position)
+        imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            123 -> {
-                var bmp = data!!.extras.get("data") as Bitmap
-                compressBitmap(bmp, 5)
-                imageList.add(ImageEntity(count, bmp, "Image" + String.format("%04d", count) + ".jpg", 0))
-                count++
+            REQUEST_IMAGE_CAPTURE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    onImageReceive(data)
+                }
             }
-            PERMISSION_LOCATION_RESULT_CODE,
-            PERMISSION_LOCATION_ON_RESULT_CODE -> {
+            PERMISSION_LOCATION_RESULT_CODE -> {
                 getGoogleClient()
+            }
+            PERMISSION_LOCATION_ON_RESULT_CODE -> {
+                when (resultCode) {
+
+                    -1 -> {
+                        isLocationTurnedOn = true
+                    }
+                    0 -> {
+                        isLocationNotAccepted = true
+                    }
+                }
             }
         }
     }
 
-    private fun compressBitmap(bmp: Bitmap, quality: Int): Bitmap {
-        val stream = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        val byteArray = stream.toByteArray()
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    override fun onResume() {
+        super.onResume()
+        isLocationAccepted()
+        isLocationRejected()
     }
+
+    private fun isLocationRejected() {
+        if (isLocationNotAccepted) {
+            ArghyamUtils().turnOnLocation(this@NewSpringActivity)
+            isLocationNotAccepted = false
+        }
+    }
+
+    private fun isLocationAccepted() {
+        if (isLocationTurnedOn) {
+            getFusedClient()
+            isLocationTurnedOn = false
+        }
+    }
+
+    private fun onImageReceive(intent: Intent?) {
+        var bitmap: Bitmap? = intent!!.extras.get("data") as Bitmap
+        addBitmapToList(bitmap)
+        makeUploadApiCall(bitmap)
+    }
+
+    private fun makeUploadApiCall(bitmap: Bitmap?) {
+        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
+        if (null != body) {
+            uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body)
+        }
+    }
+
+    private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
+        var body: MultipartBody.Part? = null
+        try {
+            var filesDir: File = applicationContext.filesDir
+            var file: File = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
+            val bos: ByteArrayOutputStream = ByteArrayOutputStream()
+            var mBitMap: Bitmap = bitmap!!
+            mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+            var bitmapdata = bos.toByteArray()
+            var fos: FileOutputStream = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            body = MultipartBody.Part.createFormData("file", file.name, reqFile)
+        } catch (ex: Exception) {
+
+        }
+        return body
+    }
+
+    private fun addBitmapToList(bitmap: Bitmap?) {
+        imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
+        imageUploaderAdapter.notifyDataSetChanged()
+        count++
+    }
+
 
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
         createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
+        uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
+        uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
     }
 
 }
+
