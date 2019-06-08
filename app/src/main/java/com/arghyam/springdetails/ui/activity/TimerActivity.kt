@@ -37,11 +37,22 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initTimeFetch()
         initItems()
         initToolbar()
         initStartButton()
         initRecyclerView()
         initTimerDone()
+    }
+
+    private fun initTimeFetch() {
+        var intent = intent
+        var args: Bundle = intent.getBundleExtra("Bundle")
+        if (args.getSerializable("ArrayList") != null) {
+            timerList = args.getSerializable("ArrayList") as ArrayList<TimerModel>
+            updateAverage()
+        }
+
     }
 
     private fun initTimerDone() {
@@ -71,7 +82,8 @@ class TimerActivity : AppCompatActivity() {
         timerAdapter = TimerAdapter(timerList, this@TimerActivity, timerInterface)
         attempt_recycler_view.layoutManager = LinearLayoutManager(this@TimerActivity)
         attempt_recycler_view.adapter = timerAdapter
-        initTimerData()
+        if (timerList.size == 0)
+            initTimerData()
     }
 
     private fun initTimerData() {
