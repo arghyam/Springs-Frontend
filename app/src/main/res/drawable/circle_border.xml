@@ -4,9 +4,9 @@
 
         <shape android:shape="oval">
             <solid android:color="#ffffff"/>
-            <stroke android:color="#525252" android:width="0.5dp"/>
+            <stroke android:color="#D8D8D8" android:width="0.5dp"/>
             <!-- Set the same value for both width and height to get a circular shape -->
-            <size android:width="20dp" android:height="20dp"/>
+            <size android:width="16dp" android:height="16dp"/>
         </shape>
     </item>
 </selector>

@@ -104,6 +104,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calender.add("Sep")
         calender.add("Oct")
         calender.add("Nov")
+
         calender.add("Dec")
     }
 }

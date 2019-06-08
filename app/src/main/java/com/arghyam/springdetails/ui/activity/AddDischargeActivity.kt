@@ -1,22 +1,33 @@
 package com.arghyam.springdetails.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.arghyam.ArghyamApplication
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_add_discharge.*
 import kotlinx.android.synthetic.main.activity_spring_details.*
+import com.arghyam.springdetails.repository.DischargeDataRepository
+import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import javax.inject.Inject
 
 class AddDischargeActivity : AppCompatActivity() {
 
     private var timerList: ArrayList<TimerModel> = ArrayList()
+    @Inject
+    lateinit var dischargeDataRepository: DischargeDataRepository
+
+    private var addDischargeDataViewModel: AddDischargeDataViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +36,8 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initApplicationComponent()
+        initRepository()
         initViewComponents()
         initClicks()
         initToolbar()
@@ -38,6 +51,20 @@ class AddDischargeActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+        initApiCalls()
+    }
+
+    private fun initApiCalls() {
+        addDischargeDataViewModel?.getDischargeSuccess()?.observe(this@AddDischargeActivity, Observer {
+
+        })
+        addDischargeDataViewModel?.getDischargeError()?.observe(this@AddDischargeActivity, Observer {
+
+        })
+    }
+
+    private fun initApplicationComponent() {
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
     private fun initClicks() {
@@ -71,10 +98,12 @@ class AddDischargeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             STOP_WATCH_TIMER_RESULT_CODE -> {
-                attempt_details.visibility = View.VISIBLE
-                attempts.visibility = View.GONE
-                timerList = data?.getSerializableExtra("timerList") as ArrayList<TimerModel>
-                initTimerData()
+                if (resultCode == Activity.RESULT_OK) {
+                    attempt_details.visibility = View.VISIBLE
+                    attempts.visibility = View.GONE
+                    timerList = data?.getSerializableExtra("timerList") as ArrayList<TimerModel>
+                    initTimerData()
+                }
             }
         }
     }
@@ -88,5 +117,11 @@ class AddDischargeActivity : AppCompatActivity() {
         attempt2.text = ArghyamUtils().secondsToMinutes(timerList[1].seconds)
         attempt3.text = ArghyamUtils().secondsToMinutes(timerList[2].seconds)
         attempts.visibility = GONE
+    }
+
+
+    private fun initRepository() {
+        addDischargeDataViewModel = ViewModelProviders.of(this).get(AddDischargeDataViewModel::class.java)
+        addDischargeDataViewModel?.setDischargeDataViewModel(dischargeDataRepository)
     }
 }
