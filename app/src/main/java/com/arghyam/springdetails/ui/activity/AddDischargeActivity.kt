@@ -17,6 +17,7 @@ import com.arghyam.springdetails.models.TimerModel
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import java.io.Serializable
 import javax.inject.Inject
 
 class AddDischargeActivity : AppCompatActivity() {
@@ -76,6 +77,9 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initStopWatchButton() {
         stop_watch.setOnClickListener {
             var intent = Intent(this@AddDischargeActivity, TimerActivity::class.java)
+            var args = Bundle()
+            args.putSerializable("ArrayList", timerList as Serializable)
+            intent.putExtra("Bundle", args)
             startActivityForResult(intent, STOP_WATCH_TIMER_RESULT_CODE)
         }
     }
