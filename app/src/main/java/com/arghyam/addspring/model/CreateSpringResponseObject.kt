@@ -1,7 +1,22 @@
 package com.arghyam.addspring.model
 
-class CreateSpringResponseObject(var springCode: String,var springName: String,var organization: ArrayList<String>,
-                                 var uploadedBy: String, var tenantId: String,var village: ArrayList<String>,
-                                 var ownership: String, var usage: ArrayList<String>,var  images: ArrayList<String>,
-                                 var latitude: String,var longitude: String,var elevation: String,
-                                 var crtdDttm: String,var updtDttm: String)
+class CreateSpringResponseObject(
+    var springCode: String,
+    var userId: String,
+    var tenantId: String,
+    var orgId: String,
+    var latitude: Double,
+    var longitude: Double,
+    var elevation: Double,
+    var accuracy: Float,
+    var village: String,
+    var numberOfHouseholds: Int,
+    var ownershipType: String,
+    var usage: String,
+    var images: ArrayList<String>,
+    var extraInformation: ExtraInfo,
+    var createdTimeStamp: String,
+    var updatedTimeStamp: String
+)
+
+class ExtraInfo(var extraInfo: String)
