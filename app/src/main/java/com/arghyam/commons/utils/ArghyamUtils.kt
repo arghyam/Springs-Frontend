@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.location.LocationManager
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -16,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import java.io.File
 
 
 class ArghyamUtils {
@@ -99,4 +101,5 @@ class ArghyamUtils {
         var seconds = timeInSeconds % 60
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
     }
+
 }
