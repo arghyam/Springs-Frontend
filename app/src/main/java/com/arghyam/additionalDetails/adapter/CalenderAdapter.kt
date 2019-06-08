@@ -61,9 +61,6 @@ class CalenderAdapter(
 
             if (!sparseBooleanArray.get(adapterPosition)) {
                 sparseBooleanArray.put(adapterPosition, true)
-
-
-
                 notifyItemChanged(adapterPosition)
             } else
             // if clicked item is already selected
