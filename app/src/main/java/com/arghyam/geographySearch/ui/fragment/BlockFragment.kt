@@ -88,6 +88,7 @@ class BlockFragment : Fragment() {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("block", blockList[position].blockName)
             (activity as SearchInterface).getTitle("" + position, blockList[position].blockName, 3)
+            activity!!.supportFragmentManager.popBackStack()
         }
     }
 

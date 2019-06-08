@@ -32,6 +32,11 @@ class SpringDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun initViewPager() {
         setupViewPager(details_view_pager)
         details_tabs.setupWithViewPager(details_view_pager)

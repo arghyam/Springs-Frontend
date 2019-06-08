@@ -84,6 +84,7 @@ class TownFragment : Fragment() {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("town", townList[position].townName)
             (activity as SearchInterface).getTitle("" + position, townList[position].townName, 4)
+            activity!!.supportFragmentManager.popBackStack()
         }
     }
 

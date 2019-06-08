@@ -1,0 +1,39 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="fab_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="splash_text">37sp</dimen>
+    <dimen name="login_title">30sp</dimen>
+    <dimen name="sign_in">26sp</dimen>
+    <dimen name="browse_as_guest">16sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_64">64dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="design_bottom_navigation_item_max_width" tools:override="true">600dp</dimen>
+    <dimen name="design_bottom_navigation_active_item_max_width" tools:override="true">600dp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_72">72dp</dimen>
+    <dimen name="image_22">22dp</dimen>
+    <dimen name="margin_12">12dp</dimen>
+    <dimen name="image_16">16dp</dimen>
+    <dimen name="image_100">100dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
+    <dimen name="image_200">200dp</dimen>
+    <dimen name="padding_42">42dp</dimen>
+    <dimen name="padding_24">24dp</dimen>
+    <dimen name="padding_54">54dp</dimen>
+    <dimen name="test_size_60">60sp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="image_12">12dp</dimen>
+    <dimen name="margin_44">44dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_80">80dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
+</resources>

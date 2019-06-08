@@ -195,6 +195,11 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun selectedMonth(position: Int) {
         if (selectedMonth.contains(position + 1)) {
             selectedMonth.remove(position + 1)
@@ -202,6 +207,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
             selectedMonth.add(position + 1)
         }
         select_month_count.text = "${selectedMonth.size} selected"
+        Log.d("month", "" + select_month_count.text)
 
         if (selectedMonth.size > 0) {
             var validated: Boolean = validateListener()
@@ -320,6 +326,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calender.add("Sep")
         calender.add("Oct")
         calender.add("Nov")
+
         calender.add("Dec")
     }
 

@@ -50,12 +50,22 @@
                         android:textSize="@dimen/text_size_16"
                         android:textColor="@color/bokara_grey"
                         android:paddingRight="@dimen/padding_16"
+                        android:layout_gravity="center"
                         android:layout_height="wrap_content"/>
 
-                <EditText
-                        android:layout_width="0dp"
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/new_spring_name"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                >
+                    <EditText
+                            android:inputType="number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="In litres"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -344,7 +354,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="#0D65D9"
-                android:text="SEARCH"
+                android:text="SUBMIT"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"
                 android:textColor="#FFFFFF"/>

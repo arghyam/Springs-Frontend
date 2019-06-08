@@ -80,6 +80,7 @@ class DistrictFragment : Fragment() {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("block", districtList[position].districtName)
             (activity as SearchInterface).getTitle("" + position, districtList[position].districtName, 2)
+            activity!!.supportFragmentManager.popBackStack()
         }
     }
 
