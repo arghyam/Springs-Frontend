@@ -30,6 +30,7 @@ interface ApiInterface {
     fun createSpring(@Body createSpringRequestModel: RequestModel): Call<ResponseModel>
 
     @PUT("api/v1/user/profilePicture")
+    @Multipart
     fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
 }
