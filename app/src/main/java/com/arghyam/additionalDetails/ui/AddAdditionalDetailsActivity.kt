@@ -72,7 +72,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                 submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
             }
         }
-
     }
 
     private fun initCheckBoxListeners() {
@@ -91,7 +90,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
             } else {
                 submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
             }
-
         }
     }
 
@@ -129,7 +127,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                 submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
             }
         }
-
     }
 
     private fun othersListener() {
@@ -233,7 +230,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                     resources.getDrawable(R.drawable.ic_collapse_up),
                     null
                 )
-
             } else {
                 calenderRecyclerview.visibility = GONE
                 select_month_count.visibility = GONE
@@ -243,7 +239,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                     resources.getDrawable(R.drawable.ic_collapse_down),
                     null
                 )
-
             }
             initRadioButtonListeners()
 

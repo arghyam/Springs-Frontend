@@ -74,6 +74,7 @@ class DetailsFragment : Fragment() {
 
     private fun showAdditionalData() {
         additional_details_layout.visibility = GONE
+        details_view.visibility= GONE
         additional_data.visibility = VISIBLE
         if (seasonality.equals("Perennial")) {
             tv_seasonality.text = seasonality

@@ -161,7 +161,9 @@
 
             <View android:layout_height="2dp"
                   android:background="@color/gainsboro"
-                  android:layout_width="match_parent"/>
+                  android:layout_width="match_parent"
+                  android:id="@+id/details_view"
+            />
             <LinearLayout
                     android:id="@+id/additional_details_layout"
                     android:layout_width="match_parent"
