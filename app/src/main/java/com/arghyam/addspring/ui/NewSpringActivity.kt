@@ -6,10 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -60,10 +58,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.IOException
-import java.util.*
+import java.io.FileOutputStream
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
@@ -150,18 +146,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageClick() {
         image_upload_layout.setOnClickListener {
-            var cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (cameraIntent.resolveActivity(packageManager) != null) {
-                try {
-                    photoFile = ArghyamUtils().createImageFile()
-                } catch (ex: IOException) {
-                    Log.i(TAG, "IOException")
-                }
-                if (photoFile != null) {
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile))
-                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
-                }
-            }
+            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE)
         }
     }
 
@@ -231,8 +217,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    tenantId="",
-                    orgId="",
+                    tenantId = "",
+                    orgId = "",
                     latitude = mLocation.latitude,
                     longitude = mLocation.longitude,
                     elevation = mLocation.altitude,
@@ -254,13 +240,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
 
-
     private fun initLocationClick() {
         img_GPS.setOnClickListener {
             getGoogleClient()
             tv_reposition.text = "fetching location information..."
             img_GPS.setImageResource(R.drawable.ic_location_refresh)
-            img_GPS.setBackgroundResource(R.drawable.circle_border);
+            img_GPS.setBackgroundResource(R.drawable.circle_border)
         }
     }
 
@@ -339,9 +324,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
 
                     if (mLocation.accuracy < 50) {
-                            tv_reposition.text = "Done"
-                            img_GPS.setImageResource(R.drawable.ic_location_done)
-                            img_GPS.setBackgroundResource(0);
+                        tv_reposition.text = "Done"
+                        img_GPS.setImageResource(R.drawable.ic_location_done)
+                        img_GPS.setBackgroundResource(0)
 
                     } else {
                         tv_reposition.text = "Click on to reposition your gps"
@@ -389,7 +374,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    extractBitMap()
+                    onImageReceive(data)
                 }
             }
             PERMISSION_LOCATION_RESULT_CODE -> {
@@ -429,22 +414,38 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
+    private fun onImageReceive(intent: Intent?) {
+        var bitmap: Bitmap? = intent!!.extras.get("data") as Bitmap
+        addBitmapToList(bitmap)
+        makeUploadApiCall(bitmap)
+    }
 
-    private fun extractBitMap() {
-        if (photoFile != null) {
-            var bitmap: Bitmap? =
-                ArghyamUtils().getBitmapFromUri(this@NewSpringActivity, Uri.parse(photoFile?.absolutePath))
-            bitmap = compressBitmap(bitmap!!, 20)
-            bitmap.let {
-                initImageUploadApi(it)
-                addBitmapToList(it)
-            }
-        } else {
-            ArghyamUtils().shortToast(
-                this@NewSpringActivity,
-                "Error while selecting the image, Please try again"
-            )
+    private fun makeUploadApiCall(bitmap: Bitmap?) {
+        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
+        if (null != body) {
+            uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body)
         }
+    }
+
+    private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
+        var body: MultipartBody.Part? = null
+        try {
+            var filesDir: File = applicationContext.filesDir
+            var file: File = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
+            val bos: ByteArrayOutputStream = ByteArrayOutputStream()
+            var mBitMap: Bitmap = bitmap!!
+            mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+            var bitmapdata = bos.toByteArray()
+            var fos: FileOutputStream = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            body = MultipartBody.Part.createFormData("file", file.name, reqFile)
+        } catch (ex: Exception) {
+
+        }
+        return body
     }
 
     private fun addBitmapToList(bitmap: Bitmap?) {
@@ -453,21 +454,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         count++
     }
 
-    private fun initImageUploadApi(bitmap: Bitmap) {
-        var filePath: String? = null
-        filePath = ArghyamUtils().getDataUriForImages(this@NewSpringActivity, bitmap)
-        val file = File(filePath)
-        val mFile = RequestBody.create(MediaType.parse("image/*"), file)
-        val fileToUpload = MultipartBody.Part.createFormData("file", file.name, mFile)
-        uploadImageViewModel.uploadImageApi(this@NewSpringActivity, fileToUpload)
-    }
-
-    private fun compressBitmap(bmp: Bitmap, quality: Int): Bitmap {
-        val stream = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.JPEG, quality, stream)
-        val byteArray = stream.toByteArray()
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
 
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)

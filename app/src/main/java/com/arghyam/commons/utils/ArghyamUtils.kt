@@ -4,12 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
@@ -21,9 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import java.io.*
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.File
 
 
 class ArghyamUtils {
@@ -106,63 +100,6 @@ class ArghyamUtils {
         var minutes = timeInSeconds / 60
         var seconds = timeInSeconds % 60
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
-    }
-
-    fun getDataUriForImages(context: Context, bitmap: Bitmap): String {
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
-        var cursor: Cursor? = null
-        try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.contentResolver.query(Uri.parse(path), proj, null, null, null)
-            val columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            return cursor.getString(columnIndex)
-        } finally {
-            cursor?.close()
-        }
-    }
-
-    fun getBitmapFromUri(context: Context, uri: Uri?): Bitmap? {
-        var bmp: Bitmap? = null
-        var `is`: InputStream? = null
-        if (uri != null) {
-            try {
-                `is` = context.contentResolver.openInputStream(uri)
-                bmp = BitmapFactory.decodeStream(`is`)
-            } catch (e: FileNotFoundException) {
-                Log.e("getBitFileNotFound ", e.toString())
-            } finally {
-                try {
-                    `is`!!.close()
-                } catch (e: IOException) {
-                    Log.e("getBitmapFromUri: ", e.toString())
-                }
-
-            }
-        }
-
-        return bmp
-    }
-
-    fun createImageFile(): File? {
-        var image: File? = null
-        try {
-            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-            val imageFileName = "JPEG_" + timeStamp + "_"
-            val storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            )
-            image = File.createTempFile(
-                imageFileName, // prefix
-                ".jpg", // suffix
-                storageDir      // directory
-            )
-        } catch (exception: IOException) {
-            image = null
-        }
-        return image
     }
 
 }
