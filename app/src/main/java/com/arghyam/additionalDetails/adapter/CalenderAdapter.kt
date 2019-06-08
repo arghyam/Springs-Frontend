@@ -2,6 +2,7 @@ package com.arghyam.additionalDetails.adapter
 
 
 import android.content.Context
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,6 @@ class CalenderAdapter(
 
     init {
         sparseBooleanArray = SparseBooleanArray()
-
         selectedItemCount = 0
     }
 
@@ -74,6 +74,12 @@ class CalenderAdapter(
     }
 
 
+    fun clear(){
+        for (i in 0..12){
+            sparseBooleanArray.put(i, false)
+            notifyDataSetChanged()
+        }
+    }
     interface OnRecyclerViewItemClickListener {
         fun selectedMonth(position: Int)
 

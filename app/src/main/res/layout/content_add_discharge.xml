@@ -12,6 +12,7 @@
 
     <LinearLayout android:layout_width="match_parent"
                   android:orientation="vertical"
+                  android:background="@color/white"
                   android:layout_height="match_parent">
 
         <TextView
@@ -19,9 +20,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_14"
                 android:padding="@dimen/padding_16"
+                android:background="@color/snow"
                 android:text="Add discharge data for Gaurikund"
-                android:textColor="@color/bokara_grey"
-        />
+                android:textColor="@color/bokara_grey"/>
 
         <View
                 android:layout_width="match_parent"
@@ -58,7 +59,8 @@
                         android:id="@+id/new_spring_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                >
+                        android:inputType="number"
+                        android:layout_weight="1">
                     <EditText
                             android:inputType="number"
                             android:layout_width="match_parent"
@@ -167,6 +169,7 @@
                     android:id="@+id/view_attempts"
                     android:paddingLeft="@dimen/padding_24"
                     android:paddingTop="@dimen/padding_20"
+                    android:paddingBottom="@dimen/padding_20"
                     android:gravity="center_vertical"
                     android:layout_height="wrap_content">
 
@@ -177,6 +180,7 @@
                         android:layout_height="wrap_content"/>
 
                 <ImageView
+                        android:id="@+id/view_attempts_arrow"
                         android:layout_width="9dp"
                         android:layout_marginLeft="@dimen/margin_12"
                         android:tint="@color/colorPrimary"

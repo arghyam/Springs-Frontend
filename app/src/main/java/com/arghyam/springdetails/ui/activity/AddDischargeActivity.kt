@@ -77,8 +77,10 @@ class AddDischargeActivity : AppCompatActivity() {
         view_attempts.setOnClickListener {
             if (attempts.visibility == VISIBLE) {
                 attempts.visibility = GONE
+                view_attempts_arrow.rotation = 0F
             } else {
                 attempts.visibility = VISIBLE
+                view_attempts_arrow.rotation = 180F
             }
         }
     }

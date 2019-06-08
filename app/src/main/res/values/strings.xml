@@ -85,14 +85,12 @@
     <string name="additional_details">Additional Details</string>
     <string name="view_attempts">View Attempts</string>
     <string name="capture">Capture</string>
-<<<<<<< HEAD
+    <string name="zero_time">00:00</string>
     <string name="add_discharge">Add Discharge Data</string>
-=======
     <string name="complete_details">Please Complete the details</string>
     <string name="select_months">Select seasonality months</string>
     <string name="select_season">Select the appropriate seasonality of the spring</string>
     <string name="select_spring">Select atleast one spring usage</string>
     <string name="enter_household">Enter the household number the spring supports</string>
     <string name="back_confirmation">Are you sure you want to go back?</string>
->>>>>>> 8f8af79f07c57f19739e0f8202c822d33a364317
 </resources>

@@ -44,6 +44,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         init()
     }
 
+
     private fun init() {
         initViews()
         initToolbar()
@@ -206,6 +207,12 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         } else {
             selectedMonth.add(position + 1)
         }
+        if(selectedMonth.size>=12){
+            (calenderRecyclerview.adapter as CalenderAdapter).clear()
+            selectedMonth.clear()
+            radioButton_pernnial.isChecked = true
+            radioButton_seasonal1.isChecked = false
+        }
         select_month_count.text = "${selectedMonth.size} selected"
         Log.d("month", "" + select_month_count.text)
 
@@ -306,7 +313,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
     private fun initRecyclerview() {
 
-        var recyclerViewAdapter = CalenderAdapter(calender, this@AddAdditionalDetailsActivity, this)
+        val recyclerViewAdapter = CalenderAdapter(calender, this@AddAdditionalDetailsActivity, this)
         val linearLayoutManager = GridLayoutManager(this, 4)
         calenderRecyclerview.layoutManager = linearLayoutManager
         calenderRecyclerview.setHasFixedSize(true)

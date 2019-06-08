@@ -33,26 +33,25 @@ class TimerAdapter(private var items: ArrayList<TimerModel>, val context: Contex
 
     override fun onBindViewHolder(holder: TimerViewHolder, position: Int) {
         if (selectedItem == position) {
-            initSelectedItem(holder)
+            initSelectedItem(holder, position)
         } else {
             initDefaultItem(holder)
         }
         holder.itemView.setOnClickListener {
             timerInterface.onItemSelected(position)
-            selectedItem = position
-            notifyDataSetChanged()
         }
         holder.counter.text = "${position + 1}"
         holder.attemptCounter.text = "Attempt ${position + 1}"
         holder.itemTimer.text = ArghyamUtils().secondsToMinutes(items[position].seconds)
     }
 
-    private fun initSelectedItem(holder: TimerViewHolder) {
+    private fun initSelectedItem(holder: TimerViewHolder, position: Int) {
         holder.timerDelete.visibility = View.VISIBLE
         holder.timerDelete.background = context.resources.getDrawable(R.drawable.ic_close)
         holder.timerDelete.setOnClickListener {
-
+            timerInterface.onRemoveClicked(position)
         }
+        holder.itemView.setBackgroundColor(context.resources.getColor(R.color.selected))
         holder.counter.background = context.resources.getDrawable(R.drawable.timer_active)
         holder.counter.setTextColor(context.resources.getColor(R.color.colorPrimary))
         holder.attemptCounter.setTextColor(context.resources.getColor(R.color.bokara_grey))
@@ -61,6 +60,7 @@ class TimerAdapter(private var items: ArrayList<TimerModel>, val context: Contex
 
     private fun initDefaultItem(holder: TimerViewHolder) {
         holder.timerDelete.visibility = View.INVISIBLE
+        holder.itemView.setBackgroundColor(context.resources.getColor(R.color.white))
         holder.counter.background = context.resources.getDrawable(R.drawable.timer_inactive)
         holder.counter.setTextColor(context.resources.getColor(R.color.jumbo))
         holder.attemptCounter.setTextColor(context.resources.getColor(R.color.jumbo))
