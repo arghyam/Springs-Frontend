@@ -32,6 +32,8 @@ import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.CreateSpringViewModel
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.CAMERA_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.CREATE_SPRING_ID
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
@@ -146,14 +148,14 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageClick() {
         image_upload_layout.setOnClickListener {
-            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(i, REQUEST_IMAGE_CAPTURE)
+            openCamera()
         }
     }
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("stefy", it?.responseCode)
+            Log.e("stefy", it?.response!!.imageUrl)
+            imagesList.add(it.response.imageUrl)
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -203,8 +205,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
 
     private fun createSpringOnClick() {
-        imagesList.add("Image 1")
-        imagesList.add("Image 2")
         var createSpringObject = RequestModel(
             id = CREATE_SPRING_ID,
             ver = BuildConfig.VER,
@@ -217,13 +217,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    tenantId = "",
-                    orgId = "",
+                    tenantId = Constants.TENANTID,
+                    orgId = Constants.ORGID,
                     latitude = mLocation.latitude,
                     longitude = mLocation.longitude,
                     elevation = mLocation.altitude,
                     accuracy = mLocation.accuracy,
-                    village = "",
+                    village = Constants.VILLAGE,
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList
 
@@ -306,6 +306,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             .withListener(permissionListener).check()
     }
 
+
     private val permissionListener = object : PermissionListener {
         override fun onPermissionGranted(response: PermissionGrantedResponse) {
             if (ArghyamUtils().isLocationEnabled(this@NewSpringActivity)) {
@@ -318,6 +319,30 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         override fun onPermissionDenied(response: PermissionDeniedResponse) {
             if (response.isPermanentlyDenied) {
                 ArghyamUtils().longToast(this@NewSpringActivity, LOCATION_PERMISSION_NOT_GRANTED)
+                ArghyamUtils().openSettings(this@NewSpringActivity)
+            }
+        }
+
+        override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {
+            token.continuePermissionRequest()
+        }
+    }
+
+    private fun openCamera() {
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(cameraPermissionListener).check()
+    }
+
+    private val cameraPermissionListener = object : PermissionListener {
+        override fun onPermissionGranted(response: PermissionGrantedResponse) {
+            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(i, REQUEST_IMAGE_CAPTURE)
+        }
+
+        override fun onPermissionDenied(response: PermissionDeniedResponse) {
+            if (response.isPermanentlyDenied) {
+                ArghyamUtils().longToast(this@NewSpringActivity, CAMERA_PERMISSION_NOT_GRANTED)
                 ArghyamUtils().openSettings(this@NewSpringActivity)
             }
         }
