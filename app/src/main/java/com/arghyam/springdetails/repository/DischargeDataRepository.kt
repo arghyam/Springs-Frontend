@@ -21,7 +21,7 @@ class DischargeDataRepository @Inject constructor() {
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val loginCall = RestClient.getWebServiceData()?.userLogin(requestModel)
+        val loginCall = RestClient.getWebServiceData()?.uploadDischargeData(requestModel)
         loginCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
