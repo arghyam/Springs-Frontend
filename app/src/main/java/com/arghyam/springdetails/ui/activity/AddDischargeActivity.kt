@@ -6,6 +6,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
@@ -40,7 +42,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import kotlinx.android.synthetic.main.list_image_uploader.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -83,9 +87,64 @@ class AddDischargeActivity : AppCompatActivity() {
         initRepository()
         initViewComponents()
         initClicks()
+        initListeners()
         initToolbar()
         initRecyclerView()
         initUploadImageApis()
+    }
+
+    private fun validateData(): Boolean {
+        return (!volumeOfContainer.text.toString().trim().equals("") && imageList.size != 0 && timerList.size != 0)
+    }
+
+    private fun updateSubmitColor() {
+        if (validateData()) {
+            submit_discharge_data.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        } else {
+            submit_discharge_data.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+        }
+    }
+
+    private fun initListeners() {
+        initEditTextListener()
+        initStopWatchListener()
+        updateSubmitColor()
+
+    }
+
+    private fun initImageCloseListener() {
+        if (imageList.size != 0) {
+            close.setOnClickListener {
+                updateSubmitColor()
+            }
+        }
+    }
+
+    private fun initStopWatchListener() {
+        updateSubmitColor()
+    }
+
+
+    private fun initEditTextListener() {
+        volumeOfContainer.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                updateSubmitColor()
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                updateSubmitColor()
+            }
+        })
     }
 
     private fun initToolbar() {
@@ -127,6 +186,8 @@ class AddDischargeActivity : AppCompatActivity() {
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
+        updateSubmitColor()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -220,6 +281,7 @@ class AddDischargeActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK) {
                     onImageReceive(data)
                 }
+                updateSubmitColor()
             }
 
             STOP_WATCH_TIMER_RESULT_CODE -> {
@@ -229,6 +291,7 @@ class AddDischargeActivity : AppCompatActivity() {
                     timerList = data?.getSerializableExtra("timerList") as ArrayList<TimerModel>
                     initTimerData()
                 }
+                updateSubmitColor()
             }
         }
     }
@@ -296,22 +359,39 @@ class AddDischargeActivity : AppCompatActivity() {
 
         submit_discharge_data.setOnClickListener {
             assignDischargeData()
-            if (volOfContainer != null) {
+            if (volOfContainer != null && validateData()) {
                 addDischargeDataOnClick()
                 ArghyamUtils().longToast(this@AddDischargeActivity, "success")
-            }
-            else
-                ArghyamUtils().longToast(this@AddDischargeActivity,"Please enter valid volume of container")
+            } else
+                showToast()
 
+        }
+    }
+
+    private fun showToast() {
+        if (volumeOfContainer.text.toString().equals("")) {
+            ArghyamUtils().longToast(this, "Add The volume of the container")
+            return
+        }
+        if (timerList.size == 0) {
+            ArghyamUtils().longToast(this, "Add the discharge time")
+            return
+        }
+        if (imageList.size == 0) {
+            ArghyamUtils().longToast(this, "Add atleast one image of the discharge")
+            return
         }
     }
 
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
-        volOfContainer = containerString.toFloat()
-        dischargeTime.add(timerList[0].seconds)
-        dischargeTime.add(timerList[1].seconds)
-        dischargeTime.add(timerList[2].seconds)
+        if (!containerString.equals(""))
+            volOfContainer = containerString.toFloat()
+        if (timerList.size != 0) {
+            dischargeTime.add(timerList[0].seconds)
+            dischargeTime.add(timerList[1].seconds)
+            dischargeTime.add(timerList[2].seconds)
+        }
     }
 
     private fun addDischargeDataOnClick() {
