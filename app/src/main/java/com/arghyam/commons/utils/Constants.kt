@@ -20,6 +20,7 @@ object Constants {
     var IS_NEW_USER: String = "isNewUser"
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.create-spring"
+    var CREATE_DISCHARGE_DATA = "forWater.user.createDischargeData"
     var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
     var GPS_ENABLED = -1
     var GPS_DISABLED = 0

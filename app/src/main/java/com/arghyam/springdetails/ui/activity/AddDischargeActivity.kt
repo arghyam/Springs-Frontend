@@ -7,12 +7,18 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isEmpty
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.springdetails.models.DischargeDataModal
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_add_discharge.*
 import kotlinx.android.synthetic.main.activity_spring_details.*
@@ -71,6 +77,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initClicks() {
         initStopWatchButton()
         initViewAttempts()
+        initCreateSpringSubmit()
     }
 
     private fun initViewAttempts() {
@@ -130,4 +137,27 @@ class AddDischargeActivity : AppCompatActivity() {
         addDischargeDataViewModel = ViewModelProviders.of(this).get(AddDischargeDataViewModel::class.java)
         addDischargeDataViewModel?.setDischargeDataViewModel(dischargeDataRepository)
     }
+
+    private fun initCreateSpringSubmit() {
+        submit_discharge_data.setOnClickListener {
+//            addDischargeDataOnClick()
+            ArghyamUtils().longToast(this@AddDischargeActivity, "success")
+        }
+    }
+
+//    private fun addDischargeDataOnClick() {
+//        var createSpringObject = RequestModel(
+//            id = CREATE_DISCHARGE_DATA,
+//            ver = BuildConfig.VER,
+//            ets = BuildConfig.ETS,
+//            params = Params(
+//                did = "",
+//                key = "",
+//                msgid = ""
+//            ),
+//            request = DischargeDataModal(
+//            )
+//        )
+//        addDischargeDataViewModel?.addDischargeApi(this, createSpringObject)    }
+
 }
