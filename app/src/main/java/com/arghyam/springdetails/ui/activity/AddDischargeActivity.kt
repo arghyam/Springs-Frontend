@@ -300,9 +300,6 @@ class AddDischargeActivity : AppCompatActivity() {
                 addDischargeDataOnClick()
                 ArghyamUtils().longToast(this@AddDischargeActivity, "success")
             }
-            else
-                ArghyamUtils().longToast(this@AddDischargeActivity,"Please enter valid volume of container")
-
         }
     }
 
@@ -330,7 +327,7 @@ class AddDischargeActivity : AppCompatActivity() {
                     dischargeTime = dischargeTime,
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,
-                    status = "",
+                    status = "created",
                     images = imagesList
                 )
             )
