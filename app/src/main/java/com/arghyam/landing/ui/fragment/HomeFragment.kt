@@ -19,10 +19,13 @@ import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
 import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.landing.viewmodel.LandingViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -36,7 +39,6 @@ class HomeFragment : Fragment() {
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
-
 
 
     /**
@@ -65,10 +67,10 @@ class HomeFragment : Fragment() {
 
     private fun setObserver() {
         landingViewModel.getIsGpsEnabled().observe(this, Observer {
-            Log.e("Api","Called")
+            Log.e("Api", "Called")
             initApiCall()
         })
-        Log.e("abc","Called")
+        Log.e("abc", "Called")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -110,8 +112,7 @@ class HomeFragment : Fragment() {
 
     private fun initFab() {
         floatingActionButton.setOnClickListener {
-            var intent = Intent(activity, NewSpringActivity::class.java)
-            startActivity(intent)
+                activity?.startActivity(Intent(activity, NewSpringActivity::class.java))
         }
     }
 

@@ -9,14 +9,18 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
+import com.arghyam.iam.ui.LoginActivity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
 
@@ -101,5 +105,6 @@ class ArghyamUtils {
         var seconds = timeInSeconds % 60
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
     }
+
 
 }

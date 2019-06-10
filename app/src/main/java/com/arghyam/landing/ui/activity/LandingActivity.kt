@@ -21,6 +21,7 @@ import com.arghyam.commons.utils.Constants.TAG_HOME
 import com.arghyam.commons.utils.Constants.TAG_MORE
 import com.arghyam.commons.utils.Constants.TAG_MY_ACTIVITY
 import com.arghyam.commons.utils.Constants.TAG_SEARCH
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.landing.interfaces.PermissionInterface
 import com.arghyam.landing.ui.fragment.ErrorFragment
 import com.arghyam.landing.ui.fragment.HomeFragment
@@ -86,9 +87,11 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_my_activty -> {
-                    CURRENT_TAG = TAG_MY_ACTIVITY
-                    val fragment = MyActivityFragment.newInstance()
-                    addFragment(fragment)
+                    if (SharedPreferenceFactory(this@LandingActivity).getString(Constants.ACCESS_TOKEN) != "") {
+                        CURRENT_TAG = TAG_MY_ACTIVITY
+                        val fragment = MyActivityFragment.newInstance()
+                        addFragment(fragment)
+                    }
                     return true
                 }
                 R.id.navigation_more -> {
