@@ -204,6 +204,7 @@ class AddDischargeActivity : AppCompatActivity() {
         }
         goBack = true
         return true
+        initApiCalls()
     }
 
     private fun startTimer() {

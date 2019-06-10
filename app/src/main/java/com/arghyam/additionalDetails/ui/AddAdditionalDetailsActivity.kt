@@ -3,6 +3,7 @@ package com.arghyam.additionalDetails.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -47,6 +48,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var checkBoxLivestock: CheckBox
     private lateinit var checkBoxOthers: CheckBox
     private lateinit var houseHoldNumber: EditText
+    private var goBack: Boolean = false
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
 
@@ -237,9 +239,22 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (goBack) {
+            onBackPressed()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
         return true
     }
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
+    }
+
 
     override fun selectedMonth(position: Int) {
         if (selectedMonth.contains(position + 1)) {
