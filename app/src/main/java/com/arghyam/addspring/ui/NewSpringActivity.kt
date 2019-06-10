@@ -55,6 +55,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_new_spring.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -65,7 +66,7 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+    GoogleApiClient.OnConnectionFailedListener{
 
     private var goBack: Boolean = false
     @Inject
@@ -87,7 +88,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var mLocationManager: LocationManager? = null
     private var isLocationTurnedOn: Boolean = false
     private var isLocationNotAccepted: Boolean = false
-    lateinit var mLocation: Location
+
+    private var mLocation: Location?= null
     var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
@@ -136,9 +138,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocationClick()
         initRepository()
         initUploadImageClick()
-        initCreateSpringSubmit()
         initApiResponseCalls()
         initUploadImageApis()
+        initCreateSpringSubmit()
+
     }
 
     private fun initDefaultLocation() {
@@ -194,10 +197,20 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
+
             if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
-            } else {
+            } else if(imageList.size <= 0) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
+
+            }else if(mLocation== null){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
+
+            }else {
                 createSpringOnClick()
+                add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
+
 
             }
         }
@@ -219,10 +232,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
                     tenantId = Constants.TENANTID,
                     orgId = Constants.ORGID,
-                    latitude = mLocation.latitude,
-                    longitude = mLocation.longitude,
-                    elevation = mLocation.altitude,
-                    accuracy = mLocation.accuracy,
+                    latitude = mLocation!!.latitude,
+                    longitude = mLocation!!.longitude,
+                    elevation = mLocation!!.altitude,
+                    accuracy = mLocation!!.accuracy,
                     village = Constants.VILLAGE,
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList
@@ -274,10 +287,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun toggleLocation() {
         card_device.visibility = View.VISIBLE
         tv_coordinates.visibility = View.VISIBLE
-        tv_address.visibility = View.VISIBLE
-        address_layout.visibility = View.VISIBLE
-        tv_address.visibility = View.VISIBLE
-        address_layout.visibility = View.VISIBLE
 //        tv_address.visibility = View.VISIBLE
 //        address_layout.visibility = View.VISIBLE
 //        tv_address.visibility = View.VISIBLE
@@ -363,12 +372,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     toggleLocation()
                     // Logic to handle location object
                     mLocation = location
-                    latitude.text = ": ${mLocation.latitude}"
-                    longitude.text = ": ${mLocation.longitude}"
-                    altitude.text = ": ${mLocation.altitude} mts"
-                    tv_accuracy.text = "Device accuracy  : ${mLocation.accuracy}mts"
+                    latitude.text = ": ${mLocation!!.latitude}"
+                    longitude.text = ": ${mLocation!!.longitude}"
+                    altitude.text = ": ${mLocation!!.altitude} mts"
+                    tv_accuracy.text = "Device accuracy  : ${mLocation!!.accuracy}mts"
 
-                    if (mLocation.accuracy < 50) {
+                    if (mLocation!!.accuracy < 50) {
                         tv_reposition.text = "Done"
                         img_GPS.setImageResource(R.drawable.ic_location_done)
                         img_GPS.setBackgroundResource(0)
