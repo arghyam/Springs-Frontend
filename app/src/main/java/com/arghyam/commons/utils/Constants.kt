@@ -11,6 +11,8 @@ object Constants {
     var TAG_MORE = "More"
     var APPLICATION_PREFERENCE="ArghyamPref"
     var LOCATION_PERMISSION_NOT_GRANTED = "Please grant permissions to see nearby springs"
+    var CAMERA_PERMISSION_NOT_GRANTED = "Please grant permissions for taking photo"
+
     var PERMISSION_LOCATION_RESULT_CODE : Int = 1217
     var PERMISSION_LOCATION_ON_RESULT_CODE : Int = 1112
     var VERIFY_OTP_ID : String = "forWater.user.verifyOtp"
@@ -20,6 +22,10 @@ object Constants {
     var IS_NEW_USER: String = "isNewUser"
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.create-spring"
+    var TENANTID = "tenant098"
+    var ORGID = "organization@13"
+    var VILLAGE = "village123"
+    var CREATE_DISCHARGE_DATA = "forWater.user.createDischargeData"
     var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
     var GPS_ENABLED = -1
     var GPS_DISABLED = 0

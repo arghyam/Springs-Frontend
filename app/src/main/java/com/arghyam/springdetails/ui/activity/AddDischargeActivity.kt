@@ -1,30 +1,72 @@
 package com.arghyam.springdetails.ui.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
+import com.arghyam.addspring.adapters.ImageUploaderAdapter
+import com.arghyam.addspring.entities.ImageEntity
+import com.arghyam.addspring.interfaces.ImageUploadInterface
+import com.arghyam.addspring.repository.UploadImageRepository
+import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.springdetails.models.DischargeDataModel
+import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_add_discharge.*
-import kotlinx.android.synthetic.main.activity_spring_details.*
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.Serializable
 import javax.inject.Inject
 
 class AddDischargeActivity : AppCompatActivity() {
 
     private var timerList: ArrayList<TimerModel> = ArrayList()
+
+    var imageList = ArrayList<ImageEntity>()
+    lateinit var imageUploaderAdapter: ImageUploaderAdapter
+    var count: Int = 1
+    private lateinit var uploadImageViewModel: UploadImageViewModel
+
+    @Inject
+    lateinit var uploadImageRepository: UploadImageRepository
+    private var dischargeTime: ArrayList<Int> = ArrayList()
+    private var imagesList: ArrayList<String> = ArrayList()
+    private lateinit var containerString: String
+    private var volOfContainer: Float? = null
+    private var litresPerSec: ArrayList<Float> = ArrayList()
+
     @Inject
     lateinit var dischargeDataRepository: DischargeDataRepository
 
@@ -42,11 +84,49 @@ class AddDischargeActivity : AppCompatActivity() {
         initViewComponents()
         initClicks()
         initToolbar()
+        initRecyclerView()
+        initUploadImageApis()
     }
 
     private fun initToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initUploadImageApis() {
+        uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
+            Log.e("stefy", it?.response!!.imageUrl)
+            imagesList.add(it.response.imageUrl)
+        })
+        uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
+            Log.e("stefy error", it)
+        })
+    }
+
+    private fun initRecyclerView() {
+        imageDischargeRecyclerView.layoutManager = LinearLayoutManager(this)
+        imageUploaderAdapter = ImageUploaderAdapter(this@AddDischargeActivity, imageList, imageUploadInterface)
+        imageDischargeRecyclerView.adapter = imageUploaderAdapter
+    }
+
+    private val imageUploadInterface = object : ImageUploadInterface {
+        override fun onCancel(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun retry(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onRemove(position: Int) {
+            onImageRemove(position)
+        }
+    }
+
+    private fun onImageRemove(position: Int) {
+        imageList.removeAt(position)
+        imageUploaderAdapter.notifyItemRemoved(position)
+        imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -71,6 +151,39 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initClicks() {
         initStopWatchButton()
         initViewAttempts()
+        initCreateSpringSubmit()
+        initUploadImageClick()
+
+    }
+
+    private fun initUploadImageClick() {
+        image_capture.setOnClickListener {
+            openCamera()
+        }
+    }
+
+    private fun openCamera() {
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(cameraPermissionListener).check()
+    }
+
+    private val cameraPermissionListener = object : PermissionListener {
+        override fun onPermissionGranted(response: PermissionGrantedResponse) {
+            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(i, Constants.REQUEST_IMAGE_CAPTURE)
+        }
+
+        override fun onPermissionDenied(response: PermissionDeniedResponse) {
+            if (response.isPermanentlyDenied) {
+                ArghyamUtils().longToast(this@AddDischargeActivity, Constants.CAMERA_PERMISSION_NOT_GRANTED)
+                ArghyamUtils().openSettings(this@AddDischargeActivity)
+            }
+        }
+
+        override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {
+            token.continuePermissionRequest()
+        }
     }
 
     private fun initViewAttempts() {
@@ -103,6 +216,12 @@ class AddDischargeActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            Constants.REQUEST_IMAGE_CAPTURE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    onImageReceive(data)
+                }
+            }
+
             STOP_WATCH_TIMER_RESULT_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     attempt_details.visibility = View.VISIBLE
@@ -112,6 +231,46 @@ class AddDischargeActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun onImageReceive(intent: Intent?) {
+        var bitmap: Bitmap? = intent!!.extras.get("data") as Bitmap
+        addBitmapToList(bitmap)
+        makeUploadApiCall(bitmap)
+    }
+
+    private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
+        var body: MultipartBody.Part? = null
+        try {
+            var filesDir: File = applicationContext.filesDir
+            var file: File = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
+            val bos: ByteArrayOutputStream = ByteArrayOutputStream()
+            var mBitMap: Bitmap = bitmap!!
+            mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+            var bitmapdata = bos.toByteArray()
+            var fos: FileOutputStream = FileOutputStream(file)
+            fos.write(bitmapdata)
+            fos.flush()
+            fos.close()
+            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            body = MultipartBody.Part.createFormData("file", file.name, reqFile)
+        } catch (ex: Exception) {
+
+        }
+        return body
+    }
+
+    private fun makeUploadApiCall(bitmap: Bitmap?) {
+        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
+        if (null != body) {
+            uploadImageViewModel.uploadImageApi(this@AddDischargeActivity, body)
+        }
+    }
+
+    private fun addBitmapToList(bitmap: Bitmap?) {
+        imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
+        imageUploaderAdapter.notifyDataSetChanged()
+        count++
     }
 
     private fun initTimerData() {
@@ -129,5 +288,53 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initRepository() {
         addDischargeDataViewModel = ViewModelProviders.of(this).get(AddDischargeDataViewModel::class.java)
         addDischargeDataViewModel?.setDischargeDataViewModel(dischargeDataRepository)
+        uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
+        uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+    }
+
+    private fun initCreateSpringSubmit() {
+
+        submit_discharge_data.setOnClickListener {
+            assignDischargeData()
+            if (volOfContainer != null) {
+                addDischargeDataOnClick()
+                ArghyamUtils().longToast(this@AddDischargeActivity, "success")
+            }
+            else
+                ArghyamUtils().longToast(this@AddDischargeActivity,"Please enter valid volume of container")
+
+        }
+    }
+
+    private fun assignDischargeData() {
+        containerString = volumeOfContainer.text.toString()
+        volOfContainer = containerString.toFloat()
+        dischargeTime.add(timerList[0].seconds)
+        dischargeTime.add(timerList[1].seconds)
+        dischargeTime.add(timerList[2].seconds)
+    }
+
+    private fun addDischargeDataOnClick() {
+        var createSpringObject = RequestModel(
+            id = CREATE_DISCHARGE_DATA,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = DischargeDataModel(
+                dischargeData = DischargeModel(
+                    springCode = "",
+                    dischargeTime = dischargeTime,
+                    volumeOfContainer = volOfContainer,
+                    litresPerSecond = litresPerSec,
+                    status = "",
+                    images = imagesList
+                )
+            )
+        )
+        addDischargeDataViewModel?.addDischargeApi(this, createSpringObject)
     }
 }

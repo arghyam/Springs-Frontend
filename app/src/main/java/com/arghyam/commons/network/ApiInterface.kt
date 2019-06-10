@@ -36,4 +36,6 @@ interface ApiInterface {
     @POST(" api/v1/createAdditionalInfo")
     fun uploadAdditionalData(@Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
 
+    @POST("/api/v1/createDischargeData")
+    fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 }
