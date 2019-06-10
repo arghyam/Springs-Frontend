@@ -68,9 +68,9 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         addCalender()
         initRecyclerview()
         initRepository()
+        observeData()
         initClick()
         initListener()
-        observeData()
 
     }
 
@@ -373,12 +373,10 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calender.add("Sep")
         calender.add("Oct")
         calender.add("Nov")
-
         calender.add("Dec")
     }
 
     private fun saveData() {
-//        var additionalDetails = AdditionalDetailsModel()
         var houseNumber: Int = Integer.parseInt(houseHoldNumber.text.toString())
         getSelectedCheckboxes()
         selectedMonthNames.clear()
@@ -389,12 +387,6 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         args.putInt("HouseHoldNumbers", houseNumber)
         args.putCharSequence("Seasonality", seasonality)
         args.putStringArrayList("WaterUse", waterUse)
-
-//        additionalDetails.houseHold = houseNumber.toString()
-//        additionalDetails.seasonality = seasonality
-//        additionalDetails.selectedMonths = selectedMonth
-//        additionalDetails.waterUseList = waterUse
-//        additionalDetails.springCode = "Spring5678"
 
 
         var mRequestData = RequestModel(
@@ -419,9 +411,8 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
         Log.e("Request", mRequestData.toString())
         makeApiCall(mRequestData)
-
-
     }
+
 
     private fun getSeasonality() {
         if (perennialRadio.isChecked) {
