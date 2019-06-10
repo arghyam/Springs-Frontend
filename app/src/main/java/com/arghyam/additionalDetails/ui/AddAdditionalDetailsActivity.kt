@@ -12,12 +12,22 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.additionalDetails.adapter.CalenderAdapter
+import com.arghyam.additionalDetails.model.AdditionalDetailsModel
+import com.arghyam.additionalDetails.model.RequestAdditionalDetailsDataModel
+import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
+import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
 import kotlinx.android.synthetic.main.content_add_additional_details.*
-import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecyclerViewItemClickListener {
@@ -25,6 +35,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     internal var selectedMonth: ArrayList<Int> = ArrayList()
     internal var selectedMonthNames: ArrayList<String> = ArrayList()
     internal var seasonality: String = ""
+    var args = Bundle()
 
     private var waterUse: ArrayList<String> = ArrayList()
 
@@ -37,6 +48,11 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var checkBoxOthers: CheckBox
     private lateinit var houseHoldNumber: EditText
 
+    private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
+
+    @Inject
+    lateinit var mAdditionalDataRepository: AdditionalDetailsRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +62,36 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
 
     private fun init() {
+        initComponent()
         initViews()
         initToolbar()
         addCalender()
         initRecyclerview()
+        initRepository()
         initClick()
         initListener()
+        observeData()
+
+    }
+
+    private fun observeData() {
+        mAdditionalDetailsViewModel.getAdditionalDataSuccess().observe(this, androidx.lifecycle.Observer {
+            Log.d("AddAdditionalDetails", "data added")
+            var dataIntent: Intent = Intent().apply {
+                putExtra("DataBundle", args)
+            }
+            setResult(Activity.RESULT_OK, dataIntent)
+            finish()
+        })
+
+        mAdditionalDetailsViewModel.getAdditionalDataError().observe(this, androidx.lifecycle.Observer {
+            Log.d("AddAdditionalDetails", "Api Error")
+        })
+    }
+
+    private fun initRepository() {
+        mAdditionalDetailsViewModel = ViewModelProviders.of(this).get(AddAdditionalDetailsViewModel::class.java)
+        mAdditionalDetailsViewModel.setAdditionalDataRepository(mAdditionalDataRepository)
     }
 
     private fun initListener() {
@@ -207,7 +247,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         } else {
             selectedMonth.add(position + 1)
         }
-        if(selectedMonth.size>=12){
+        if (selectedMonth.size >= 12) {
             (calenderRecyclerview.adapter as CalenderAdapter).clear()
             selectedMonth.clear()
             radioButton_pernnial.isChecked = true
@@ -338,7 +378,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     }
 
     private fun saveData() {
-        var args = Bundle()
+//        var additionalDetails = AdditionalDetailsModel()
         var houseNumber: Int = Integer.parseInt(houseHoldNumber.text.toString())
         getSelectedCheckboxes()
         selectedMonthNames.clear()
@@ -349,11 +389,36 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         args.putInt("HouseHoldNumbers", houseNumber)
         args.putCharSequence("Seasonality", seasonality)
         args.putStringArrayList("WaterUse", waterUse)
-        var dataIntent: Intent = Intent().apply {
-            putExtra("DataBundle", args)
-        }
-        setResult(Activity.RESULT_OK, dataIntent)
-        finish()
+
+//        additionalDetails.houseHold = houseNumber.toString()
+//        additionalDetails.seasonality = seasonality
+//        additionalDetails.selectedMonths = selectedMonth
+//        additionalDetails.waterUseList = waterUse
+//        additionalDetails.springCode = "Spring5678"
+
+
+        var mRequestData = RequestModel(
+            id = Constants.ADDITIONAL_DATA_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestAdditionalDetailsDataModel(
+                additionalInfo = AdditionalDetailsModel(
+                    springCode = "Spring5678",
+                    seasonality = seasonality,
+                    waterUseList = waterUse,
+                    months = selectedMonth,
+                    household = houseNumber.toString()
+                )
+            )
+        )
+
+        Log.e("Request", mRequestData.toString())
+        makeApiCall(mRequestData)
 
 
     }
@@ -467,5 +532,16 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         return checkBoxOthers.isChecked || checkBoxLivestock.isChecked || checkBoxIndustrial.isChecked ||
                 checkBoxIrrigation.isChecked || checkBoxDomestic.isChecked
     }
+
+
+    private fun makeApiCall(mRequestData: RequestModel) {
+        mAdditionalDetailsViewModel.addAdditionalDetailsApi(this, mRequestData)
+
+    }
+
+    private fun initComponent() {
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
+
 }
 

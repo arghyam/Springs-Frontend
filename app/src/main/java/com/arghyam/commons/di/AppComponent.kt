@@ -1,5 +1,6 @@
 package com.arghyam.commons.di
 
+import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.example.ui.ExampleActivity
 import com.arghyam.iam.ui.LoginActivity
@@ -23,5 +24,7 @@ interface AppComponent {
     fun inject(addDischargeActivity: AddDischargeActivity)
 
     fun inject(newSpringActivity: NewSpringActivity)
+
+    fun inject(addAdditionalDetailsActivity: AddAdditionalDetailsActivity)
 
 }

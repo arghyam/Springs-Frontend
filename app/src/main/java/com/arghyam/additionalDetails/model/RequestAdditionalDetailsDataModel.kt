@@ -1,0 +1,3 @@
+package com.arghyam.additionalDetails.model
+
+class RequestAdditionalDetailsDataModel(var additionalInfo : AdditionalDetailsModel)
