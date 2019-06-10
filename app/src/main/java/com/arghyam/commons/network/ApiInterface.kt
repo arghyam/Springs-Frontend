@@ -33,4 +33,7 @@ interface ApiInterface {
     @Multipart
     fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
+    @POST(" api/v1/createAdditionalInfo")
+    fun uploadAdditionalData(@Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
+
 }
