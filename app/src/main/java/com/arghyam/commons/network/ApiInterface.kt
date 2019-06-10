@@ -33,4 +33,6 @@ interface ApiInterface {
     @Multipart
     fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
+    @POST("/api/v1/createDischargeData")
+    fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 }

@@ -25,6 +25,7 @@ object Constants {
     var TENANTID = "tenant098"
     var ORGID = "organization@13"
     var VILLAGE = "village123"
+    var CREATE_DISCHARGE_DATA = "forWater.user.createDischargeData"
     var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
     var GPS_ENABLED = -1
     var GPS_DISABLED = 0

@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
@@ -22,11 +23,15 @@ import com.arghyam.addspring.interfaces.ImageUploadInterface
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.springdetails.models.DischargeDataModel
+import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_add_discharge.*
-import kotlinx.android.synthetic.main.activity_spring_details.*
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
 import com.karumi.dexter.Dexter
@@ -36,7 +41,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_add_discharge.*
-import kotlinx.android.synthetic.main.content_new_spring.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -57,8 +61,11 @@ class AddDischargeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
-
+    private var dischargeTime: ArrayList<Int> = ArrayList()
     private var imagesList: ArrayList<String> = ArrayList()
+    private lateinit var containerString: String
+    private var volOfContainer: Float? = null
+    private var litresPerSec: ArrayList<Float> = ArrayList()
 
     @Inject
     lateinit var dischargeDataRepository: DischargeDataRepository
@@ -144,6 +151,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initClicks() {
         initStopWatchButton()
         initViewAttempts()
+        initCreateSpringSubmit()
         initUploadImageClick()
 
     }
@@ -282,5 +290,51 @@ class AddDischargeActivity : AppCompatActivity() {
         addDischargeDataViewModel?.setDischargeDataViewModel(dischargeDataRepository)
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+    }
+
+    private fun initCreateSpringSubmit() {
+
+        submit_discharge_data.setOnClickListener {
+            assignDischargeData()
+            if (volOfContainer != null) {
+                addDischargeDataOnClick()
+                ArghyamUtils().longToast(this@AddDischargeActivity, "success")
+            }
+            else
+                ArghyamUtils().longToast(this@AddDischargeActivity,"Please enter valid volume of container")
+
+        }
+    }
+
+    private fun assignDischargeData() {
+        containerString = volumeOfContainer.text.toString()
+        volOfContainer = containerString.toFloat()
+        dischargeTime.add(timerList[0].seconds)
+        dischargeTime.add(timerList[1].seconds)
+        dischargeTime.add(timerList[2].seconds)
+    }
+
+    private fun addDischargeDataOnClick() {
+        var createSpringObject = RequestModel(
+            id = CREATE_DISCHARGE_DATA,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = DischargeDataModel(
+                dischargeData = DischargeModel(
+                    springCode = "",
+                    dischargeTime = dischargeTime,
+                    volumeOfContainer = volOfContainer,
+                    litresPerSecond = litresPerSec,
+                    status = "",
+                    images = imagesList
+                )
+            )
+        )
+        addDischargeDataViewModel?.addDischargeApi(this, createSpringObject)
     }
 }
