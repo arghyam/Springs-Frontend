@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -58,9 +59,12 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private var timerList: ArrayList<TimerModel> = ArrayList()
 
+    private var imageCount: Int = 0
     var imageList = ArrayList<ImageEntity>()
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
     var count: Int = 1
+    private var goBack: Boolean = false
+
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     @Inject
@@ -94,7 +98,9 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun validateData(): Boolean {
-        return (!volumeOfContainer.text.toString().trim().equals("") && imageList.size != 0 && timerList.size != 0)
+        return ((!volumeOfContainer.text.toString().trim().equals("") && !volumeOfContainer.text.toString().trim().equals(
+            "0"
+        )) && imageList.size != 0 && timerList.size != 0)
     }
 
     private fun updateSubmitColor() {
@@ -110,14 +116,6 @@ class AddDischargeActivity : AppCompatActivity() {
         initStopWatchListener()
         updateSubmitColor()
 
-    }
-
-    private fun initImageCloseListener() {
-        if (imageList.size != 0) {
-            close.setOnClickListener {
-                updateSubmitColor()
-            }
-        }
     }
 
     private fun initStopWatchListener() {
@@ -187,14 +185,33 @@ class AddDischargeActivity : AppCompatActivity() {
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
         updateSubmitColor()
+        imageCount--
 
     }
 
+    //    override fun onSupportNavigateUp(): Boolean {
+//
+//        onBackPressed()
+//        return true
+//        initApiCalls()
+//    }
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (goBack) {
+            onBackPressed()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
         return true
-        initApiCalls()
     }
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
+    }
+
 
     private fun initApiCalls() {
         addDischargeDataViewModel?.getDischargeSuccess()?.observe(this@AddDischargeActivity, Observer {
@@ -219,7 +236,11 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageClick() {
         image_capture.setOnClickListener {
-            openCamera()
+            if (imageCount < 2)
+                openCamera()
+            else {
+                ArghyamUtils().shortToast(this, "You can capture maximum of two photographs")
+            }
         }
     }
 
@@ -280,6 +301,7 @@ class AddDischargeActivity : AppCompatActivity() {
             Constants.REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onImageReceive(data)
+                    imageCount++
                 }
                 updateSubmitColor()
             }
