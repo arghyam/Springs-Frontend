@@ -21,10 +21,8 @@ import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
-import android.content.Context.MODE_PRIVATE
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.iam.ui.LoginActivity
-import com.google.android.material.snackbar.Snackbar
 
 
 /**

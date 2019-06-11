@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
 import android.provider.MediaStore
@@ -22,10 +23,15 @@ import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import androidx.core.content.ContextCompat.startActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.FrameLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.core.content.ContextCompat.startActivity
-
-
+import com.androidadvance.topsnackbar.TSnackbar
+import com.arghyam.R
 
 
 class ArghyamUtils {
@@ -110,11 +116,14 @@ class ArghyamUtils {
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
     }
 
-    fun makeSnackbar(view: View, message:String,action:String,activity: Context?,activityname:Class<*>){
-        view?.let { it1 ->
-            Snackbar.make(it1, message, Snackbar.LENGTH_LONG)
-                .setAction(action) {
-                    activity?.startActivity(Intent(activity, activityname))}.show()
+    fun makeSnackbar(view: View, message: String, action: String, activity: Context?, activityname: Class<*>) {
+        view.let { it1 ->
+            val snack: TSnackbar = TSnackbar.make(it1, message, TSnackbar.LENGTH_LONG)
+            val v:View = snack.view
+            val textView:TextView = v.findViewById(R.id.snackbar_text)
+            textView.setTextColor(Color.WHITE)
+            snack.setAction(action) { activity?.startActivity(Intent(activity, activityname)) }
+            snack.show()
 
         }
     }
