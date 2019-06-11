@@ -11,13 +11,32 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
+import com.arghyam.addspring.repository.UploadImageRepository
+import com.arghyam.addspring.viewmodel.UploadImageViewModel
+import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import com.arghyam.springdetails.adapter.ImageAdapter
+import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
+import com.arghyam.springdetails.models.SpringDetailsModel
+import com.arghyam.springdetails.models.SpringDetailsResponseObject
+import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -30,7 +49,23 @@ class DetailsFragment : Fragment() {
     internal lateinit var seasonality: String
     private var houseHoldNumber: Int = 0
 
+    var responseList = ArrayList<Any>()
+
+
+    @Inject
+    lateinit var springDetailsRepository: SpringDetailsRepository
+
+    private var springDetailsViewModel: SpringDetailsViewModel? = null
+
+
+
+    @Inject
+    lateinit var uploadImageRepository: UploadImageRepository
+
     private var waterUse: ArrayList<String> = ArrayList()
+
+    private lateinit var uploadImageViewModel: UploadImageViewModel
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
@@ -42,9 +77,70 @@ class DetailsFragment : Fragment() {
     }
 
     private fun init() {
+        initComponent()
+
         initClick()
         initImageAdapter()
         initAddDischargeData()
+        initRepository()
+        initSpringDetailsResponse()
+        initSpringDetails()
+    }
+
+    private fun initComponent() {
+        (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
+
+    private fun initSpringDetailsResponse() {
+        springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
+
+            Log.e("stefy", it.response.responseCode)
+
+            responseList.add(it.response.responseObject)
+
+            Log.e("stefy", responseList.toString())
+            Log.e("stefy", responseList[0].toString())
+
+//            saveSpringDetailsData(it)
+            if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
+                springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
+            }
+
+//            imagesList.add(it.response.imageUrl)
+        })
+        springDetailsViewModel?.getSpringError()?.observe(this, Observer {
+            Log.e("stefy error", it)
+        })
+    }
+
+    private fun saveSpringDetailsData(responseModel: ResponseModel) {
+        var springDetailsResponseObject: SpringDetailsResponseObject = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<SpringDetailsResponseObject>() {}.type
+        )
+        Log.e("stefy5", springDetailsResponseObject.toString())
+    }
+
+    private fun initSpringDetails() {
+        var springDetailObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringDetailsDataModel(
+                springs = SpringDetailsModel(
+                    springCode = "8H7RjK"
+
+
+                )
+            )
+        )
+        springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
+
     }
 
     private fun initClick() {
@@ -74,7 +170,7 @@ class DetailsFragment : Fragment() {
 
     private fun showAdditionalData() {
         additional_details_layout.visibility = GONE
-        details_view.visibility= GONE
+        details_view.visibility = GONE
         additional_data.visibility = VISIBLE
         if (seasonality.equals("Perennial")) {
             tv_seasonality.text = seasonality
@@ -130,5 +226,14 @@ class DetailsFragment : Fragment() {
 
         }
     }
+
+    private fun initRepository() {
+        springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
+        springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
+
+        uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
+        uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+    }
+
 
 }
