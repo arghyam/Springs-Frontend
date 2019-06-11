@@ -66,9 +66,11 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener{
+    GoogleApiClient.OnConnectionFailedListener {
 
     private var goBack: Boolean = false
+    private var imageCount: Int = 0
+
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
 
@@ -89,7 +91,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var isLocationTurnedOn: Boolean = false
     private var isLocationNotAccepted: Boolean = false
 
-    private var mLocation: Location?= null
+    private var mLocation: Location? = null
     var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
@@ -151,7 +153,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageClick() {
         image_upload_layout.setOnClickListener {
-            openCamera()
+            if (imageCount < 2)
+                openCamera()
+            else {
+                ArghyamUtils().shortToast(this, "You can capture maximum of two photographs")
+            }
         }
     }
 
@@ -200,13 +206,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
-            } else if(imageList.size <= 0) {
+            } else if (imageList.size <= 0) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
 
-            }else if(mLocation== null){
+            } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
-            }else {
+            } else {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
@@ -256,7 +262,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         if (goBack) {
             onBackPressed()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back?")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
             startTimer()
         }
         goBack = true
@@ -413,6 +419,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
         override fun onRemove(position: Int) {
             onImageRemove(position)
+            imageCount--
         }
     }
 
@@ -429,6 +436,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onImageReceive(data)
+                    imageCount++
                 }
             }
             PERMISSION_LOCATION_RESULT_CODE -> {
