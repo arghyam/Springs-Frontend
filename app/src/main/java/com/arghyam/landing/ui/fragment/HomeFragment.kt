@@ -15,24 +15,41 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.adapters.LandingAdapter
+import com.arghyam.landing.model.AllSpringModel
+import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.model.LandingModel
+import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class HomeFragment : Fragment() {
+
+    @Inject
+    lateinit var getAllSpringRepository: GetAllSpringRepository
+
+    private var getAllSpringViewModel: GetAllSpringViewModel? = null
+
 
     private var springsList = ArrayList<LandingModel>()
     private var count: Int = 1
@@ -79,6 +96,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
+        initComponent()
         if (ArghyamUtils().permissionGranted(
                 context!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -86,6 +104,7 @@ class HomeFragment : Fragment() {
         ) {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
+                initRepository()
                 initApiCall()
             } else {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
@@ -95,19 +114,64 @@ class HomeFragment : Fragment() {
             }
         }
         initFab()
+//        initComponent()
     }
 
+    private fun initComponent() {
+        (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
 
     private fun initApiCall() {
         if (itemsAvailable) {
             errorItems?.visibility = GONE
             springsLocation?.visibility = VISIBLE
+            initGetAllSpring()
+            getAllSpringRequest()
             pagination()
         } else {
             errorItems.visibility = VISIBLE
             errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
             springsLocation.visibility = GONE
         }
+    }
+
+    private fun initGetAllSpring() {
+        getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
+            saveGetAllSpringsData(it)
+            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
+                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
+            }
+        })
+        getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
+            Log.e("error", it)
+        })
+    }
+
+    private fun saveGetAllSpringsData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode.equals("200")) {
+//            allSpring = responseModel.response.responseObject.
+            Log.d("stefysuccess", responseModel.response.responseCode)
+        }
+    }
+
+
+    private fun getAllSpringRequest() {
+        var getAllSpringObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = GetAllSpringsModel(
+                springs = AllSpringModel(
+                    type = "springs"
+                )
+            )
+        )
+        getAllSpringViewModel?.getAllSpringApi(context!!, getAllSpringObject)
     }
 
     private fun initFab() {
@@ -162,6 +226,11 @@ class HomeFragment : Fragment() {
             }
         }
         adapter.notifyDataSetChanged()
+    }
+
+    private fun initRepository() {
+        getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java!!)
+        getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
     }
 
 }

@@ -43,6 +43,7 @@ import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -84,6 +85,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var imagesList: ArrayList<String> = ArrayList()
     private var photoFile: File? = null
 
+    val REQUEST_CODE = 4
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
     private var googleApiClient: GoogleApiClient? = null
@@ -188,11 +190,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<CreateSpringResponseObject>() {}.type
         )
-        gotoLandingActivity(createSpringResponseObject)
+//        gotoLandingActivity(createSpringResponseObject)
+        gotoSpringDetailsActivty(createSpringResponseObject)
     }
 
-    private fun gotoLandingActivity(createSpringResponseObject: CreateSpringResponseObject) {
-        val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+
+    private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
+        val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -452,6 +456,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                         isLocationNotAccepted = true
                     }
                 }
+            }
+            REQUEST_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    var bundle = data?.getBundleExtra("DataBundle")
+                    Log.d("bundleSpring",bundle.toString())
+                }
+
             }
         }
     }

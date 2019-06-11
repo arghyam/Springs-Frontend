@@ -38,4 +38,11 @@ interface ApiInterface {
 
     @POST("/api/v1/createDischargeData")
     fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
+
+    @GET("/api/v1/getAllSprings")
+    fun getAllSprings(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/springs/{springCode}")
+    fun springDetails(@Body springDetailsRequetModel: RequestModel): Call<ResponseModel>
+
 }

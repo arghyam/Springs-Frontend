@@ -22,6 +22,7 @@ object Constants {
     var IS_NEW_USER: String = "isNewUser"
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.create-spring"
+    var GET_ALL_SPRINGS_ID = "open-saber.registry.search"
     var TENANTID = "tenant098"
     var ORGID = "organization@13"
     var VILLAGE = "village123"
