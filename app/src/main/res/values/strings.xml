@@ -93,4 +93,5 @@
     <string name="select_spring">Select atleast one spring usage</string>
     <string name="enter_household">Enter the household number the spring supports</string>
     <string name="back_confirmation">Are you sure you want to go back?</string>
+    <string name="title_favourites">Favourites</string>
 </resources>

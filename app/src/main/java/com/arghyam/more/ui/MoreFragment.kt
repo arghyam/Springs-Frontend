@@ -1,6 +1,7 @@
 package com.arghyam.more.ui
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,9 +11,13 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 
 import com.arghyam.R
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.myactivity.ui.MyActivityFragment
 import com.bumptech.glide.Glide.init
 import kotlinx.android.synthetic.main.content_more.*
+import kotlinx.android.synthetic.main.content_more.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -38,7 +43,7 @@ class MoreFragment : Fragment() {
     }
 
     private fun init() {
-       initClick()
+        initClick()
     }
 
     private fun initClick() {
@@ -51,11 +56,21 @@ class MoreFragment : Fragment() {
             rl_edit_name.visibility = VISIBLE
             edit_name_layout.visibility = GONE
         }
+
+        sign_in_button.setOnClickListener {
+            startActivity(Intent(activity!!, LoginActivity::class.java))
+            activity!!.finish()
+        }
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var rootView = inflater!!.inflate(R.layout.fragment_more, container, false)
+        if (SharedPreferenceFactory(activity!!).getString(Constants.ACCESS_TOKEN) == "") {
+            rootView.user_details.visibility = GONE
+            rootView.sign_out.visibility = GONE
+            rootView.sign_in_for_guest.visibility = VISIBLE
+        }
         return rootView
     }
 

@@ -104,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
         sendOtpButton.setOnClickListener(getOtpOnClickListener())
         guestBrowse.setOnClickListener {
             startActivity(Intent(this@LoginActivity, LandingActivity::class.java))
+            finish()
         }
     }
 
