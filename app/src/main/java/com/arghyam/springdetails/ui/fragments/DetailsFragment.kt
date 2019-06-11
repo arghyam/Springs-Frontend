@@ -113,7 +113,15 @@ class DetailsFragment : Fragment() {
             ArghyamUtils().convertToString(response[0]),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
+        initSetData()
         Log.e("stefy5", springProfileResponse.ownership)
+    }
+
+    private fun initSetData() {
+        tv_spring_name.text=":  ${springProfileResponse.springName}"
+        tv_spring_ownership.text=":  ${springProfileResponse.ownership}"
+        tv_spring_id.text=":  ${springProfileResponse.springCode}"
+        tv_spring_submtted.text=":  ${springProfileResponse.uploadedBy}"
     }
 
     private fun initSpringDetails() {
