@@ -29,6 +29,10 @@ import kotlinx.android.synthetic.main.content_login.*
 import javax.inject.Inject
 
 
+
+
+
+
 class LoginActivity : AppCompatActivity() {
 
     @Inject
@@ -59,6 +63,14 @@ class LoginActivity : AppCompatActivity() {
         } else {
             ""
         }
+    }
+
+    override fun onBackPressed() {
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
+
     }
 
 

@@ -9,6 +9,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -17,7 +18,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
+import androidx.core.content.ContextCompat.startActivity
+import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat.startActivity
+
+
 
 
 class ArghyamUtils {
@@ -102,4 +110,12 @@ class ArghyamUtils {
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
     }
 
+    fun makeSnackbar(view: View, message:String,action:String,activity: Context?,activityname:Class<*>){
+        view?.let { it1 ->
+            Snackbar.make(it1, message, Snackbar.LENGTH_LONG)
+                .setAction(action) {
+                    activity?.startActivity(Intent(activity, activityname))}.show()
+
+        }
+    }
 }

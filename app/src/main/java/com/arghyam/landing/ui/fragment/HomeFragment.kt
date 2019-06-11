@@ -19,6 +19,8 @@ import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.model.LandingModel
 import com.arghyam.landing.ui.activity.LandingActivity
@@ -110,8 +112,19 @@ class HomeFragment : Fragment() {
 
     private fun initFab() {
         floatingActionButton.setOnClickListener {
-            var intent = Intent(activity, NewSpringActivity::class.java)
-            startActivity(intent)
+
+            if (SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.ACCESS_TOKEN) == "") {
+                view?.let { it1 ->
+                    ArghyamUtils().makeSnackbar(
+                        it1,
+                        "Sign In to Continue",
+                        "SIGN IN",
+                        activity,
+                        LoginActivity::class.java
+                    )
+                }
+            } else
+                activity?.startActivity(Intent(activity, NewSpringActivity::class.java))
         }
     }
 

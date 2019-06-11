@@ -14,10 +14,18 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.springdetails.adapter.ImageAdapter
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
+import android.content.Context.MODE_PRIVATE
+import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.iam.ui.LoginActivity
+import com.google.android.material.snackbar.Snackbar
+
 
 /**
  * A simple [Fragment] subclass.
@@ -49,8 +57,21 @@ class DetailsFragment : Fragment() {
 
     private fun initClick() {
         additional_details_layout.setOnClickListener {
-            val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE)
+            if (SharedPreferenceFactory(activity as SpringDetailsActivity).getString(Constants.ACCESS_TOKEN) == "") {
+                view?.let { it1 ->
+                    ArghyamUtils().makeSnackbar(
+                        it1,
+                        "SignIn to continue",
+                        "SIGN In",
+                        activity,
+                        LoginActivity::class.java
+                    )
+                }
+
+            } else{
+                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
+                startActivityForResult(intent, REQUEST_CODE)
+            }
         }
     }
 
@@ -74,7 +95,7 @@ class DetailsFragment : Fragment() {
 
     private fun showAdditionalData() {
         additional_details_layout.visibility = GONE
-        details_view.visibility= GONE
+        details_view.visibility = GONE
         additional_data.visibility = VISIBLE
         if (seasonality.equals("Perennial")) {
             tv_seasonality.text = seasonality
@@ -94,7 +115,19 @@ class DetailsFragment : Fragment() {
 
     private fun initAddDischargeData() {
         add_discharge_data.setOnClickListener {
-            activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
+            if (SharedPreferenceFactory(activity as SpringDetailsActivity).getString(Constants.ACCESS_TOKEN) == "") {
+                view?.let { it1 ->
+                    ArghyamUtils().makeSnackbar(
+                        it1,
+                        "SignIn to continue",
+                        "SIGN In",
+                        activity,
+                        LoginActivity::class.java
+                    )
+                                    }
+
+            } else
+                activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
         }
     }
 

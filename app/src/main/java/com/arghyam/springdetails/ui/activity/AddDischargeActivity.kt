@@ -20,6 +20,7 @@ import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
 import com.arghyam.addspring.interfaces.ImageUploadInterface
+import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
@@ -28,12 +29,15 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_add_discharge.*
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -86,6 +90,7 @@ class AddDischargeActivity : AppCompatActivity() {
         initToolbar()
         initRecyclerView()
         initUploadImageApis()
+        initApiResponseCalls()
     }
 
     private fun initToolbar() {
@@ -303,12 +308,41 @@ class AddDischargeActivity : AppCompatActivity() {
         }
     }
 
+    private fun initApiResponseCalls() {
+        addDischargeDataViewModel?.getDischargeSuccess()?.observe(this@AddDischargeActivity, Observer {
+            dischargeDataResponse(it)
+            if (addDischargeDataViewModel?.getDischargeSuccess()?.hasObservers()!!) {
+                addDischargeDataViewModel?.getDischargeSuccess()?.removeObservers(this@AddDischargeActivity)
+            }
+        })
+        addDischargeDataViewModel?.getDischargeError()?.observe(this@AddDischargeActivity, Observer {
+            Log.e("error", it)
+        })
+    }
+
+    private fun dischargeDataResponse(responseModel: ResponseModel) {
+        var dischargeDataResponseObject: CreateSpringResponseObject = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<CreateSpringResponseObject>() {}.type
+        )
+        gotoSpringDetailsActivity(dischargeDataResponseObject)
+    }
+
+    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: CreateSpringResponseObject) {
+        val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
         volOfContainer = containerString.toFloat()
         dischargeTime.add(timerList[0].seconds)
         dischargeTime.add(timerList[1].seconds)
         dischargeTime.add(timerList[2].seconds)
+//        Log.e("anirudh",averageTimer.text.toString())
+        val lps : Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
+        litresPerSec.add(lps)
     }
 
     private fun addDischargeDataOnClick() {
