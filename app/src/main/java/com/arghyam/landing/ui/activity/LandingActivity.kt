@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -22,6 +23,7 @@ import com.arghyam.commons.utils.Constants.TAG_MORE
 import com.arghyam.commons.utils.Constants.TAG_MY_ACTIVITY
 import com.arghyam.commons.utils.Constants.TAG_SEARCH
 import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.interfaces.PermissionInterface
 import com.arghyam.landing.ui.fragment.ErrorFragment
 import com.arghyam.landing.ui.fragment.HomeFragment

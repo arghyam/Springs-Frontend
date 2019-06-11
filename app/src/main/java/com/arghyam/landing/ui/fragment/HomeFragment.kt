@@ -112,6 +112,17 @@ class HomeFragment : Fragment() {
 
     private fun initFab() {
         floatingActionButton.setOnClickListener {
+            if (SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.ACCESS_TOKEN) == "") {
+                view?.let { it1 ->
+                    ArghyamUtils().makeSnackbar(
+                        it1,
+                        "Sign In to Continue",
+                        "SIGN IN",
+                        activity,
+                        LoginActivity::class.java
+                    )
+                }
+            } else
                 activity?.startActivity(Intent(activity, NewSpringActivity::class.java))
         }
     }

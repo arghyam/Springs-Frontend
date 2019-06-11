@@ -143,7 +143,7 @@
                 android:id="@+id/timerDone"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="@color/blue"
+                android:background="@color/cornflower_blue"
                 android:text="DONE"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"

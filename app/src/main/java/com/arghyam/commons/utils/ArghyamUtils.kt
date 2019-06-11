@@ -4,24 +4,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
-import com.arghyam.iam.ui.LoginActivity
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.google.android.material.snackbar.Snackbar
-import java.io.File
+import android.widget.TextView
+import com.androidadvance.topsnackbar.TSnackbar
+import com.arghyam.R
 
 
 class ArghyamUtils {
@@ -107,4 +106,18 @@ class ArghyamUtils {
     }
 
 
+    fun makeSnackbar(view: View, message: String, action: String, context: Context?, activityname: Class<*>) {
+        view.let { it1 ->
+            val snack: TSnackbar = TSnackbar.make(it1, message, TSnackbar.LENGTH_LONG)
+            val v: View = snack.view
+            val textView: TextView = v.findViewById(R.id.snackbar_text)
+            textView.setTextColor(Color.WHITE)
+            snack.setAction(action) {
+                context?.startActivity(Intent(context, activityname))
+                (context as Activity).finish()
+            }
+            snack.show()
+
+        }
+    }
 }

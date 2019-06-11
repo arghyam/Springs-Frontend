@@ -4,6 +4,7 @@ import androidx.viewpager.widget.ViewPager
 import android.view.ViewGroup
 import android.widget.ImageView.ScaleType
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter

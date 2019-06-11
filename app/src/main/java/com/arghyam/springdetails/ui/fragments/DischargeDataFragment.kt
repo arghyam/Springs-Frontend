@@ -9,9 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.R
+import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.springdetails.adapter.DischargeDataAdapter
 import com.arghyam.springdetails.models.DischargeDataModal
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import kotlinx.android.synthetic.main.discharge_data.*
 import kotlinx.android.synthetic.main.fragment_discharge_data.*
 
@@ -46,7 +51,19 @@ class DischargeDataFragment : Fragment() {
 
     private fun initDischargeDataButton() {
         dischargeDataButton.setOnClickListener {
-            activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
+            if (SharedPreferenceFactory(activity as SpringDetailsActivity).getString(Constants.ACCESS_TOKEN) == "") {
+                view?.let { it1 ->
+                    ArghyamUtils().makeSnackbar(
+                        it1,
+                        "SignIn to continue",
+                        "SIGN In",
+                        activity,
+                        LoginActivity::class.java
+                    )
+                }
+
+            } else
+                activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
         }
     }
 
