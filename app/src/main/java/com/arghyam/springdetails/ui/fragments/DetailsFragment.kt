@@ -24,11 +24,10 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseDataModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.springdetails.adapter.ImageAdapter
-import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
-import com.arghyam.springdetails.models.SpringDetailsModel
-import com.arghyam.springdetails.models.SpringDetailsResponseObject
+import com.arghyam.springdetails.models.*
 import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
@@ -49,14 +48,14 @@ class DetailsFragment : Fragment() {
     internal lateinit var seasonality: String
     private var houseHoldNumber: Int = 0
 
-    var responseList = ArrayList<Any>()
+    lateinit var response: ArrayList<Any>
 
+    private lateinit var springProfileResponse: SpringProfileResponse
 
     @Inject
     lateinit var springDetailsRepository: SpringDetailsRepository
 
     private var springDetailsViewModel: SpringDetailsViewModel? = null
-
 
 
     @Inject
@@ -96,12 +95,7 @@ class DetailsFragment : Fragment() {
 
             Log.e("stefy", it.response.responseCode)
 
-            responseList.add(it.response.responseObject)
-
-            Log.e("stefy", responseList.toString())
-            Log.e("stefy", responseList[0].toString())
-
-//            saveSpringDetailsData(it)
+            saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
                 springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
             }
@@ -114,11 +108,12 @@ class DetailsFragment : Fragment() {
     }
 
     private fun saveSpringDetailsData(responseModel: ResponseModel) {
-        var springDetailsResponseObject: SpringDetailsResponseObject = Gson().fromJson(
-            ArghyamUtils().convertToString(responseModel.response.responseObject),
-            object : TypeToken<SpringDetailsResponseObject>() {}.type
+        response = responseModel.response.responseObject as ArrayList<Any>
+        springProfileResponse = Gson().fromJson(
+            ArghyamUtils().convertToString(response[0]),
+            object : TypeToken<SpringProfileResponse>() {}.type
         )
-        Log.e("stefy5", springDetailsResponseObject.toString())
+        Log.e("stefy5", springProfileResponse.ownership)
     }
 
     private fun initSpringDetails() {
