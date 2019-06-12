@@ -33,6 +33,7 @@ import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.springdetails.models.AddDischargeResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
@@ -62,12 +63,15 @@ class AddDischargeActivity : AppCompatActivity() {
     private var timerList: ArrayList<TimerModel> = ArrayList()
 
     private var imageCount: Int = 0
+    private  var springCode: String=""
     var imageList = ArrayList<ImageEntity>()
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
     var count: Int = 1
     private var goBack: Boolean = false
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
+
+    lateinit var dischargeDataResponseObject:AddDischargeResponseModel
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
@@ -88,16 +92,22 @@ class AddDischargeActivity : AppCompatActivity() {
         init()
     }
 
+    private fun getSpringId() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+    }
+
     private fun init() {
         initApplicationComponent()
         initRepository()
+        getSpringId()
         initViewComponents()
-        initClicks()
         initListeners()
         initToolbar()
         initRecyclerView()
         initUploadImageApis()
         initApiResponseCalls()
+        initClicks()
     }
 
     private fun validateData(): Boolean {
@@ -423,16 +433,19 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun dischargeDataResponse(responseModel: ResponseModel) {
-        var dischargeDataResponseObject: CreateSpringResponseObject = Gson().fromJson(
+        dischargeDataResponseObject = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
-            object : TypeToken<CreateSpringResponseObject>() {}.type
+            object : TypeToken<AddDischargeResponseModel>() {}.type
         )
+
+        springCode = dischargeDataResponseObject.springCode
+        Log.d("springCode----",springCode)
         gotoSpringDetailsActivity(dischargeDataResponseObject)
     }
 
-    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: CreateSpringResponseObject) {
+    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
-        intent.putExtra("stringid",dischargeDataResponseObject.springCode)
+        intent.putExtra("SpringCode",springCode)
         startActivity(intent)
         finish()
     }
@@ -464,7 +477,7 @@ class AddDischargeActivity : AppCompatActivity() {
             ),
             request = DischargeDataModel(
                 dischargeData = DischargeModel(
-                    springCode = "",
+                    springCode = springCode,
                     dischargeTime = dischargeTime,
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,

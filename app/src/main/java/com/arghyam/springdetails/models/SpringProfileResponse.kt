@@ -2,6 +2,7 @@ package com.arghyam.springdetails.models
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.google.gson.annotations.SerializedName
 
 @JsonIgnoreProperties
 class SpringProfileResponse(
@@ -23,4 +24,23 @@ class SpringProfileResponse(
     var updatedTimeStamp: String
 )
 
-class ExtraInfoDischarge(var dischargeData: ArrayList<String>)
+class ExtraInfoDischarge(var dischargeData: ArrayList<DischargeData>)
+
+class DischargeData(
+    var dischargeTime: ArrayList<String>,
+    var images: ArrayList<String>,
+    var months: ArrayList<String>,
+    @SerializedName("@type")
+    val type: String,
+    var updatedTimeStamp: String,
+    var createdTimeStamp: String,
+    var userId: String,
+    var orgId: String,
+    var volumeOfContainer: Int,
+    var litresPerSecond: ArrayList<Double>,
+    var tenantId: String,
+    var springCode: String,
+    var seasonality: String,
+    var status: String,
+    var osid: String
+)

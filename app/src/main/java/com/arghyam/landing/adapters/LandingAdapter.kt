@@ -55,8 +55,11 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
                     context,
                     LoginActivity::class.java
                 )
-            } else
-                context.startActivity(Intent(context, AddDischargeActivity::class.java))
+            } else{
+                var dataIntent = Intent(context, AddDischargeActivity::class.java)
+                dataIntent.putExtra("SpringCode", springs.springCode)
+                context.startActivity(dataIntent)
+            }
             return@OnClickListener
         })
         holder.favourite.setOnClickListener {

@@ -10,26 +10,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
-import com.arghyam.springdetails.models.DischargeDataModal
+import com.arghyam.springdetails.models.SpringProfileResponse
 import kotlinx.android.synthetic.main.discharge_data_item.view.*
 
-class DischargeDataAdapter(private val items : ArrayList<DischargeDataModal>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+class DischargeDataAdapter(private val items : ArrayList<SpringProfileResponse>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.discharge_data_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item : DischargeDataModal = items[position]
-        holder.date.text = item.date
-        holder.discharge.text = item.discharge
-        holder.submittedBy.text = item.submitted
+        val item : SpringProfileResponse = items[position]
+        holder.date.text = item.createdTimeStamp
+//        holder.discharge.text = item.
+        holder.submittedBy.text = item.userId
         holder.tick.visibility = VISIBLE
-        if(!item.isVerified) {
-            holder.date.setTextColor(context.resources.getColor(R.color.jumbo))
-            holder.discharge.setTextColor(context.resources.getColor(R.color.jumbo))
-            holder.submittedBy.setTextColor(context.resources.getColor(R.color.jumbo))
-            holder.tick.visibility = INVISIBLE
-        }
+//        if(!item.isVerified) {
+//            holder.date.setTextColor(context.resources.getColor(R.color.jumbo))
+//            holder.discharge.setTextColor(context.resources.getColor(R.color.jumbo))
+//            holder.submittedBy.setTextColor(context.resources.getColor(R.color.jumbo))
+//            holder.tick.visibility = INVISIBLE
+//        }
     }
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
