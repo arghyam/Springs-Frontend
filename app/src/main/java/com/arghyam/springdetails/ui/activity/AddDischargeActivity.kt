@@ -60,6 +60,7 @@ import javax.inject.Inject
 class AddDischargeActivity : AppCompatActivity() {
 
     private var timerList: ArrayList<TimerModel> = ArrayList()
+    private lateinit var springCode: String
 
     private var imageCount: Int = 0
     var imageList = ArrayList<ImageEntity>()
@@ -227,6 +228,11 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initApplicationComponent() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.d("Anirudh", "" + springCode)
+
+
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -432,7 +438,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
-        intent.putExtra("stringid",dischargeDataResponseObject.springCode)
+        intent.putExtra("SpringCode",dischargeDataResponseObject.springCode)
+        Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -464,7 +471,7 @@ class AddDischargeActivity : AppCompatActivity() {
             ),
             request = DischargeDataModel(
                 dischargeData = DischargeModel(
-                    springCode = "",
+                    springCode = springCode,
                     dischargeTime = dischargeTime,
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,

@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
-import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
@@ -44,7 +43,6 @@ import kotlinx.android.synthetic.main.spring_details.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-
 
 
 /**
@@ -105,10 +103,9 @@ class DetailsFragment : Fragment() {
 
 
     private fun initComponent() {
-        intent= activity?.intent!!
+        intent = activity?.intent!!
 
         springCode = intent.getStringExtra("SpringCode")
-
 
         Log.d("Anirudh", "" + springCode)
 
@@ -128,16 +125,17 @@ class DetailsFragment : Fragment() {
         })
 
         springDetailsViewModel?.getSpringFailure()?.observe(this, Observer {
-            Log.e("stefy===",it)
+            Log.e("stefy===", it)
         })
     }
 
     private fun saveSpringDetailsData(responseModel: ResponseModel) {
 
-        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+        var springProfileResponse: SpringProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
+        Log.e("Anirudh",springProfileResponse.toString())
         initSetData(springProfileResponse)
         imageSample(springProfileResponse)
     }
@@ -243,14 +241,18 @@ class DetailsFragment : Fragment() {
                     )
                 }
 
-            } else
-                activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
+            } else {
+                val intent = Intent(context, AddDischargeActivity::class.java)
+                intent.putExtra("SpringCode", springCode)
+                Log.e("Code in details", springCode)
+                startActivity(intent)
+            }
         }
     }
 
     private fun initImageAdapter(responseModel: ResponseModel) {
-        Log.d("responseCheck",responseModel.response.responseObject.toString())
-        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+        Log.d("responseCheck", responseModel.response.responseObject.toString())
+        var springProfileResponse: SpringProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
@@ -285,7 +287,6 @@ class DetailsFragment : Fragment() {
     private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
         return springProfileResponse.images
     }
-
 
 
     private fun imageChangeListener(): ViewPager.OnPageChangeListener {
