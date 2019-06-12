@@ -61,6 +61,9 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         })
         holder.favourite.setOnClickListener {
         }
+        holder.ownership.text= springs.ownershipType
+        holder.springcode.text= springs.springCode
+        holder.village.text= springs.village
 
 
     }
@@ -73,6 +76,10 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         val favourite: ImageView = view.fav_icon
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
+        val ownership: TextView = view.ownership_value
+        val springcode:TextView = view.springcode
+        val village:TextView = view.village_name
+
 
     }
 }
