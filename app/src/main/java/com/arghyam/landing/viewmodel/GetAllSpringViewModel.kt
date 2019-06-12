@@ -16,12 +16,14 @@ class GetAllSpringViewModel: ViewModel()  {
     val getAllSpringData = MutableLiveData<ResponseModel>()
     val getAllSpringError: SingleLiveEvent<String> = SingleLiveEvent()
 
-    fun setGetAllSpringRepository(createSpringRepository: GetAllSpringRepository) {
+
+
+    fun setGetAllSpringRepository(getAllSpringRepository: GetAllSpringRepository) {
         this.getAllSpringRepository = getAllSpringRepository
     }
 
-    fun getAllSpringApi(mContext: Context, requestModel: RequestModel) {
-        getAllSpringRepository?.getAllSpringApiRequest(mContext, requestModel, object :
+    fun getAllSpringApi(mContext: Context,pageNumber:Int, requestModel: RequestModel) {
+        getAllSpringRepository?.getAllSpringApiRequest(mContext,pageNumber, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())

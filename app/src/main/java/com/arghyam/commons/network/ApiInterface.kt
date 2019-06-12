@@ -39,7 +39,7 @@ interface ApiInterface {
     @POST("/api/v1/createDischargeData")
     fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
-    @GET("/api/v1/getAllSprings")
+    @POST("/api/v1/getAllSprings")
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/springs/{springCode}")

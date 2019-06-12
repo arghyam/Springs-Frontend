@@ -315,6 +315,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         isCounterRunning = false
         resendCode.text = "${getString(R.string.resend)}"
         resendCode.alpha = 1.0f
+        maxTime = 30
     }
 
     private fun onEditTextBackSpaceClicked(from: EditText, to: EditText) {

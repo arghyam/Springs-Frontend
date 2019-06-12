@@ -126,15 +126,15 @@ class SearchFragment : Fragment() {
             Log.d("search", searchRsultRecyclerView.visibility.toString())
             searchRsultRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-            val adapter = activity?.let { LandingAdapter(springsList, it) }
-            searchRsultRecyclerView.adapter = adapter
-
-            springsList.add(LandingModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 2", "Village 2", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 3", "Village 3", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 4", "Village 4", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 5", "Village 5", "https://picsum.photos/200/300"))
-            Log.d("searchspringsList", springsList.toString())
+//            val adapter = activity?.let { LandingAdapter(springsList, it) }
+//            searchRsultRecyclerView.adapter = adapter
+//
+//            springsList.add(LandingModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
+//            springsList.add(LandingModel("Recent Spring 2", "Village 2", "https://picsum.photos/200/300"))
+//            springsList.add(LandingModel("Recent Spring 3", "Village 3", "https://picsum.photos/200/300"))
+//            springsList.add(LandingModel("Recent Spring 4", "Village 4", "https://picsum.photos/200/300"))
+//            springsList.add(LandingModel("Recent Spring 5", "Village 5", "https://picsum.photos/200/300"))
+//            Log.d("searchspringsList", springsList.toString())
 
         }
 
