@@ -6,17 +6,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -169,7 +165,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
             imagesList.add(it.response.imageUrl)
-            Log.d("imagesList",imagesList.toString())
+            Log.d("imagesList", imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -201,6 +197,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }

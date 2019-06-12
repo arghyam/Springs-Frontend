@@ -59,14 +59,6 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
 
-    private var pageNumber: Int = 1
-
-    private var isLoading = true
-    private var pastVisibleItems: Int = 0
-    private var visibleItemCount: Int = 0
-    private var totalItemCount: Int = 0
-    private var previousTotal = 0
-
     /**
      * Initialize newInstance for passing paameters
      */

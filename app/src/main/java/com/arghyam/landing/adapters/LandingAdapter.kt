@@ -40,7 +40,10 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
-            context.startActivity(Intent(context, SpringDetailsActivity::class.java))
+            var dataIntent = Intent(context, SpringDetailsActivity::class.java)
+            dataIntent.putExtra("springid", springs.springCode)
+            context.startActivity(dataIntent)
+
             return@OnClickListener
         })
         holder.springItemADD.setOnClickListener(View.OnClickListener {

@@ -27,8 +27,8 @@ import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
-import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
@@ -36,7 +36,6 @@ import com.arghyam.iam.model.ResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
-import kotlinx.android.synthetic.main.activity_add_discharge.*
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
 import com.google.gson.Gson
@@ -47,9 +46,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.content_add_additional_details.*
+import kotlinx.android.synthetic.main.activity_add_discharge.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
-import kotlinx.android.synthetic.main.list_image_uploader.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -434,6 +432,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("stringid",dischargeDataResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -447,13 +446,10 @@ class AddDischargeActivity : AppCompatActivity() {
             dischargeTime.add(timerList[1].seconds)
             dischargeTime.add(timerList[2].seconds)
         }
-        volOfContainer = containerString.toFloat()
-        dischargeTime.add(timerList[0].seconds)
-        dischargeTime.add(timerList[1].seconds)
-        dischargeTime.add(timerList[2].seconds)
-//        Log.e("anirudh",averageTimer.text.toString())
-        val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
-        litresPerSec.add(lps)
+        if (!containerString.equals("") && timerList.size != 0) {
+            val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
+            litresPerSec.add(lps)
+        }
     }
 
     private fun addDischargeDataOnClick() {

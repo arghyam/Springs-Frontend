@@ -59,7 +59,7 @@ class DetailsFragment : Fragment() {
     private lateinit var parentIntent: Intent
     lateinit var response: ArrayList<Any>
 
-    private var images: List<String> = ArrayList()
+    private var images: ArrayList<String> = ArrayList()
 
     private lateinit var springProfileResponse: SpringProfileResponse
 
@@ -100,7 +100,6 @@ class DetailsFragment : Fragment() {
         initAddDischargeData()
         initRepository()
         initSpringDetailsResponse()
-        //initSpringDetails()
     }
 
     private fun initComponent() {
@@ -109,15 +108,10 @@ class DetailsFragment : Fragment() {
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
-
-            Log.e("stefy", it.response.responseCode)
-
             saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
                 springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
             }
-
-//            imagesList.add(it.response.imageUrl)
         })
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
             Log.e("stefy error", it)
@@ -139,35 +133,8 @@ class DetailsFragment : Fragment() {
         tv_spring_ownership.text = ":  ${springProfileResponse.ownership}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
-
-//        images = springProfileResponse.images
-//        Log.d("images", springProfileResponse.images.toString())
-
-
     }
 
-    private fun initSpringDetails() {
-        var springCode: String = parentIntent.getStringExtra("SpringCode")
-        var springDetailObject = RequestModel(
-            id = GET_ALL_SPRINGS_ID,
-            ver = BuildConfig.VER,
-            ets = BuildConfig.ETS,
-            params = Params(
-                did = "",
-                key = "",
-                msgid = ""
-            ),
-            request = RequestSpringDetailsDataModel(
-                springs = SpringDetailsModel(
-                    springCode = springCode
-
-
-                )
-            )
-        )
-        springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
-
-    }
 
     private fun initClick() {
         additional_details_layout.setOnClickListener {
@@ -199,7 +166,6 @@ class DetailsFragment : Fragment() {
                 waterUse = bundle?.get("WaterUse") as ArrayList<String>
                 seasonality = bundle.get("Seasonality") as String
                 houseHoldNumber = bundle.get("HouseHoldNumbers") as Int
-
                 Log.e("Water use", waterUse.toString())
                 showAdditionalData()
 
@@ -247,10 +213,9 @@ class DetailsFragment : Fragment() {
 
 
     private fun initImageAdapter() {
-        val adapter = activity?.let { ImageAdapter(it, imageSample()) }
+        val adapter = activity?.let { ImageAdapter(it, images) }
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
-
         setupAutoPager()
     }
 
@@ -277,13 +242,6 @@ class DetailsFragment : Fragment() {
     }
 
 
-    private fun imageSample(): ArrayList<String> {
-        var images: ArrayList<String> = ArrayList()
-        images.add("https://picsum.photos/200/300")
-        images.add("https://picsum.photos/300/300")
-        images.add("https://picsum.photos/400/300")
-        return images
-    }
 
     private fun imageChangeListener(): ViewPager.OnPageChangeListener {
         return object : ViewPager.OnPageChangeListener {

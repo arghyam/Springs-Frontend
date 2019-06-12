@@ -11,7 +11,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 
 
-class ImageAdapter(private var mContext: Context?, private var sliderImageId: ArrayList<String>) : PagerAdapter() {
+class ImageAdapter(private var mContext: Context?, private var sliderImages: ArrayList<String>) : PagerAdapter() {
 
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
@@ -22,7 +22,7 @@ class ImageAdapter(private var mContext: Context?, private var sliderImageId: Ar
         val imageView = ImageView(mContext)
         imageView.scaleType = ScaleType.CENTER_CROP
         Glide.with(mContext!!)
-            .load(sliderImageId[position])
+            .load(sliderImages[position])
             .into(imageView)
         (container as ViewPager).addView(imageView, 0)
         return imageView
@@ -33,6 +33,6 @@ class ImageAdapter(private var mContext: Context?, private var sliderImageId: Ar
     }
 
     override fun getCount(): Int {
-        return sliderImageId.size
+        return sliderImages.size
     }
 }
