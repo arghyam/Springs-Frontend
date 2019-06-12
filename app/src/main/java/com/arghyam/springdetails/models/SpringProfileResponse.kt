@@ -1,12 +1,26 @@
 package com.arghyam.springdetails.models
 
-class SpringProfileResponse (
 
-    var elevation: String,
-    var images: ArrayList<String>, var type: String,
-    var crtdDttm: String,
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties
+class SpringProfileResponse(
+    var springCode: String,
+    var userId: String,
+    var tenantId: String,
+    var orgId: String,
+    var latitude: Double,
+    var longitude: Double,
+    var elevation: Double,
+    var accuracy: Float,
+    var village: String,
+    var numberOfHouseholds: Int,
+    var ownershipType: String,
     var usage: String,
-    var latitude: String, var springName: String, var ownership: String,
-    var organization: String, var tenantId: String, var springCode: String,
-    var village: String, var uploadedBy: String, var longitude: String,
-    var updtDttm: String, var osid: String)
+    var images: ArrayList<String>,
+    var extraInformation: ExtraInfoDischarge,
+    var createdTimeStamp: String,
+    var updatedTimeStamp: String
+)
+
+class ExtraInfoDischarge(var dischargeData: ArrayList<String>)

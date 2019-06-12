@@ -41,7 +41,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
-            dataIntent.putExtra("springid", springs.springCode)
+            dataIntent.putExtra("SpringCode", springs.springCode)
             context.startActivity(dataIntent)
 
             return@OnClickListener

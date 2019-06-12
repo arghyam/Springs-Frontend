@@ -41,7 +41,7 @@ class SpringDetailsActivity : AppCompatActivity() {
 
     private fun getSpringId() {
         var dataIntent: Intent = intent
-        springCode = dataIntent.getStringExtra("stringid")
+        springCode = dataIntent.getStringExtra("SpringCode")
     }
 
     private fun init() {
@@ -75,6 +75,9 @@ class SpringDetailsActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+//        var detailsFragment:DetailsFragment
+//
+//        detailsFragment.arguments=
         adapter.addFragment(DetailsFragment(), "Details")
         adapter.addFragment(DischargeDataFragment(), "Discharge Data")
         viewPager.adapter = adapter

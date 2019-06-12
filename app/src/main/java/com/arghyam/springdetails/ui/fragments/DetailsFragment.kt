@@ -46,6 +46,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
+
 /**
  * A simple [Fragment] subclass.
  *
@@ -57,10 +58,10 @@ class DetailsFragment : Fragment() {
     internal lateinit var seasonality: String
     private var houseHoldNumber: Int = 0
     private lateinit var parentIntent: Intent
-    lateinit var response: ArrayList<Any>
-
     private var images: ArrayList<String> = ArrayList()
-
+    lateinit var intent: Intent
+    lateinit var response: ArrayList<SpringProfileResponse>
+    var springCode: String? = null
     private lateinit var springProfileResponse: SpringProfileResponse
 
     @Inject
@@ -83,7 +84,7 @@ class DetailsFragment : Fragment() {
     val PERIOD_MS: Long = 3000 // time in milliseconds between successive task executions.
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
+        return inflater.inflate(com.arghyam.R.layout.fragment_details, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -94,20 +95,29 @@ class DetailsFragment : Fragment() {
 
     private fun init() {
         initComponent()
+        initRepository()
 
         initClick()
-        initImageAdapter()
+        initSpringDetails()
         initAddDischargeData()
-        initRepository()
         initSpringDetailsResponse()
     }
 
+
     private fun initComponent() {
+        intent= activity?.intent!!
+
+        springCode = intent.getStringExtra("SpringCode")
+
+
+        Log.d("Anirudh", "" + springCode)
+
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
+            initImageAdapter(it)
             saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
                 springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
@@ -116,25 +126,52 @@ class DetailsFragment : Fragment() {
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
             Log.e("stefy error", it)
         })
+
+        springDetailsViewModel?.getSpringFailure()?.observe(this, Observer {
+            Log.e("stefy===",it)
+        })
     }
 
     private fun saveSpringDetailsData(responseModel: ResponseModel) {
-        response = responseModel.response.responseObject as ArrayList<Any>
-        springProfileResponse = Gson().fromJson(
-            ArghyamUtils().convertToString(response[0]),
+
+        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-        initSetData()
-        Log.e("stefy5", springProfileResponse.ownership)
+        initSetData(springProfileResponse)
+        imageSample(springProfileResponse)
     }
 
-    private fun initSetData() {
-        tv_spring_name.text = ":  ${springProfileResponse.springName}"
-        tv_spring_ownership.text = ":  ${springProfileResponse.ownership}"
+    private fun initSetData(springProfileResponse: SpringProfileResponse) {
+        tv_spring_name.text = ":  ${springProfileResponse.orgId}"
+        tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
-        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
+
+
+//        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
+//        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
     }
 
+    private fun initSpringDetails() {
+
+        var springDetailObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringDetailsDataModel(
+                springs = SpringDetailsModel(
+                    springCode = springCode
+                )
+            )
+        )
+        springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
+
+    }
 
     private fun initClick() {
         additional_details_layout.setOnClickListener {
@@ -211,14 +248,18 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    private fun initImageAdapter(responseModel: ResponseModel) {
+        Log.d("responseCheck",responseModel.response.responseObject.toString())
+        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<SpringProfileResponse>() {}.type
+        )
 
-    private fun initImageAdapter() {
-        val adapter = activity?.let { ImageAdapter(it, images) }
+        val adapter = activity?.let { ImageAdapter(it, imageSample(springProfileResponse)) }
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
         setupAutoPager()
     }
-
 
     private fun setupAutoPager() {
         val handler = Handler()
@@ -239,6 +280,10 @@ class DetailsFragment : Fragment() {
                 handler.post(update)
             }
         }, 500, 2500)
+    }
+
+    private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
+        return springProfileResponse.images
     }
 
 
