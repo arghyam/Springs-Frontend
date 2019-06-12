@@ -11,6 +11,8 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.RadioButton
@@ -145,7 +147,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initApiResponseCalls()
         initUploadImageApis()
         initCreateSpringSubmit()
+        initListener()
+    }
 
+    private fun initListener() {
+        isTextWritten()
+        initClick()
     }
 
     private fun initDefaultLocation() {
@@ -155,12 +162,55 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageClick() {
         image_upload_layout.setOnClickListener {
+            var validated: Boolean = validateListener()
+            if (validated) {
+                valid()
+            } else
+                notvalid()
             if (imageCount < 2)
                 openCamera()
             else {
                 ArghyamUtils().shortToast(this, "You can capture maximum of two photographs")
             }
         }
+    }
+
+    private fun isTextWritten() {
+        spring_name.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                isvalid()
+            }
+        })
+    }
+
+    private fun initClick() {
+        radioGroup?.setOnCheckedChangeListener { group, checkedId ->
+            initRadioButtonListeners()
+        }
+    }
+
+    private fun initRadioButtonListeners() {
+        isvalid()
+    }
+
+    private fun notvalid() {
+        add_spring_submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+    }
+
+    private fun valid() {
+        add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
     }
 
     private fun initUploadImageApis() {
@@ -197,6 +247,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("springid", createSpringResponseObject.springCode)
+        Log.d("springid", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -207,8 +259,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-
-            if (radioGroup.checkedRadioButtonId == -1) {
+            if (spring_name.text == null || spring_name.text.toString().equals("")){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
+            }
+            else if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
             } else if (imageList.size <= 0) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
@@ -220,12 +274,33 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
-
-
             }
         }
     }
 
+    private fun validateListener(): Boolean {
+        return springNameListener() && imageUploadListener() && ownershipTypeListener() && locationListener()
+    }
+
+    private fun locationListener(): Boolean {
+        Log.e("Anirudh loc", mLocation.toString())
+        return mLocation != null
+    }
+
+    private fun imageUploadListener(): Boolean {
+        Log.e("Anirudh imgupload", imageList.size.toString())
+        return imageList.size > 0
+    }
+
+    private fun ownershipTypeListener(): Boolean {
+        Log.e("Anirudh ownership", radioGroup.checkedRadioButtonId.toString())
+        return (radioGroup.checkedRadioButtonId != -1)
+    }
+
+    private fun springNameListener(): Boolean {
+        Log.e("Anirudh name", spring_name.text.toString())
+        return !(spring_name.text == null || spring_name.text.toString().equals(""))
+    }
 
     private fun createSpringOnClick() {
         var createSpringObject = RequestModel(
@@ -288,6 +363,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
+    private fun isvalid(){
+        Log.e("Anirudh","isvalid")
+        var validated: Boolean = validateListener()
+        if (validated) {
+            valid()
+        } else {
+            notvalid()
+        }
+    }
     private fun initLocation() {
         location_layout.setOnClickListener {
             getGoogleClient()
@@ -398,7 +482,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                         ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 50mts")
 
                     }
-
+                    isvalid()
                 } else {
                     getFusedClient()
                 }
@@ -432,6 +516,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
+        isvalid()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -460,7 +545,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     var bundle = data?.getBundleExtra("DataBundle")
-                    Log.d("bundleSpring",bundle.toString())
+                    Log.d("bundleSpring", bundle.toString())
                 }
 
             }
@@ -471,6 +556,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         super.onResume()
         isLocationAccepted()
         isLocationRejected()
+        isvalid()
     }
 
     private fun isLocationRejected() {

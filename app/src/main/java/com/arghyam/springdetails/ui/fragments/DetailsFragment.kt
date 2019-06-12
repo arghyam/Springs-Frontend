@@ -26,7 +26,6 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
-import com.arghyam.iam.model.ResponseDataModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.springdetails.adapter.ImageAdapter
 import com.arghyam.springdetails.models.*
@@ -39,9 +38,9 @@ import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.android.synthetic.main.spring_details.*
 import javax.inject.Inject
+
+
 /**
  * A simple [Fragment] subclass.
  *
@@ -52,9 +51,10 @@ class DetailsFragment : Fragment() {
     internal var selectedMonthNames: ArrayList<String> = ArrayList()
     internal lateinit var seasonality: String
     private var houseHoldNumber: Int = 0
+    lateinit var intent: Intent
 
-    lateinit var response: ArrayList<Any>
-
+    lateinit var response: ArrayList<SpringProfileResponse>
+    var springCode: String? = null
     private lateinit var springProfileResponse: SpringProfileResponse
 
     @Inject
@@ -72,7 +72,7 @@ class DetailsFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
+        return inflater.inflate(com.arghyam.R.layout.fragment_details, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,7 +82,6 @@ class DetailsFragment : Fragment() {
 
     private fun init() {
         initComponent()
-
         initClick()
         initImageAdapter()
         initAddDischargeData()
@@ -91,14 +90,21 @@ class DetailsFragment : Fragment() {
         initSpringDetails()
     }
 
+
     private fun initComponent() {
+        intent= activity?.intent!!
+
+        springCode = intent.getStringExtra("springid")
+
+        Log.d("Anirudh", "" + springCode)
+
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
 
-            Log.e("stefy", it.response.responseCode)
+            //            Log.e("stefy", it.response.responseCode)
 
             saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
@@ -113,23 +119,26 @@ class DetailsFragment : Fragment() {
     }
 
     private fun saveSpringDetailsData(responseModel: ResponseModel) {
-        response = responseModel.response.responseObject as ArrayList<Any>
+        response = responseModel.response.responseObject as ArrayList<SpringProfileResponse>
+        Log.e("stefy5", responseModel.response.responseObject.toString())
+
         springProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(response[0]),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
         initSetData()
-        Log.e("stefy5", springProfileResponse.ownership)
     }
 
     private fun initSetData() {
-        tv_spring_name.text=":  ${springProfileResponse.springName}"
-        tv_spring_ownership.text=":  ${springProfileResponse.ownership}"
-        tv_spring_id.text=":  ${springProfileResponse.springCode}"
-        tv_spring_submtted.text=":  ${springProfileResponse.uploadedBy}"
+        tv_spring_name.text = ":  ${springProfileResponse.springName}"
+        tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
+        tv_spring_id.text = ":  ${springProfileResponse.springCode}"
+        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
+        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
     }
 
     private fun initSpringDetails() {
+
         var springDetailObject = RequestModel(
             id = GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -141,9 +150,7 @@ class DetailsFragment : Fragment() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = "8H7RjK"
-
-
+                    springCode = "5G4gBV"
                 )
             )
         )
@@ -164,7 +171,7 @@ class DetailsFragment : Fragment() {
                     )
                 }
 
-            } else{
+            } else {
                 val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE)
             }
@@ -220,7 +227,7 @@ class DetailsFragment : Fragment() {
                         activity,
                         LoginActivity::class.java
                     )
-                                    }
+                }
 
             } else
                 activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
