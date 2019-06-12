@@ -16,8 +16,9 @@ import javax.inject.Inject
 
 class GetAllSpringRepository @Inject constructor()  {
 
+     var pageNumber:Int = 1
     fun getAllSpringApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val getAllSpringCall = RestClient.getWebServiceData()?.getAllSprings(requestModel)
+        val getAllSpringCall = RestClient.getWebServiceData()?.getAllSprings(pageNumber,requestModel)
         getAllSpringCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
