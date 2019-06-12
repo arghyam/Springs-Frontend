@@ -84,7 +84,6 @@
                         />
                         <TextView
                                 android:id="@+id/tv_spring_name"
-                                android:text=":  Gaurikund"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
@@ -103,7 +102,6 @@
                         <TextView
                                 android:id="@+id/tv_spring_location"
 
-                                android:text=":  Kedarnath, Uttarakhand"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
@@ -122,7 +120,6 @@
                         <TextView
                                 android:id="@+id/tv_spring_ownership"
 
-                                android:text=":  Public"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
@@ -141,7 +138,6 @@
                         <TextView
                                 android:id="@+id/tv_spring_id"
 
-                                android:text=":  Spring5682"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
@@ -159,7 +155,6 @@
                         />
                         <TextView
                                 android:id="@+id/tv_spring_submtted"
-                                android:text=":  Ramesh Agarwal"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
