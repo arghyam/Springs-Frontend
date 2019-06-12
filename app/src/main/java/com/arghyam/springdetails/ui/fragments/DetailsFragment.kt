@@ -82,12 +82,12 @@ class DetailsFragment : Fragment() {
 
     private fun init() {
         initComponent()
-        initClick()
-        initImageAdapter()
-        initAddDischargeData()
         initRepository()
-        initSpringDetailsResponse()
+
+        initClick()
         initSpringDetails()
+        initAddDischargeData()
+        initSpringDetailsResponse()
     }
 
 
@@ -95,6 +95,7 @@ class DetailsFragment : Fragment() {
         intent= activity?.intent!!
 
         springCode = intent.getStringExtra("springid")
+
 
         Log.d("Anirudh", "" + springCode)
 
@@ -104,37 +105,40 @@ class DetailsFragment : Fragment() {
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
 
-            //            Log.e("stefy", it.response.responseCode)
-
+            initImageAdapter(it)
             saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
                 springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
             }
 
-//            imagesList.add(it.response.imageUrl)
         })
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
             Log.e("stefy error", it)
         })
+
+        springDetailsViewModel?.getSpringFailure()?.observe(this, Observer {
+            Log.e("stefy===",it)
+        })
     }
 
     private fun saveSpringDetailsData(responseModel: ResponseModel) {
-        response = responseModel.response.responseObject as ArrayList<SpringProfileResponse>
-        Log.e("stefy5", responseModel.response.responseObject.toString())
 
-        springProfileResponse = Gson().fromJson(
-            ArghyamUtils().convertToString(response[0]),
+        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-        initSetData()
+        initSetData(springProfileResponse)
+        imageSample(springProfileResponse)
     }
 
-    private fun initSetData() {
-        tv_spring_name.text = ":  ${springProfileResponse.springName}"
+    private fun initSetData(springProfileResponse: SpringProfileResponse) {
+        tv_spring_name.text = ":  ${springProfileResponse.orgId}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
-        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
-        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
+
+
+//        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
+//        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
     }
 
     private fun initSpringDetails() {
@@ -150,7 +154,7 @@ class DetailsFragment : Fragment() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = "5G4gBV"
+                    springCode = springCode
                 )
             )
         )
@@ -235,19 +239,21 @@ class DetailsFragment : Fragment() {
     }
 
 
-    private fun initImageAdapter() {
-        val adapter = activity?.let { ImageAdapter(it, imageSample()) }
+    private fun initImageAdapter(responseModel: ResponseModel) {
+        Log.d("responseCheck",responseModel.response.responseObject.toString())
+        var springProfileResponse:  SpringProfileResponse= Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<SpringProfileResponse>() {}.type
+        )
+
+        val adapter = activity?.let { ImageAdapter(it, imageSample(springProfileResponse)) }
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
     }
 
 
-    private fun imageSample(): ArrayList<String> {
-        var images: ArrayList<String> = ArrayList()
-        images.add("https://picsum.photos/200/300")
-        images.add("https://picsum.photos/300/300")
-        images.add("https://picsum.photos/400/300")
-        return images
+    private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
+        return springProfileResponse.images
     }
 
     private fun imageChangeListener(): ViewPager.OnPageChangeListener {

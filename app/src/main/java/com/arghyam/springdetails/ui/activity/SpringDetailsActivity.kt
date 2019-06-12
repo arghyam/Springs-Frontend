@@ -46,6 +46,9 @@ class SpringDetailsActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+//        var detailsFragment:DetailsFragment
+//
+//        detailsFragment.arguments=
         adapter.addFragment(DetailsFragment(), "Details")
         adapter.addFragment(DischargeDataFragment(), "Discharge Data")
         viewPager.adapter = adapter

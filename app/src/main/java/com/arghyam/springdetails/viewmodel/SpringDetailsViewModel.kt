@@ -15,6 +15,8 @@ class SpringDetailsViewModel : ViewModel() {
     private var springDetailsRepository: SpringDetailsRepository? = null
     val springDetailsData = MutableLiveData<ResponseModel>()
     val SpringDetailsError: SingleLiveEvent<String> = SingleLiveEvent()
+    val SpringDetailsFailure: SingleLiveEvent<String> = SingleLiveEvent()
+
 
     fun setSpringDetailsRepository(springDetailsRepository: SpringDetailsRepository) {
         this.springDetailsRepository = springDetailsRepository
@@ -33,11 +35,14 @@ class SpringDetailsViewModel : ViewModel() {
             }
 
             override fun onFailure(message: String?) {
-                SpringDetailsError.value=message
+                SpringDetailsFailure.value=message
             }
 
         })
     }
+
+
+
 
     fun getSpringDetailsResponse(): MutableLiveData<ResponseModel> {
         return springDetailsData
@@ -45,5 +50,8 @@ class SpringDetailsViewModel : ViewModel() {
 
     fun getSpringError(): SingleLiveEvent<String> {
         return SpringDetailsError
+    }
+    fun getSpringFailure(): SingleLiveEvent<String> {
+        return SpringDetailsFailure
     }
 }
