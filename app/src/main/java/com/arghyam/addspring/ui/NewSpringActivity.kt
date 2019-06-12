@@ -6,13 +6,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -42,7 +46,6 @@ import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
-import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -56,7 +59,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_new_spring.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -83,6 +85,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+
     private var photoFile: File? = null
 
     val REQUEST_CODE = 4
@@ -165,8 +168,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
             imagesList.add(it.response.imageUrl)
+            Log.d("imagesList",imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -197,6 +200,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("SpringCode", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -460,7 +464,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     var bundle = data?.getBundleExtra("DataBundle")
-                    Log.d("bundleSpring",bundle.toString())
+                    Log.d("bundleSpring", bundle.toString())
                 }
 
             }
@@ -520,6 +524,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
         return body
     }
+
 
     private fun addBitmapToList(bitmap: Bitmap?) {
         imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))

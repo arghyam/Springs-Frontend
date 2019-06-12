@@ -6,6 +6,7 @@ object Constants {
     var POOR_INTERNET_CONNECTION : String = "22"
     var PHONE_NUMBER : String = "phoneNumber"
     var TAG_HOME: String = "home"
+    var TAG_FAVOURITES: String = "favourites"
     var TAG_SEARCH: String = "search"
     var TAG_MY_ACTIVITY = "My Activity"
     var TAG_MORE = "More"

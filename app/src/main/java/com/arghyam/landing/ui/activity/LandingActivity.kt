@@ -18,11 +18,13 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
+import com.arghyam.commons.utils.Constants.TAG_FAVOURITES
 import com.arghyam.commons.utils.Constants.TAG_HOME
 import com.arghyam.commons.utils.Constants.TAG_MORE
 import com.arghyam.commons.utils.Constants.TAG_MY_ACTIVITY
 import com.arghyam.commons.utils.Constants.TAG_SEARCH
 import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.favourites.ui.FavouritesFragment
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.interfaces.PermissionInterface
 import com.arghyam.landing.ui.fragment.ErrorFragment
@@ -82,6 +84,12 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     showHome()
                     return true
                 }
+                    R.id.navigation_fav -> {
+                CURRENT_TAG = TAG_FAVOURITES
+                        val fragment = FavouritesFragment.newInstance()
+                        addFragment(fragment)
+                return true
+            }
                 R.id.navigation_search -> {
                     CURRENT_TAG = TAG_SEARCH
                     val fragment = SearchFragment.newInstance()

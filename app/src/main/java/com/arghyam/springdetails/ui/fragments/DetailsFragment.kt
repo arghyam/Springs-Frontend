@@ -4,6 +4,7 @@ package com.arghyam.springdetails.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,30 +19,33 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
-import com.arghyam.commons.utils.Constants
-import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
-import com.arghyam.iam.model.ResponseDataModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.springdetails.adapter.ImageAdapter
-import com.arghyam.springdetails.models.*
+import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
+import com.arghyam.springdetails.models.SpringDetailsModel
+import com.arghyam.springdetails.models.SpringProfileResponse
 import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
-import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.android.synthetic.main.spring_details.*
-import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+
+
 /**
  * A simple [Fragment] subclass.
  *
@@ -52,8 +56,10 @@ class DetailsFragment : Fragment() {
     internal var selectedMonthNames: ArrayList<String> = ArrayList()
     internal lateinit var seasonality: String
     private var houseHoldNumber: Int = 0
-
+    private lateinit var parentIntent: Intent
     lateinit var response: ArrayList<Any>
+
+    private var images: List<String> = ArrayList()
 
     private lateinit var springProfileResponse: SpringProfileResponse
 
@@ -70,6 +76,11 @@ class DetailsFragment : Fragment() {
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
+    //...
+    var currentPage = 0
+    var timer: Timer? = null
+    val DELAY_MS: Long = 500//delay in milliseconds before task is to be executed
+    val PERIOD_MS: Long = 3000 // time in milliseconds between successive task executions.
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
@@ -77,6 +88,7 @@ class DetailsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        parentIntent = activity!!.intent
         init()
     }
 
@@ -88,7 +100,7 @@ class DetailsFragment : Fragment() {
         initAddDischargeData()
         initRepository()
         initSpringDetailsResponse()
-        initSpringDetails()
+        //initSpringDetails()
     }
 
     private fun initComponent() {
@@ -123,13 +135,19 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initSetData() {
-        tv_spring_name.text=":  ${springProfileResponse.springName}"
-        tv_spring_ownership.text=":  ${springProfileResponse.ownership}"
-        tv_spring_id.text=":  ${springProfileResponse.springCode}"
-        tv_spring_submtted.text=":  ${springProfileResponse.uploadedBy}"
+        tv_spring_name.text = ":  ${springProfileResponse.springName}"
+        tv_spring_ownership.text = ":  ${springProfileResponse.ownership}"
+        tv_spring_id.text = ":  ${springProfileResponse.springCode}"
+        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
+
+//        images = springProfileResponse.images
+//        Log.d("images", springProfileResponse.images.toString())
+
+
     }
 
     private fun initSpringDetails() {
+        var springCode: String = parentIntent.getStringExtra("SpringCode")
         var springDetailObject = RequestModel(
             id = GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -141,7 +159,7 @@ class DetailsFragment : Fragment() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = "8H7RjK"
+                    springCode = springCode
 
 
                 )
@@ -164,7 +182,7 @@ class DetailsFragment : Fragment() {
                     )
                 }
 
-            } else{
+            } else {
                 val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE)
             }
@@ -220,7 +238,7 @@ class DetailsFragment : Fragment() {
                         activity,
                         LoginActivity::class.java
                     )
-                                    }
+                }
 
             } else
                 activity?.startActivity(Intent(activity, AddDischargeActivity::class.java))
@@ -232,6 +250,30 @@ class DetailsFragment : Fragment() {
         val adapter = activity?.let { ImageAdapter(it, imageSample()) }
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
+
+        setupAutoPager()
+    }
+
+
+    private fun setupAutoPager() {
+        val handler = Handler()
+
+        val update = Runnable {
+            images_view_pager.setCurrentItem(currentPage, true)
+            if (currentPage == Integer.MAX_VALUE) {
+                currentPage = 0
+            } else {
+                ++currentPage
+            }
+        }
+
+
+        timer?.schedule(object : TimerTask() {
+
+            override fun run() {
+                handler.post(update)
+            }
+        }, 500, 2500)
     }
 
 
