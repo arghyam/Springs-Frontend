@@ -49,12 +49,10 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var getAllSpringRepository: GetAllSpringRepository
-
     private var getAllSpringViewModel: GetAllSpringViewModel? = null
-
-
     private var springsList = ArrayList<AllSpringDataModel>()
     private var count: Int = 1
+    private var maxItem: Int = 0
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
@@ -115,6 +113,7 @@ class HomeFragment : Fragment() {
             }
         }
         initFab()
+        reload()
     }
 
 
@@ -157,7 +156,18 @@ class HomeFragment : Fragment() {
                 object : TypeToken<AllSpringDetailsModel>() {}.type
             )
             springsList.addAll(responseData.springs)
+            maxItem = responseData.totalSprings % 5
             adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun reload(){
+        reload.setOnClickListener{
+            Log.e("Anirudh","reloaded")
+            springsList.clear()
+            adapter.notifyDataSetChanged()
+            count = 1
+            initApiCall()
         }
     }
 
@@ -208,8 +218,12 @@ class HomeFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
-                    count++
-                    initApiCall()
+                    if (maxItem > count) {
+                        count++
+                        Log.e("karthik", "$count")
+                        initApiCall()
+
+                    }
                 }
             }
         })

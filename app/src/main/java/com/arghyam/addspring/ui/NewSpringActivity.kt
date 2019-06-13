@@ -287,8 +287,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun imageUploadListener(): Boolean {
-        Log.e("Anirudh imgupload", imageList.size.toString())
-        return imageList.size > 0
+        Log.e("Anirudh imgupload", imagesList.size.toString())
+        return imagesList.size > 0
     }
 
     private fun ownershipTypeListener(): Boolean {
