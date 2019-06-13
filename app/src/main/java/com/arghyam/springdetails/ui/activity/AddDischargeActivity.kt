@@ -33,6 +33,7 @@ import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.springdetails.models.AddDischargeResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
@@ -70,9 +71,11 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
+    lateinit var dischargeDataResponseObject:AddDischargeResponseModel
+
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
-    private var dischargeTime: ArrayList<Int> = ArrayList()
+    private var dischargeTime: ArrayList<String> = ArrayList()
     private var imagesList: ArrayList<String> = ArrayList()
     private lateinit var containerString: String
     private var volOfContainer: Float? = null
@@ -89,16 +92,23 @@ class AddDischargeActivity : AppCompatActivity() {
         init()
     }
 
+    private fun getSpringId() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.e("Anirudh",springCode)
+    }
+
     private fun init() {
         initApplicationComponent()
         initRepository()
+        getSpringId()
         initViewComponents()
-        initClicks()
         initListeners()
         initToolbar()
         initRecyclerView()
         initUploadImageApis()
         initApiResponseCalls()
+        initClicks()
     }
 
     private fun validateData(): Boolean {
@@ -429,15 +439,19 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun dischargeDataResponse(responseModel: ResponseModel) {
-        var dischargeDataResponseObject: CreateSpringResponseObject = Gson().fromJson(
+        dischargeDataResponseObject = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
-            object : TypeToken<CreateSpringResponseObject>() {}.type
+            object : TypeToken<AddDischargeResponseModel>() {}.type
         )
+
+        springCode = dischargeDataResponseObject.springCode
+        Log.d("springCode----",springCode)
         gotoSpringDetailsActivity(dischargeDataResponseObject)
     }
 
-    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: CreateSpringResponseObject) {
+    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("SpringCode",springCode)
         intent.putExtra("SpringCode",dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
@@ -449,17 +463,23 @@ class AddDischargeActivity : AppCompatActivity() {
         if (!containerString.equals(""))
             volOfContainer = containerString.toFloat()
         if (timerList.size != 0) {
-            dischargeTime.add(timerList[0].seconds)
-            dischargeTime.add(timerList[1].seconds)
-            dischargeTime.add(timerList[2].seconds)
+            dischargeTime.add(timerList[0].seconds.toString())
+            dischargeTime.add(timerList[1].seconds.toString())
+            dischargeTime.add(timerList[2].seconds.toString())
         }
         if (!containerString.equals("") && timerList.size != 0) {
             val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
             litresPerSec.add(lps)
+            litresPerSec.add(lps)
+
         }
     }
 
+
     private fun addDischargeDataOnClick() {
+        val months:ArrayList<String> = ArrayList()
+        months.add("January")
+        months.add("April")
         var createSpringObject = RequestModel(
             id = CREATE_DISCHARGE_DATA,
             ver = BuildConfig.VER,
@@ -476,6 +496,8 @@ class AddDischargeActivity : AppCompatActivity() {
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,
                     status = "created",
+                    seasonality = "Sessional",
+                    months = months,
                     images = imagesList
                 )
             )

@@ -141,7 +141,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initSetData(springProfileResponse: SpringProfileResponse) {
-        tv_spring_name.text = ":  ${springProfileResponse.orgId}"
+        tv_spring_name.text = ":  ${springProfileResponse.springName}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
 
@@ -185,8 +185,12 @@ class DetailsFragment : Fragment() {
                 }
 
             } else {
-                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
-                startActivityForResult(intent, REQUEST_CODE)
+                val intent = Intent(context, AddAdditionalDetailsActivity::class.java)
+                intent.putExtra("SpringCode", springCode)
+                Log.e("Code in details", springCode)
+                startActivityForResult(intent,REQUEST_CODE)
+//                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
+//                startActivityForResult(intent, REQUEST_CODE)
             }
         }
     }

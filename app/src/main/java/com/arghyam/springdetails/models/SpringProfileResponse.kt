@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName
 @JsonIgnoreProperties
 class SpringProfileResponse(
     var springCode: String,
+    var springName: String,
     var userId: String,
     var tenantId: String,
     var orgId: String,

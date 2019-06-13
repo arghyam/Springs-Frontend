@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.springdetails.models.DischargeDataModal
+import com.arghyam.springdetails.models.SpringProfileResponse
 import kotlinx.android.synthetic.main.discharge_data_item.view.*
 
 class DischargeDataAdapter(private val items : ArrayList<DischargeDataModal>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {

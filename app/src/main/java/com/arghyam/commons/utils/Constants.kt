@@ -24,9 +24,9 @@ object Constants {
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.create-spring"
     var GET_ALL_SPRINGS_ID = "open-saber.registry.search"
-    var TENANTID = "tenant098"
-    var ORGID = "organization@13"
-    var VILLAGE = "village123"
+    var TENANTID = ""
+    var ORGID = ""
+    var VILLAGE = ""
     var CREATE_DISCHARGE_DATA = "forWater.user.createDischargeData"
     var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
     var GPS_ENABLED = -1

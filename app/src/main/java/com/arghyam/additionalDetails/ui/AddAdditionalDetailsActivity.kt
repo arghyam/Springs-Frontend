@@ -49,6 +49,8 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var checkBoxOthers: CheckBox
     private lateinit var houseHoldNumber: EditText
     private var goBack: Boolean = false
+    private lateinit var springCode: String
+
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
 
@@ -73,7 +75,13 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         observeData()
         initClick()
         initListener()
+        initIntent()
+    }
 
+    private fun initIntent() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.d("Anirudh", "" + springCode)
     }
 
     private fun observeData() {
@@ -415,7 +423,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
             ),
             request = RequestAdditionalDetailsDataModel(
                 additionalInfo = AdditionalDetailsModel(
-                    springCode = "Spring5678",
+                    springCode = springCode,
                     seasonality = seasonality,
                     waterUseList = waterUse,
                     months = selectedMonth,
