@@ -314,13 +314,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    tenantId = Constants.TENANTID,
-                    orgId = Constants.ORGID,
+                    tenantId = "",
+                    orgId = "",
                     latitude = mLocation!!.latitude,
                     longitude = mLocation!!.longitude,
                     elevation = mLocation!!.altitude,
                     accuracy = mLocation!!.accuracy,
-                    village = Constants.VILLAGE,
+                    village = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList
 

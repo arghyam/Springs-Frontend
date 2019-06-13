@@ -21,9 +21,9 @@ class DischargeDataAdapter(private val items : ArrayList<SpringProfileResponse>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item : SpringProfileResponse = items[position]
         holder.date.text = item.createdTimeStamp
-//        holder.discharge.text = item.
-        holder.submittedBy.text = item.userId
-        holder.tick.visibility = VISIBLE
+//        holder.discharge.text = item.extraInformation.dischargeData
+        holder.submittedBy.text = item.ownershipType
+//        holder.tick.visibility = VISIBLE
 //        if(!item.isVerified) {
 //            holder.date.setTextColor(context.resources.getColor(R.color.jumbo))
 //            holder.discharge.setTextColor(context.resources.getColor(R.color.jumbo))

@@ -415,7 +415,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
             ),
             request = RequestAdditionalDetailsDataModel(
                 additionalInfo = AdditionalDetailsModel(
-                    springCode = "Spring5678",
+                    springCode = "",
                     seasonality = seasonality,
                     waterUseList = waterUse,
                     months = selectedMonth,
