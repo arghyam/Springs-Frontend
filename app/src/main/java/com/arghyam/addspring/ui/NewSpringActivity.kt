@@ -471,7 +471,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     altitude.text = ": ${mLocation!!.altitude} mts"
                     tv_accuracy.text = "Device accuracy  : ${mLocation!!.accuracy}mts"
 
-                    if (mLocation!!.accuracy < 50) {
+                    if (mLocation!!.accuracy < 25) {
                         tv_reposition.text = "Done"
                         img_GPS.setImageResource(R.drawable.ic_location_done)
                         img_GPS.setBackgroundResource(0)
@@ -479,7 +479,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     } else {
                         tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
-                        ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 50mts")
+                        ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 25mts")
 
                     }
                     isvalid()
