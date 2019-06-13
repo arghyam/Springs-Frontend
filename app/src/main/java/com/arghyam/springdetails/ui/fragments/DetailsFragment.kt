@@ -94,7 +94,6 @@ class DetailsFragment : Fragment() {
     private fun init() {
         initComponent()
         initRepository()
-
         initClick()
         initSpringDetails()
         initAddDischargeData()
@@ -144,10 +143,17 @@ class DetailsFragment : Fragment() {
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
+        date.text= "${ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)}"
+        time.text ="${ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)}"
 
 
 //        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
 //        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initSpringDetails()
     }
 
     private fun initSpringDetails() {
@@ -189,6 +195,8 @@ class DetailsFragment : Fragment() {
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivityForResult(intent,REQUEST_CODE)
+
+
 //                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
 //                startActivityForResult(intent, REQUEST_CODE)
             }

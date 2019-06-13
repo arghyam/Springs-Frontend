@@ -83,7 +83,7 @@ class DischargeDataFragment : Fragment() {
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
-//            initDischargeAdapter(it)
+            //            initDischargeAdapter(it)
             saveSpringDetailsData(it)
             if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
                 springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
@@ -121,7 +121,6 @@ class DischargeDataFragment : Fragment() {
         initDischargeData(springProfileResponse)
 
 
-
     }
 
     private fun initComponent() {
@@ -152,7 +151,7 @@ class DischargeDataFragment : Fragment() {
                     )
                 }
 
-            } else{
+            } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
@@ -184,21 +183,18 @@ class DischargeDataFragment : Fragment() {
     }
 
     private fun initDischargeData(springProfileResponse: SpringProfileResponse) {
-//        dischargeData.add(DischargeDataModal("12/11/1995", "30", "karthik", true))
-//        dischargeData.add(DischargeDataModal("17/08/1996", "63", "Sean Paul", false))
-//        dischargeData.add(DischargeDataModal("15/07/1996", "30.55", "Enrique iglesius", true))
-//        dischargeData.add(DischargeDataModal("12/11/1996", "30.44", "Pitbull", false))
-//        dischargeData.add(DischargeDataModal("12/11/1996", "30.23", "karthik", true))
-        if (springProfileResponse.extraInformation.dischargeData.size > 0)
-            dischargeModeList.add(
-                DischargeDataModal(
-                    springProfileResponse.extraInformation.dischargeData[0].createdTimeStamp,
-                    springProfileResponse.extraInformation.dischargeData[0].litresPerSecond.toString(),
-                    springProfileResponse.extraInformation.dischargeData[0].userId,
-                    true
+        for (dischargeCount in springProfileResponse.extraInformation.dischargeData) {
+            if (springProfileResponse.extraInformation.dischargeData.size > 0)
+                dischargeModeList.add(
+                    DischargeDataModal(
+                        ArghyamUtils().getDate(dischargeCount.createdTimeStamp),
+                        dischargeCount.litresPerSecond[0].toString(),
+                        dischargeCount.userId,
+                        true
+                    )
                 )
-            )
-        discharge_data_recyclerView.adapter?.notifyDataSetChanged()
+            discharge_data_recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 
     private fun initRepository() {

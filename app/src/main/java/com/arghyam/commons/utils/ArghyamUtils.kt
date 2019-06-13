@@ -21,6 +21,9 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import android.widget.TextView
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ArghyamUtils {
@@ -120,4 +123,35 @@ class ArghyamUtils {
 
         }
     }
+
+     fun getDate(dateString: String): String {
+        val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        formatter.timeZone = TimeZone.getTimeZone("UTC ")
+        var value: Date? = null
+        try {
+            value = formatter.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
+        dateFormatter.timeZone = TimeZone.getDefault()
+        return dateFormatter.format(value)
+    }
+
+    fun getTime(dateString: String): String {
+        val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        formatter.timeZone = TimeZone.getTimeZone("UTC ")
+        var value: Date? = null
+        try {
+            value = formatter.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        val dateFormatter = SimpleDateFormat("hh:mm a")
+        dateFormatter.timeZone = TimeZone.getDefault()
+        return dateFormatter.format(value)
+    }
+
 }
