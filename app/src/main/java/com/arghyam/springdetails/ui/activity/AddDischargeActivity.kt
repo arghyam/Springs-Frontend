@@ -211,7 +211,7 @@ class AddDischargeActivity : AppCompatActivity() {
 //    }
     override fun onSupportNavigateUp(): Boolean {
         if (goBack) {
-            onBackPressed()
+            finish()
         } else {
             ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
             startTimer()
@@ -220,6 +220,18 @@ class AddDischargeActivity : AppCompatActivity() {
         return true
         initApiCalls()
     }
+
+    override fun onBackPressed() {
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
+    }
+
+
 
     private fun startTimer() {
         Handler().postDelayed({

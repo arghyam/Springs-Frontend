@@ -134,7 +134,7 @@ class DetailsFragment : Fragment() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-        Log.e("Anirudh",springProfileResponse.toString())
+        Log.e("Anirudh", springProfileResponse.toString())
         initSetData(springProfileResponse)
         imageSample(springProfileResponse)
     }
@@ -143,8 +143,10 @@ class DetailsFragment : Fragment() {
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
-        date.text= "${ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)}"
-        time.text ="${ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)}"
+        if (!springProfileResponse.createdTimeStamp.equals(null)) {
+            date.text = "${ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)}"
+            time.text = "${ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)}"
+        }
 
 
 //        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
@@ -194,7 +196,7 @@ class DetailsFragment : Fragment() {
                 val intent = Intent(context, AddAdditionalDetailsActivity::class.java)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
-                startActivityForResult(intent,REQUEST_CODE)
+                startActivityForResult(intent, REQUEST_CODE)
 
 
 //                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)

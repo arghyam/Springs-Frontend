@@ -248,13 +248,23 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
     override fun onSupportNavigateUp(): Boolean {
         if (goBack) {
-            onBackPressed()
+            finish()
         } else {
             ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
             startTimer()
         }
         goBack = true
         return true
+    }
+
+    override fun onBackPressed() {
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
     }
 
     private fun startTimer() {
