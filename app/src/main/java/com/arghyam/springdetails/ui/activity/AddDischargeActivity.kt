@@ -31,6 +31,7 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.commons.utils.DecimalDigitsInputFilter
+import com.arghyam.commons.utils.InputFilterMinMax
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -114,7 +115,7 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initvolumecontrol() {
-        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,1))
+        volumeOfContainer.filters = arrayOf<InputFilter>(InputFilterMinMax("0","100"));(DecimalDigitsInputFilter(2,1))
     }
 
     private fun validateData(): Boolean {
@@ -172,8 +173,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
-            imagesList.add(it.response.imageUrl)
+            Log.e("stefy", it?.response!!.imageName)
+            imagesList.add(it.response.imageName)
         })
         uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
             Log.e("stefy error", it)
