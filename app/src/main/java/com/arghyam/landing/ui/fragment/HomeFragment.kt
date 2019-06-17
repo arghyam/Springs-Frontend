@@ -83,10 +83,8 @@ class HomeFragment : Fragment() {
 
     private fun setObserver() {
         landingViewModel.getIsGpsEnabled().observe(this, Observer {
-            Log.e("Api", "Called")
             initApiCall()
         })
-        Log.e("abc", "Called")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -137,9 +135,9 @@ class HomeFragment : Fragment() {
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
             saveGetAllSpringsData(it)
-            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-            }
+//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
+//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
+//            }
         })
         getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
             Log.e("error", it)
@@ -155,19 +153,30 @@ class HomeFragment : Fragment() {
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<AllSpringDetailsModel>() {}.type
             )
+            Log.e(
+                "Total Springs", ArghyamUtils().convertToString(responseModel.response.responseObject)
+            )
+
+            Log.e("Total Springs", responseData.totalSprings.toString() + "springs")
             springsList.addAll(responseData.springs)
-            maxItem = responseData.totalSprings % 5
+            for (spring in springsList)
+                Log.e("SpringList", spring.springCode)
+            maxItem = responseData.totalSprings / 5
+            if (responseData.totalSprings % 5 != 0) {
+                maxItem++
+            }
             adapter.notifyDataSetChanged()
         }
     }
 
-    private fun reload(){
-        reload.setOnClickListener{
-            Log.e("Anirudh","reloaded")
+    private fun reload() {
+        reload.setOnClickListener {
+            Log.e("Anirudh", "reloaded")
             springsList.clear()
             adapter.notifyDataSetChanged()
             count = 1
-            initApiCall()
+//            initApiCall()
+            getAllSpringRequest()
         }
     }
 
@@ -221,8 +230,9 @@ class HomeFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
-                        initApiCall()
 
+                        getAllSpringRequest()
+//                        initApiCall()
                     }
                 }
             }

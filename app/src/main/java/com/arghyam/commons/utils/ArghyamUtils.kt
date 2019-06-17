@@ -124,7 +124,7 @@ class ArghyamUtils {
         }
     }
 
-     fun getDate(dateString: String): String {
+    fun getDate(dateString: String): String {
         val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
         formatter.timeZone = TimeZone.getTimeZone("UTC ")
         var value: Date? = null
@@ -136,7 +136,10 @@ class ArghyamUtils {
 
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
         dateFormatter.timeZone = TimeZone.getDefault()
-        return dateFormatter.format(value)
+        if (value != null)
+            return dateFormatter.format(value)
+        else
+            return ""
     }
 
     fun getTime(dateString: String): String {
@@ -151,7 +154,10 @@ class ArghyamUtils {
 
         val dateFormatter = SimpleDateFormat("hh:mm a")
         dateFormatter.timeZone = TimeZone.getDefault()
-        return dateFormatter.format(value)
+        if (value != null)
+            return dateFormatter.format(value)
+        else
+            return ""
     }
 
 }
