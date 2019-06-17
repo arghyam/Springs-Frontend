@@ -2,6 +2,8 @@ package com.arghyam.landing.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +57,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
                     context,
                     LoginActivity::class.java
                 )
-            } else{
+            } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
                 context.startActivity(dataIntent)
@@ -63,10 +65,34 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             return@OnClickListener
         })
         holder.favourite.setOnClickListener {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (holder.favourite.drawable.constantState == context.getDrawable(R.drawable.ic_fav).constantState) {
+                    Log.e("fill", "sss")
+
+                    holder.favourite.setImageResource(R.drawable.ic_fav_fill)
+                } else {
+                    Log.e("fav", "sdsd")
+                    holder.favourite.setImageResource(R.drawable.ic_fav)
+
+                }
+            }
+            else{
+                if (holder.favourite.drawable.constantState == context.resources.getDrawable(R.drawable.ic_fav).constantState) {
+                    Log.e("fill", "sss")
+
+                    holder.favourite.setImageResource(R.drawable.ic_fav_fill)
+                } else {
+                    Log.e("fav", "sdsd")
+                    holder.favourite.setImageResource(R.drawable.ic_fav)
+
+                }
+            }
+
         }
-        holder.ownership.text= springs.ownershipType
-        holder.springcode.text= springs.springCode
-        holder.village.text= springs.village
+        holder.ownership.text = springs.ownershipType
+        holder.springcode.text = springs.springCode
+        holder.village.text = springs.village
 
 
     }
@@ -80,8 +106,8 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
-        val springcode:TextView = view.springcode
-        val village:TextView = view.village_name
+        val springcode: TextView = view.springcode
+        val village: TextView = view.village_name
 
 
     }

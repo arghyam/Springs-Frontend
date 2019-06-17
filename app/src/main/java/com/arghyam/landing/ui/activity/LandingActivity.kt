@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -47,16 +48,25 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var landingViewModel: LandingViewModel? = null
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
+    var mContent : Fragment? = null
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
+//        if(savedInstanceState!=null){
+//            mContent = supportFragmentManager.getFragment(savedInstanceState, "HomeFragment")
+//        }
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         initViewModel()
         showHome()
 
     }
+
+//    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        supportFragmentManager.putFragment(outState!!,"HomeFragment",mContent!!)
+//    }
 
     private fun initViewModel() {
         landingViewModel = ViewModelProviders.of(this).get(LandingViewModel::class.java)
