@@ -18,7 +18,7 @@ public class DecimalDigitsInputFilter implements InputFilter {
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
-        Matcher matcher=mPattern.matcher(dest);
+        Matcher matcher=mPattern.matcher(dest.subSequence(0, dstart).toString() + source.subSequence(start, end) + dest.subSequence(dend, dest.length()));
         if(!matcher.matches())
             return "";
         return null;
