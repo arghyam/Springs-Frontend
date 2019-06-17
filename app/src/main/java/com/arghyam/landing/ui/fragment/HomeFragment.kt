@@ -137,9 +137,9 @@ class HomeFragment : Fragment() {
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
             saveGetAllSpringsData(it)
-            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-            }
+//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
+//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
+//            }
         })
         getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
             Log.e("error", it)
@@ -221,7 +221,7 @@ class HomeFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
-                        initApiCall()
+                        getAllSpringRequest()
 
                     }
                 }
