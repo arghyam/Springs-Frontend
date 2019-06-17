@@ -84,12 +84,12 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     showHome()
                     return true
                 }
-                    R.id.navigation_fav -> {
-                CURRENT_TAG = TAG_FAVOURITES
-                        val fragment = FavouritesFragment.newInstance()
-                        addFragment(fragment)
-                return true
-            }
+                R.id.navigation_fav -> {
+                    CURRENT_TAG = TAG_FAVOURITES
+                    val fragment = FavouritesFragment.newInstance()
+                    addFragment(fragment)
+                    return true
+                }
                 R.id.navigation_search -> {
                     CURRENT_TAG = TAG_SEARCH
                     val fragment = SearchFragment.newInstance()
@@ -131,6 +131,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     override fun onBackPressed() {
         super.onBackPressed()
         if (CURRENT_TAG == TAG_HOME) {
+            if (SharedPreferenceFactory(this@LandingActivity).getString(Constants.ACCESS_TOKEN) == "") {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
             finish()
         } else {
             CURRENT_TAG = TAG_HOME
