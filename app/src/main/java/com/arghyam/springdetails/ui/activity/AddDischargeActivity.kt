@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -23,13 +24,13 @@ import com.arghyam.R
 import com.arghyam.addspring.adapters.ImageUploaderAdapter
 import com.arghyam.addspring.entities.ImageEntity
 import com.arghyam.addspring.interfaces.ImageUploadInterface
-import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
+import com.arghyam.commons.utils.DecimalDigitsInputFilter
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -109,6 +110,11 @@ class AddDischargeActivity : AppCompatActivity() {
         initUploadImageApis()
         initApiResponseCalls()
         initClicks()
+        initvolumecontrol()
+    }
+
+    private fun initvolumecontrol() {
+        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,1))
     }
 
     private fun validateData(): Boolean {
