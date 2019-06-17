@@ -114,7 +114,7 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initvolumecontrol() {
-        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,1))
+        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,2))
     }
 
     private fun validateData(): Boolean {
