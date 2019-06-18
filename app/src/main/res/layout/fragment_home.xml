@@ -98,7 +98,7 @@
 
                 <ImageView
                         android:layout_width="80dp"
-                        android:src="@drawable/ic_drops"
+                        app:srcCompat="@drawable/ic_drops"
                         android:layout_height="80dp"/>
 
                 <TextView
@@ -151,6 +151,13 @@
             app:borderWidth="0dp"
             android:layout_marginBottom="20dp"
             android:id="@+id/floatingActionButton"/>
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+    />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

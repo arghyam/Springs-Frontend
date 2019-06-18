@@ -125,6 +125,7 @@ class HomeFragment : Fragment() {
         if (itemsAvailable) {
             errorItems?.visibility = GONE
             springsLocation?.visibility = VISIBLE
+            progressBar.visibility= VISIBLE
             getAllSpringRequest()
             initGetAllSpring()
         } else {
@@ -136,6 +137,7 @@ class HomeFragment : Fragment() {
 
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
+            progressBar.visibility= GONE
             saveGetAllSpringsData(it)
 //            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
 //                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
@@ -232,6 +234,7 @@ class HomeFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
+                        progressBar.visibility= VISIBLE
                         getAllSpringRequest()
 //                        initApiCall()
                     }
