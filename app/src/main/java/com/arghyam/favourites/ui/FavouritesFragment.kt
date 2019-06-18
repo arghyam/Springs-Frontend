@@ -99,6 +99,7 @@ class FavouritesFragment : Fragment() {
 
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
+            progressBar.visibility = View.GONE
             saveGetAllSpringsData(it)
 //            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
 //                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
@@ -135,9 +136,11 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initApiCall() {
-            getAllSpringRequest()
-            initGetAllSpring()
+        progressBar.visibility = View.VISIBLE
+        getAllSpringRequest()
+        initGetAllSpring()
     }
+
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
@@ -173,6 +176,7 @@ class FavouritesFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
+                        progressBar.visibility = View.VISIBLE
                         getAllSpringRequest()
 //                        initApiCall()
                     }
@@ -185,7 +189,6 @@ class FavouritesFragment : Fragment() {
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
     }
-
 
 
     interface OnFragmentInteractionListener {
