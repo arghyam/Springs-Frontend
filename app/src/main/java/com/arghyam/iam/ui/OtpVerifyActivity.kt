@@ -134,7 +134,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initResendCodeButton() {
         resendCode.setOnClickListener {
-            if (resendOtpCount < 4) {
+            if (resendOtpCount <= 4) {
                 if (!isCounterRunning) {
                     makeResendOtpCall()
                 }
