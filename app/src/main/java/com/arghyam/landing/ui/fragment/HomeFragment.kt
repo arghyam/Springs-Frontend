@@ -57,6 +57,8 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
 
+    private var firstCallMade: Boolean = false
+
     /**
      * Initialize newInstance for passing paameters
      */
@@ -83,8 +85,15 @@ class HomeFragment : Fragment() {
 
     private fun setObserver() {
         landingViewModel.getIsGpsEnabled().observe(this, Observer {
-            Log.e("Api", "Called")
-            initApiCall()
+
+            if (!firstCallMade) {
+                Log.e("Api", "Called")
+                springsList.clear()
+                adapter.notifyDataSetChanged()
+                count = 1
+                initApiCall()
+                firstCallMade = true
+            }
         })
         Log.e("abc", "Called")
     }
@@ -103,13 +112,16 @@ class HomeFragment : Fragment() {
         ) {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
-                initRepository()
-                initApiCall()
+                if (springsList.size == 0) {
+                    initRepository()
+                    initApiCall()
+                }
             } else {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
                 errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
                 springsLocation.visibility = GONE
+                firstCallMade = false
             }
         }
         initFab()
@@ -123,12 +135,18 @@ class HomeFragment : Fragment() {
 
     private fun initApiCall() {
         if (itemsAvailable) {
-            errorItems?.visibility = GONE
-            springsLocation?.visibility = VISIBLE
-            progressBar.visibility= VISIBLE
-            getAllSpringRequest()
-            initGetAllSpring()
+            if (!firstCallMade) {
+                Log.e("pattu", "dulha")
+                errorItems?.visibility = GONE
+                springsLocation?.visibility = VISIBLE
+                progressBar.visibility = VISIBLE
+                initRepository()
+                getAllSpringRequest()
+                initGetAllSpring()
+                firstCallMade = true
+            }
         } else {
+            Log.e("pattu", "ghungroo")
             errorItems.visibility = VISIBLE
             errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
             springsLocation.visibility = GONE
@@ -137,7 +155,7 @@ class HomeFragment : Fragment() {
 
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
-            progressBar.visibility= GONE
+            progressBar.visibility = GONE
             saveGetAllSpringsData(it)
 //            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
 //                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
@@ -162,6 +180,7 @@ class HomeFragment : Fragment() {
             )
 
             Log.e("Total Springs", responseData.totalSprings.toString() + "springs")
+            Log.e("Springs", "added")
             springsList.addAll(responseData.springs)
             for (spring in springsList)
                 Log.e("SpringList", spring.springCode)
@@ -234,7 +253,7 @@ class HomeFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
-                        progressBar.visibility= VISIBLE
+                        progressBar.visibility = VISIBLE
                         getAllSpringRequest()
 //                        initApiCall()
                     }
