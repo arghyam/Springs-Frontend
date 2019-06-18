@@ -3,6 +3,7 @@ package com.arghyam.commons.di
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.example.ui.ExampleActivity
+import com.arghyam.favourites.ui.FavouritesFragment
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.iam.ui.OtpVerifyActivity
 import com.arghyam.landing.ui.fragment.HomeFragment
@@ -30,6 +31,8 @@ interface AppComponent {
     fun inject(newSpringActivity: NewSpringActivity)
 
     fun inject(addAdditionalDetailsActivity: AddAdditionalDetailsActivity)
+
+    fun inject(favouritesFragment: FavouritesFragment)
 
     fun inject(homeFragment: HomeFragment)
 

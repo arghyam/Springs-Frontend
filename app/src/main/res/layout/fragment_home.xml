@@ -98,7 +98,7 @@
 
                 <ImageView
                         android:layout_width="80dp"
-                        android:src="@drawable/ic_drops"
+                        app:srcCompat="@drawable/ic_drops"
                         android:layout_height="80dp"/>
 
                 <TextView
