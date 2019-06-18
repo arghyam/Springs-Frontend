@@ -128,7 +128,7 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s?.length!! >= 3) {
+                if (s?.trim()!!.length >= 3) {
                     submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                 } else {
                     submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
@@ -145,7 +145,6 @@ class ProfileActivity : AppCompatActivity() {
         if (null != intent.extras) {
             val phone = intent.getStringExtra(PHONE_NUMBER)
             mobile.setText(phone)
-
         }
     }
 
