@@ -36,13 +36,20 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="?attr/actionBarSize">
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/favrecyclerview"
-                        android:layout_width="match_parent"
-                        android:layout_below="@+id/spring_near"
-                        android:layout_height="wrap_content"/>
-
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/favrecyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/spring_near"
+                    android:layout_height="wrap_content"/>
+            <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+            />
         </FrameLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 
