@@ -144,7 +144,6 @@ class OtpVerifyActivity : AppCompatActivity() {
                         "You have reached the maximum limit, Please try again",
                         Toast.LENGTH_LONG
                 ).show()
-                onBackPressed()
             }
         }
     }
