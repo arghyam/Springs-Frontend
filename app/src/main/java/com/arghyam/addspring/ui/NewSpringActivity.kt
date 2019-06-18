@@ -15,6 +15,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -197,6 +198,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initClick() {
         radioGroup?.setOnCheckedChangeListener { group, checkedId ->
             initRadioButtonListeners()
+            hideSoftKeyboard()
         }
     }
 
@@ -258,10 +260,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if (spring_name.text == null || spring_name.text.toString().equals("")){
+            if (spring_name.text == null || spring_name.text.toString().equals("")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
-            }
-            else if (radioGroup.checkedRadioButtonId == -1) {
+            } else if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
             } else if (imageList.size <= 0) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
@@ -356,6 +357,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initLocationClick() {
         img_GPS.setOnClickListener {
+            hideSoftKeyboard()
             getGoogleClient()
             tv_reposition.text = "fetching location information..."
             img_GPS.setImageResource(R.drawable.ic_location_refresh)
@@ -363,8 +365,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
-    private fun isvalid(){
-        Log.e("Anirudh","isvalid")
+    private fun isvalid() {
+        Log.e("Anirudh", "isvalid")
         var validated: Boolean = validateListener()
         if (validated) {
             valid()
@@ -372,8 +374,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             notvalid()
         }
     }
+
     private fun initLocation() {
         location_layout.setOnClickListener {
+            hideSoftKeyboard()
             getGoogleClient()
         }
     }
@@ -620,6 +624,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+    }
+
+    private fun hideSoftKeyboard(){
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }
