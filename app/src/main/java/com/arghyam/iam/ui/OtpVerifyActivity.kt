@@ -134,7 +134,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun initResendCodeButton() {
         resendCode.setOnClickListener {
-            if (resendOtpCount < 4) {
+            if (resendOtpCount <= 4) {
                 if (!isCounterRunning) {
                     makeResendOtpCall()
                 }
@@ -144,7 +144,6 @@ class OtpVerifyActivity : AppCompatActivity() {
                         "You have reached the maximum limit, Please try again",
                         Toast.LENGTH_LONG
                 ).show()
-                onBackPressed()
             }
         }
     }
