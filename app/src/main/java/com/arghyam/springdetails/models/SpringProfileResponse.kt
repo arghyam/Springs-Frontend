@@ -37,7 +37,7 @@ class DischargeData(
     var createdTimeStamp: String,
     var userId: String,
     var orgId: String,
-    var volumeOfContainer: Int,
+    var volumeOfContainer: Float,
     var litresPerSecond: ArrayList<Double>,
     var tenantId: String,
     var springCode: String,
