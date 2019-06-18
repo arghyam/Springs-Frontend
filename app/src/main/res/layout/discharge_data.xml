@@ -36,7 +36,7 @@
                     android:background="@drawable/background_border_head"
                     android:textColor="@color/ship_grey"
                     android:gravity="center_vertical"
-                    android:text="@string/discharge_lpm"
+                    android:text="@string/discharge_lps"
                     android:layout_height="fill_parent"/>
 
             <TextView
