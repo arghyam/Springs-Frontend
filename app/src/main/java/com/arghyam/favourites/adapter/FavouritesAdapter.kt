@@ -1,8 +1,7 @@
-package com.arghyam.landing.adapters
+package com.arghyam.favourites.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
@@ -21,9 +21,7 @@ import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_spring.view.*
 
-
-class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context: Context) :
-    RecyclerView.Adapter<LandingAdapter.ViewHolder>() {
+class FavouritesAdapter (private val springList: ArrayList<FavSpringDataModel>, val context: Context) : RecyclerView.Adapter<FavouritesAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
         return ViewHolder(v)
@@ -34,7 +32,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val springs: AllSpringDataModel = springList[position]
+        val springs: FavSpringDataModel = springList[position]
         holder.springNameText.text = springs.orgId
         holder.villageNameText.text = springs.village
         Glide.with(context)
@@ -64,27 +62,10 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             return@OnClickListener
         })
         holder.favourite.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (holder.favourite.drawable.constantState == context.getDrawable(R.drawable.ic_fav).constantState) {
-
-                    holder.favourite.setImageResource(R.drawable.ic_fav_fill)
-                } else {
-                    holder.favourite.setImageResource(R.drawable.ic_fav)
-                }
-            } else {
-                if (holder.favourite.drawable.constantState == context.resources.getDrawable(R.drawable.ic_fav).constantState) {
-                    holder.favourite.setImageResource(R.drawable.ic_fav_fill)
-                } else {
-                    holder.favourite.setImageResource(R.drawable.ic_fav)
-
-                }
-            }
         }
         holder.ownership.text= springs.ownershipType
         holder.springcode.text= springs.springCode
         holder.village.text= springs.village
-
-
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -96,8 +77,8 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
-        val springcode:TextView = view.springcode
-        val village:TextView = view.village_name
+        val springcode: TextView = view.springcode
+        val village: TextView = view.village_name
 
 
     }

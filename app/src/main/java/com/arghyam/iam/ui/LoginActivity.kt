@@ -29,10 +29,6 @@ import kotlinx.android.synthetic.main.content_login.*
 import javax.inject.Inject
 
 
-
-
-
-
 class LoginActivity : AppCompatActivity() {
 
     @Inject
