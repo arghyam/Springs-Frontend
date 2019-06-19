@@ -85,17 +85,31 @@ class HomeFragment : Fragment() {
 
     private fun setObserver() {
         landingViewModel.getIsGpsEnabled().observe(this, Observer {
-
-            if (!firstCallMade) {
-                Log.e("Api", "Called")
-                springsList.clear()
-                adapter.notifyDataSetChanged()
-                count = 1
-                initApiCall()
-                firstCallMade = true
+            if (it) {
+//                if (!firstCallMade) {
+//                    springsList.clear()
+//                    adapter.notifyDataSetChanged()
+//                    count = 1
+//                    Log.e("Call", "from landing view model")
+//                    initApiCall()
+//                    firstCallMade = true
+//                }
+                if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
+                    if (!firstCallMade) {
+                        springsList.clear()
+                    adapter.notifyDataSetChanged()
+                        count = 1
+                        initApiCall()
+                    }
+                } else {
+                    activity?.let { ArghyamUtils().turnOnLocation(it) }!!
+                    errorItems.visibility = VISIBLE
+                    errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+                    springsLocation.visibility = GONE
+                    firstCallMade = false
+                }
             }
         })
-        Log.e("abc", "Called")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -113,6 +127,7 @@ class HomeFragment : Fragment() {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                 if (springsList.size == 0) {
+                    Log.e("Call made ", "from location enabled")
                     initRepository()
                     initApiCall()
                 }
@@ -136,7 +151,7 @@ class HomeFragment : Fragment() {
     private fun initApiCall() {
         if (itemsAvailable) {
             if (!firstCallMade) {
-                Log.e("pattu", "dulha")
+                Log.e("call made ", "from initApiCall")
                 errorItems?.visibility = GONE
                 springsLocation?.visibility = VISIBLE
                 progressBar.visibility = VISIBLE
@@ -146,7 +161,6 @@ class HomeFragment : Fragment() {
                 firstCallMade = true
             }
         } else {
-            Log.e("pattu", "ghungroo")
             errorItems.visibility = VISIBLE
             errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
             springsLocation.visibility = GONE
@@ -254,6 +268,7 @@ class HomeFragment : Fragment() {
                         count++
                         Log.e("karthik", "$count")
                         progressBar.visibility = VISIBLE
+                        Log.e("Call made", " from recycler View")
                         getAllSpringRequest()
 //                        initApiCall()
                     }
