@@ -97,12 +97,13 @@ class HomeFragment : Fragment() {
                 if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                     if (!firstCallMade) {
                         springsList.clear()
-                    adapter.notifyDataSetChanged()
+                        adapter.notifyDataSetChanged()
                         count = 1
                         initApiCall()
                     }
                 } else {
-                    activity?.let { ArghyamUtils().turnOnLocation(it) }!!
+                    Log.e("call", "from observer")
+//                    activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                     errorItems.visibility = VISIBLE
                     errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
                     springsLocation.visibility = GONE
@@ -127,11 +128,12 @@ class HomeFragment : Fragment() {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                 if (springsList.size == 0) {
-                    Log.e("Call made ", "from location enabled")
+
                     initRepository()
                     initApiCall()
                 }
             } else {
+                Log.e("call", "from init")
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
                 errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
@@ -278,7 +280,6 @@ class HomeFragment : Fragment() {
             }
         })
     }
-
 
     private fun initRepository() {
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
