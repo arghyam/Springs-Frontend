@@ -71,6 +71,7 @@
                     </TextView>
 
                     <ImageView
+                            android:id="@+id/reload"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:srcCompat="@drawable/ic_refresh"
@@ -97,7 +98,7 @@
 
                 <ImageView
                         android:layout_width="80dp"
-                        android:src="@drawable/ic_drops"
+                        app:srcCompat="@drawable/ic_drops"
                         android:layout_height="80dp"/>
 
                 <TextView
@@ -132,6 +133,13 @@
 
 
             </LinearLayout>
+            <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+            />
 
 
         </FrameLayout>
@@ -149,7 +157,8 @@
             android:backgroundTint="@color/colorPrimaryDark"
             app:borderWidth="0dp"
             android:layout_marginBottom="20dp"
-            android:id="@+id/floatingActionButton"/>
+            android:id="@+id/floatingActionButton"
+            android:focusable="true"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

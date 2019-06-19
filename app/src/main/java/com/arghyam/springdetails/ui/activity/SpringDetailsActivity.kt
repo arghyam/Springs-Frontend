@@ -1,20 +1,38 @@
 package com.arghyam.springdetails.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.arghyam.R
-
-import kotlinx.android.synthetic.main.activity_spring_details.*
-import kotlinx.android.synthetic.main.content_spring_details.*
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
+import com.arghyam.R
+import com.arghyam.commons.utils.Constants
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
+import com.arghyam.springdetails.models.SpringDetailsModel
+import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.fragments.DetailsFragment
 import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
+import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
+import kotlinx.android.synthetic.main.activity_spring_details.*
+import kotlinx.android.synthetic.main.content_spring_details.*
+import javax.inject.Inject
 
 
 class SpringDetailsActivity : AppCompatActivity() {
+
+    private lateinit var springCode: String
+    @Inject
+    lateinit var springDetailsRepository: SpringDetailsRepository
+
+    private var springDetailsViewModel: SpringDetailsViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +40,24 @@ class SpringDetailsActivity : AppCompatActivity() {
         init()
     }
 
+    private fun getSpringId() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.e("Code", springCode)
+
+    }
+
     private fun init() {
         initToolBar()
+        initComponent()
+        getSpringId()
+        initRepository()
+        initSpringDetails()
         initViewPager()
+    }
+
+    private fun initComponent() {
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
     private fun initToolBar() {
@@ -45,6 +78,9 @@ class SpringDetailsActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+//        var detailsFragment:DetailsFragment
+//
+//        detailsFragment.arguments=
         adapter.addFragment(DetailsFragment(), "Details")
         adapter.addFragment(DischargeDataFragment(), "Discharge Data")
         viewPager.adapter = adapter
@@ -71,4 +107,30 @@ class SpringDetailsActivity : AppCompatActivity() {
             return mFragmentTitleList.get(position)
         }
     }
+
+    private fun initRepository() {
+        springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
+        springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
+    }
+
+    private fun initSpringDetails() {
+        var springDetailObject = RequestModel(
+            id = Constants.GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringDetailsDataModel(
+                springs = SpringDetailsModel(
+                    springCode = springCode
+                )
+            )
+        )
+        springDetailsViewModel?.springDetailsApi(this@SpringDetailsActivity, springDetailObject)
+
+    }
+
 }

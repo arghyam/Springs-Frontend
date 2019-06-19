@@ -4,8 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -17,10 +19,14 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
+import com.arghyam.commons.utils.Constants.TAG_FAVOURITES
 import com.arghyam.commons.utils.Constants.TAG_HOME
 import com.arghyam.commons.utils.Constants.TAG_MORE
 import com.arghyam.commons.utils.Constants.TAG_MY_ACTIVITY
 import com.arghyam.commons.utils.Constants.TAG_SEARCH
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.favourites.ui.FavouritesFragment
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.interfaces.PermissionInterface
 import com.arghyam.landing.ui.fragment.ErrorFragment
 import com.arghyam.landing.ui.fragment.HomeFragment
@@ -42,16 +48,25 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var landingViewModel: LandingViewModel? = null
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
+    var mContent : Fragment? = null
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
+//        if(savedInstanceState!=null){
+//            mContent = supportFragmentManager.getFragment(savedInstanceState, "HomeFragment")
+//        }
         navView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         initViewModel()
         showHome()
 
     }
+
+//    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        supportFragmentManager.putFragment(outState!!,"HomeFragment",mContent!!)
+//    }
 
     private fun initViewModel() {
         landingViewModel = ViewModelProviders.of(this).get(LandingViewModel::class.java)
@@ -79,6 +94,12 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     showHome()
                     return true
                 }
+                R.id.navigation_fav -> {
+                    CURRENT_TAG = TAG_FAVOURITES
+                    val fragment = FavouritesFragment.newInstance()
+                    addFragment(fragment)
+                    return true
+                }
                 R.id.navigation_search -> {
                     CURRENT_TAG = TAG_SEARCH
                     val fragment = SearchFragment.newInstance()
@@ -86,9 +107,11 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_my_activty -> {
-                    CURRENT_TAG = TAG_MY_ACTIVITY
-                    val fragment = MyActivityFragment.newInstance()
-                    addFragment(fragment)
+                    if (SharedPreferenceFactory(this@LandingActivity).getString(Constants.ACCESS_TOKEN) != "") {
+                        CURRENT_TAG = TAG_MY_ACTIVITY
+                        val fragment = MyActivityFragment.newInstance()
+                        addFragment(fragment)
+                    }
                     return true
                 }
                 R.id.navigation_more -> {
@@ -118,6 +141,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     override fun onBackPressed() {
         super.onBackPressed()
         if (CURRENT_TAG == TAG_HOME) {
+            if (SharedPreferenceFactory(this@LandingActivity).getString(Constants.ACCESS_TOKEN) == "") {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
             finish()
         } else {
             CURRENT_TAG = TAG_HOME

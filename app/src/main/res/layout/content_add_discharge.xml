@@ -372,7 +372,7 @@
                 android:id="@+id/submit_discharge_data"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="#0D65D9"
+                android:background="@color/cornflower_blue"
                 android:text="SUBMIT"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"

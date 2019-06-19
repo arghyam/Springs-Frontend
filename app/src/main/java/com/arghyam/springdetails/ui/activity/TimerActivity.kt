@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.SystemClock
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +44,22 @@ class TimerActivity : AppCompatActivity() {
         initStartButton()
         initRecyclerView()
         initTimerDone()
+        validateListener()
+    }
+
+    private fun validateListener() {
+        if (validate()){
+            timerDone.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+
+        }
+        else{
+            timerDone.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        }
+
+    }
+
+    private fun validate(): Boolean {
+        return timerList[0].seconds == 0 || timerList[1].seconds == 0 || timerList[2].seconds == 0
     }
 
     private fun initTimeFetch() {
@@ -52,12 +69,15 @@ class TimerActivity : AppCompatActivity() {
             timerList = args.getSerializable("ArrayList") as ArrayList<TimerModel>
             updateAverage()
         }
-
     }
 
     private fun initTimerDone() {
         timerDone.setOnClickListener {
-            returnIntent()
+            if (!validate()){
+                returnIntent()
+            }
+            else
+                ArghyamUtils().longToast(this,"Please set the time first")
         }
     }
 
@@ -120,6 +140,7 @@ class TimerActivity : AppCompatActivity() {
         timerButton.text = resources.getText(R.string.stop)
         timerButton.background = ContextCompat.getDrawable(this, R.drawable.stop_button)
         timerButton.setTextColor(Color.parseColor("#0D65D9"))
+
     }
 
     private fun resetTimer() {
@@ -133,6 +154,7 @@ class TimerActivity : AppCompatActivity() {
         timer.text = "00:00"
         timerButton.background = ContextCompat.getDrawable(this, R.drawable.start_button)
         timerButton.setTextColor(Color.parseColor("#ffffff"))
+        validateListener()
 
     }
 
@@ -177,6 +199,7 @@ class TimerActivity : AppCompatActivity() {
                 timerList[position].seconds = 0
                 timerAdapter.notifyDataSetChanged()
                 updateAverage()
+                validateListener()
             }
         }
 

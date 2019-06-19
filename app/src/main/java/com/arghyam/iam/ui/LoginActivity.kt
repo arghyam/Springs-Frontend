@@ -61,6 +61,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
+
+    }
+
 
     private fun initApiCalls() {
         iamViewModel?.getLoginResponse()?.observe(this, Observer {
@@ -104,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
         sendOtpButton.setOnClickListener(getOtpOnClickListener())
         guestBrowse.setOnClickListener {
             startActivity(Intent(this@LoginActivity, LandingActivity::class.java))
+            finish()
         }
     }
 

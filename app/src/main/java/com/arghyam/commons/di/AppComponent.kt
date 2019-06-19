@@ -3,10 +3,15 @@ package com.arghyam.commons.di
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.example.ui.ExampleActivity
+import com.arghyam.favourites.ui.FavouritesFragment
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.iam.ui.OtpVerifyActivity
+import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
+import com.arghyam.springdetails.ui.fragments.DetailsFragment
+import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -26,5 +31,15 @@ interface AppComponent {
     fun inject(newSpringActivity: NewSpringActivity)
 
     fun inject(addAdditionalDetailsActivity: AddAdditionalDetailsActivity)
+
+    fun inject(favouritesFragment: FavouritesFragment)
+
+    fun inject(homeFragment: HomeFragment)
+
+    fun inject(detailsFragment: DetailsFragment)
+
+    fun inject(springDetailsActivity: SpringDetailsActivity)
+
+    fun inject(dischargeDataFragment: DischargeDataFragment)
 
 }

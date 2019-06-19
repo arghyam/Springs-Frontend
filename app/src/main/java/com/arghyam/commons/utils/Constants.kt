@@ -6,6 +6,7 @@ object Constants {
     var POOR_INTERNET_CONNECTION : String = "22"
     var PHONE_NUMBER : String = "phoneNumber"
     var TAG_HOME: String = "home"
+    var TAG_FAVOURITES: String = "favourites"
     var TAG_SEARCH: String = "search"
     var TAG_MY_ACTIVITY = "My Activity"
     var TAG_MORE = "More"
@@ -22,9 +23,10 @@ object Constants {
     var IS_NEW_USER: String = "isNewUser"
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.create-spring"
-    var TENANTID = "tenant098"
-    var ORGID = "organization@13"
-    var VILLAGE = "village123"
+    var GET_ALL_SPRINGS_ID = "open-saber.registry.search"
+    var TENANTID = ""
+    var ORGID = ""
+    var VILLAGE = ""
     var CREATE_DISCHARGE_DATA = "forWater.user.createDischargeData"
     var STOP_WATCH_TIMER_RESULT_CODE: Int = 2509
     var GPS_ENABLED = -1

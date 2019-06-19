@@ -3,6 +3,7 @@ package com.arghyam.additionalDetails.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -47,6 +48,9 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var checkBoxLivestock: CheckBox
     private lateinit var checkBoxOthers: CheckBox
     private lateinit var houseHoldNumber: EditText
+    private var goBack: Boolean = false
+    private lateinit var springCode: String
+
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
 
@@ -71,7 +75,13 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         observeData()
         initClick()
         initListener()
+        initIntent()
+    }
 
+    private fun initIntent() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.d("Anirudh", "" + springCode)
     }
 
     private fun observeData() {
@@ -237,9 +247,32 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
         return true
     }
+
+    override fun onBackPressed() {
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
+    }
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
+    }
+
 
     override fun selectedMonth(position: Int) {
         if (selectedMonth.contains(position + 1)) {
@@ -400,7 +433,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
             ),
             request = RequestAdditionalDetailsDataModel(
                 additionalInfo = AdditionalDetailsModel(
-                    springCode = "Spring5678",
+                    springCode = springCode,
                     seasonality = seasonality,
                     waterUseList = waterUse,
                     months = selectedMonth,

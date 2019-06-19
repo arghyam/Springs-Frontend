@@ -52,7 +52,7 @@
     <string name="household_dependency">Household Dependency</string>
     <string name="add_additional_details">Add Additional Details</string>
     <string name="date">Date</string>
-    <string name="discharge_lpm">Discharge (lpm)</string>
+    <string name="discharge_lps">Discharge (lps)</string>
     <string name="search_hint">Search by spring name,location or ID</string>
     <string name="logout">Sign Out</string>
     <string name="FAQ">Frequently asked questions (FAQ)</string>
@@ -93,4 +93,5 @@
     <string name="select_spring">Select atleast one spring usage</string>
     <string name="enter_household">Enter the household number the spring supports</string>
     <string name="back_confirmation">Are you sure you want to go back?</string>
+    <string name="title_favourites">Favourites</string>
 </resources>

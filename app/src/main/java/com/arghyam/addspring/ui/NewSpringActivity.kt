@@ -11,8 +11,11 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -42,7 +45,7 @@ import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
-import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -55,7 +58,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_new_spring.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -66,9 +68,11 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener{
+    GoogleApiClient.OnConnectionFailedListener {
 
     private var goBack: Boolean = false
+    private var imageCount: Int = 0
+
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
 
@@ -80,8 +84,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+
     private var photoFile: File? = null
 
+    val REQUEST_CODE = 4
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
     private var googleApiClient: GoogleApiClient? = null
@@ -89,7 +95,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var isLocationTurnedOn: Boolean = false
     private var isLocationNotAccepted: Boolean = false
 
-    private var mLocation: Location?= null
+    private var mLocation: Location? = null
     var count: Int = 1
     var imageList = ArrayList<ImageEntity>()
 
@@ -141,7 +147,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initApiResponseCalls()
         initUploadImageApis()
         initCreateSpringSubmit()
+        initListener()
+    }
 
+    private fun initListener() {
+        isTextWritten()
+        initClick()
     }
 
     private fun initDefaultLocation() {
@@ -151,14 +162,62 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageClick() {
         image_upload_layout.setOnClickListener {
-            openCamera()
+            var validated: Boolean = validateListener()
+            if (validated) {
+                valid()
+            } else
+                notvalid()
+            if (imageCount < 2)
+                openCamera()
+            else {
+                ArghyamUtils().shortToast(this, "You can capture maximum of two photographs")
+            }
         }
+    }
+
+    private fun isTextWritten() {
+        spring_name.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                isvalid()
+            }
+        })
+    }
+
+    private fun initClick() {
+        radioGroup?.setOnCheckedChangeListener { group, checkedId ->
+            initRadioButtonListeners()
+            hideSoftKeyboard()
+        }
+    }
+
+    private fun initRadioButtonListeners() {
+        isvalid()
+    }
+
+    private fun notvalid() {
+        add_spring_submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+    }
+
+    private fun valid() {
+        add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
     }
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
-            imagesList.add(it.response.imageUrl)
+            imagesList.add(it.response.imageName)
+            Log.d("imagesList", imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -182,11 +241,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<CreateSpringResponseObject>() {}.type
         )
-        gotoLandingActivity(createSpringResponseObject)
+//        gotoLandingActivity(createSpringResponseObject)
+        gotoSpringDetailsActivty(createSpringResponseObject)
     }
 
-    private fun gotoLandingActivity(createSpringResponseObject: CreateSpringResponseObject) {
-        val intent = Intent(this@NewSpringActivity, LandingActivity::class.java)
+
+    private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
+        val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -197,25 +260,47 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-
-            if (radioGroup.checkedRadioButtonId == -1) {
+            if (spring_name.text == null || spring_name.text.toString().equals("")) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
+            } else if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
-            } else if(imageList.size <= 0) {
+            } else if (imageList.size <= 0) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
 
-            }else if(mLocation== null){
+            } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
-            }else {
+            } else {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
-
-
             }
         }
     }
 
+    private fun validateListener(): Boolean {
+        return springNameListener() && imageUploadListener() && ownershipTypeListener() && locationListener()
+    }
+
+    private fun locationListener(): Boolean {
+        Log.e("Anirudh loc", mLocation.toString())
+        return mLocation != null
+    }
+
+    private fun imageUploadListener(): Boolean {
+        Log.e("Anirudh imgupload", imagesList.size.toString())
+        return imagesList.size > 0
+    }
+
+    private fun ownershipTypeListener(): Boolean {
+        Log.e("Anirudh ownership", radioGroup.checkedRadioButtonId.toString())
+        return (radioGroup.checkedRadioButtonId != -1)
+    }
+
+    private fun springNameListener(): Boolean {
+        Log.e("Anirudh name", spring_name.text.toString())
+        return !(spring_name.text == null || spring_name.text.toString().equals(""))
+    }
 
     private fun createSpringOnClick() {
         var createSpringObject = RequestModel(
@@ -230,13 +315,14 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    tenantId = Constants.TENANTID,
-                    orgId = Constants.ORGID,
+                    springName = spring_name.text.toString(),
+                    tenantId = "",
+                    orgId = "",
                     latitude = mLocation!!.latitude,
                     longitude = mLocation!!.longitude,
                     elevation = mLocation!!.altitude,
                     accuracy = mLocation!!.accuracy,
-                    village = Constants.VILLAGE,
+                    village = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList
 
@@ -256,7 +342,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         if (goBack) {
             onBackPressed()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back?")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
             startTimer()
         }
         goBack = true
@@ -271,6 +357,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initLocationClick() {
         img_GPS.setOnClickListener {
+            hideSoftKeyboard()
             getGoogleClient()
             tv_reposition.text = "fetching location information..."
             img_GPS.setImageResource(R.drawable.ic_location_refresh)
@@ -278,8 +365,19 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
+    private fun isvalid() {
+        Log.e("Anirudh", "isvalid")
+        var validated: Boolean = validateListener()
+        if (validated) {
+            valid()
+        } else {
+            notvalid()
+        }
+    }
+
     private fun initLocation() {
         location_layout.setOnClickListener {
+            hideSoftKeyboard()
             getGoogleClient()
         }
     }
@@ -377,7 +475,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     altitude.text = ": ${mLocation!!.altitude} mts"
                     tv_accuracy.text = "Device accuracy  : ${mLocation!!.accuracy}mts"
 
-                    if (mLocation!!.accuracy < 50) {
+                    if (mLocation!!.accuracy < 25) {
                         tv_reposition.text = "Done"
                         img_GPS.setImageResource(R.drawable.ic_location_done)
                         img_GPS.setBackgroundResource(0)
@@ -385,10 +483,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     } else {
                         tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
-                        ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 50mts")
+                        ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 25mts")
 
                     }
-
+                    isvalid()
                 } else {
                     getFusedClient()
                 }
@@ -413,6 +511,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
         override fun onRemove(position: Int) {
             onImageRemove(position)
+            imageCount--
         }
     }
 
@@ -421,6 +520,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
+        isvalid()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -429,6 +529,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onImageReceive(data)
+                    imageCount++
                 }
             }
             PERMISSION_LOCATION_RESULT_CODE -> {
@@ -445,6 +546,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     }
                 }
             }
+            REQUEST_CODE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    var bundle = data?.getBundleExtra("DataBundle")
+                    Log.d("bundleSpring", bundle.toString())
+                }
+
+            }
         }
     }
 
@@ -452,6 +560,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         super.onResume()
         isLocationAccepted()
         isLocationRejected()
+        isvalid()
     }
 
     private fun isLocationRejected() {
@@ -502,6 +611,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         return body
     }
 
+
     private fun addBitmapToList(bitmap: Bitmap?) {
         imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
         imageUploaderAdapter.notifyDataSetChanged()
@@ -514,6 +624,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+    }
+
+    private fun hideSoftKeyboard(){
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

@@ -5,7 +5,11 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
@@ -23,23 +27,28 @@ import com.arghyam.addspring.interfaces.ImageUploadInterface
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
-import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
+import com.arghyam.commons.utils.DecimalDigitsInputFilter
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
+import com.arghyam.springdetails.models.AddDischargeResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
 import com.arghyam.springdetails.models.TimerModel
-import kotlinx.android.synthetic.main.activity_add_discharge.*
 import com.arghyam.springdetails.repository.DischargeDataRepository
 import com.arghyam.springdetails.viewmodel.AddDischargeDataViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.activity_add_discharge.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -53,15 +62,21 @@ import javax.inject.Inject
 class AddDischargeActivity : AppCompatActivity() {
 
     private var timerList: ArrayList<TimerModel> = ArrayList()
+    private lateinit var springCode: String
 
+    private var imageCount: Int = 0
     var imageList = ArrayList<ImageEntity>()
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
     var count: Int = 1
+    private var goBack: Boolean = false
+
     private lateinit var uploadImageViewModel: UploadImageViewModel
+
+    lateinit var dischargeDataResponseObject:AddDischargeResponseModel
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
-    private var dischargeTime: ArrayList<Int> = ArrayList()
+    private var dischargeTime: ArrayList<String> = ArrayList()
     private var imagesList: ArrayList<String> = ArrayList()
     private lateinit var containerString: String
     private var volOfContainer: Float? = null
@@ -78,14 +93,76 @@ class AddDischargeActivity : AppCompatActivity() {
         init()
     }
 
+    private fun getSpringId() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.e("Anirudh",springCode)
+    }
+
     private fun init() {
         initApplicationComponent()
         initRepository()
+        getSpringId()
         initViewComponents()
-        initClicks()
+        initListeners()
         initToolbar()
         initRecyclerView()
         initUploadImageApis()
+        initApiResponseCalls()
+        initClicks()
+        initvolumecontrol()
+    }
+
+    private fun initvolumecontrol() {
+        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,2))
+    }
+
+    private fun validateData(): Boolean {
+        return ((!volumeOfContainer.text.toString().trim().equals("") && !volumeOfContainer.text.toString().trim().equals(
+            "0"
+        )) && imageList.size != 0 && timerList.size != 0)
+    }
+
+    private fun updateSubmitColor() {
+        if (validateData()) {
+            submit_discharge_data.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        } else {
+            submit_discharge_data.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+        }
+    }
+
+    private fun initListeners() {
+        initEditTextListener()
+        initStopWatchListener()
+        updateSubmitColor()
+
+    }
+
+    private fun initStopWatchListener() {
+        updateSubmitColor()
+    }
+
+
+    private fun initEditTextListener() {
+        volumeOfContainer.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                updateSubmitColor()
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                updateSubmitColor()
+            }
+        })
     }
 
     private fun initToolbar() {
@@ -95,8 +172,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
-            imagesList.add(it.response.imageUrl)
+            Log.e("stefy", it?.response!!.imageName)
+            imagesList.add(it.response.imageName)
         })
         uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
             Log.e("stefy error", it)
@@ -127,13 +204,47 @@ class AddDischargeActivity : AppCompatActivity() {
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
+        updateSubmitColor()
+        imageCount--
+
     }
 
+    //    override fun onSupportNavigateUp(): Boolean {
+//
+//        onBackPressed()
+//        return true
+//        initApiCalls()
+//    }
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
         return true
         initApiCalls()
     }
+
+    override fun onBackPressed() {
+        if (goBack) {
+            finish()
+        } else {
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            startTimer()
+        }
+        goBack = true
+    }
+
+
+
+    private fun startTimer() {
+        Handler().postDelayed({
+            goBack = false
+        }, 2000)
+    }
+
 
     private fun initApiCalls() {
         addDischargeDataViewModel?.getDischargeSuccess()?.observe(this@AddDischargeActivity, Observer {
@@ -145,6 +256,11 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initApplicationComponent() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.d("Anirudh", "" + springCode)
+
+
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -158,7 +274,11 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageClick() {
         image_capture.setOnClickListener {
-            openCamera()
+            if (imageCount < 2)
+                openCamera()
+            else {
+                ArghyamUtils().shortToast(this, "You can capture maximum of two photographs")
+            }
         }
     }
 
@@ -219,7 +339,9 @@ class AddDischargeActivity : AppCompatActivity() {
             Constants.REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onImageReceive(data)
+                    imageCount++
                 }
+                updateSubmitColor()
             }
 
             STOP_WATCH_TIMER_RESULT_CODE -> {
@@ -229,6 +351,7 @@ class AddDischargeActivity : AppCompatActivity() {
                     timerList = data?.getSerializableExtra("timerList") as ArrayList<TimerModel>
                     initTimerData()
                 }
+                updateSubmitColor()
             }
         }
     }
@@ -296,25 +419,85 @@ class AddDischargeActivity : AppCompatActivity() {
 
         submit_discharge_data.setOnClickListener {
             assignDischargeData()
-            if (volOfContainer != null) {
+            if (volOfContainer != null && validateData()) {
                 addDischargeDataOnClick()
                 ArghyamUtils().longToast(this@AddDischargeActivity, "success")
-            }
-            else
-                ArghyamUtils().longToast(this@AddDischargeActivity,"Please enter valid volume of container")
+            } else
+                showToast()
 
         }
     }
 
-    private fun assignDischargeData() {
-        containerString = volumeOfContainer.text.toString()
-        volOfContainer = containerString.toFloat()
-        dischargeTime.add(timerList[0].seconds)
-        dischargeTime.add(timerList[1].seconds)
-        dischargeTime.add(timerList[2].seconds)
+    private fun showToast() {
+        if (volumeOfContainer.text.toString().equals("")) {
+            ArghyamUtils().longToast(this, "Add The volume of the container")
+            return
+        }
+        if (timerList.size == 0) {
+            ArghyamUtils().longToast(this, "Add the discharge time")
+            return
+        }
+        if (imageList.size == 0) {
+            ArghyamUtils().longToast(this, "Add atleast one image of the discharge")
+            return
+        }
     }
 
+
+    private fun initApiResponseCalls() {
+        addDischargeDataViewModel?.getDischargeSuccess()?.observe(this@AddDischargeActivity, Observer {
+            dischargeDataResponse(it)
+            if (addDischargeDataViewModel?.getDischargeSuccess()?.hasObservers()!!) {
+                addDischargeDataViewModel?.getDischargeSuccess()?.removeObservers(this@AddDischargeActivity)
+            }
+        })
+        addDischargeDataViewModel?.getDischargeError()?.observe(this@AddDischargeActivity, Observer {
+            Log.e("error", it)
+        })
+    }
+
+    private fun dischargeDataResponse(responseModel: ResponseModel) {
+        dischargeDataResponseObject = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<AddDischargeResponseModel>() {}.type
+        )
+
+        springCode = dischargeDataResponseObject.springCode
+        Log.d("springCode----",springCode)
+        gotoSpringDetailsActivity(dischargeDataResponseObject)
+    }
+
+    private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
+        val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
+        intent.putExtra("SpringCode",springCode)
+        intent.putExtra("SpringCode",dischargeDataResponseObject.springCode)
+        Log.e("Code", dischargeDataResponseObject.springCode)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun assignDischargeData() {
+        containerString = volumeOfContainer.text.toString()
+        if (!containerString.equals(""))
+            volOfContainer = containerString.toFloat()
+        if (timerList.size != 0) {
+            dischargeTime.add(timerList[0].seconds.toString())
+            dischargeTime.add(timerList[1].seconds.toString())
+            dischargeTime.add(timerList[2].seconds.toString())
+        }
+        if (!containerString.equals("") && timerList.size != 0) {
+            val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
+            litresPerSec.add(lps)
+            litresPerSec.add(lps)
+
+        }
+    }
+
+
     private fun addDischargeDataOnClick() {
+        val months:ArrayList<String> = ArrayList()
+        months.add("January")
+        months.add("April")
         var createSpringObject = RequestModel(
             id = CREATE_DISCHARGE_DATA,
             ver = BuildConfig.VER,
@@ -326,11 +509,13 @@ class AddDischargeActivity : AppCompatActivity() {
             ),
             request = DischargeDataModel(
                 dischargeData = DischargeModel(
-                    springCode = "",
+                    springCode = springCode,
                     dischargeTime = dischargeTime,
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,
-                    status = "",
+                    status = "created",
+                    seasonality = "Sessional",
+                    months = months,
                     images = imagesList
                 )
             )

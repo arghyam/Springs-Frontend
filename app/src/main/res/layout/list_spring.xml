@@ -55,7 +55,7 @@
                             android:layout_alignBottom="@+id/img_spring"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="Kheerganga, Himachal Pradesh"
+                            android:text=""
                             android:textColor="#FFFFFF"
                             android:textSize="14sp"
                             android:textStyle="normal"/>
@@ -87,7 +87,7 @@
                                 android:textSize="12sp"/>
 
                         <TextView
-                                android:id="@+id/mytextview3"
+                                android:id="@+id/springcode"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@+id/mytextview1"
@@ -106,7 +106,7 @@
                             android:paddingTop="8dp">
 
                         <TextView
-                                android:id="@+id/mytextview2"
+                                android:id="@+id/ownership"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
@@ -116,10 +116,10 @@
                                 android:textSize="12sp"/>
 
                         <TextView
-                                android:id="@+id/mytextview4"
+                                android:id="@+id/ownership_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_toRightOf="@+id/mytextview2"
+                                android:layout_toRightOf="@+id/ownership"
                                 android:paddingLeft="25dp"
                                 android:text=": Private"
                                 android:textColor="#262524"

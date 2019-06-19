@@ -4,7 +4,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              >
+                android:focusableInTouchMode="true"
+                android:clickable="true"
+                android:focusable="true"
+>
 <ScrollView android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/button_layout">
@@ -252,7 +255,7 @@
                         android:textSize="12sp"
                         android:textColor="#595958"
                         android:paddingTop="16dp"
-                        android:text="Note: Recommended accuracy is 50 mts"/>
+                        android:text="Note: Recommended accuracy is 25 mts"/>
 
             </LinearLayout>
 

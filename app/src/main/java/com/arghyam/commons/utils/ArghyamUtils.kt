@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -17,7 +18,12 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import java.io.File
+import android.widget.TextView
+import com.androidadvance.topsnackbar.TSnackbar
+import com.arghyam.R
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ArghyamUtils {
@@ -100,6 +106,58 @@ class ArghyamUtils {
         var minutes = timeInSeconds / 60
         var seconds = timeInSeconds % 60
         return "" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
+    }
+
+
+    fun makeSnackbar(view: View, message: String, action: String, context: Context?, activityname: Class<*>) {
+        view.let { it1 ->
+            val snack: TSnackbar = TSnackbar.make(it1, message, TSnackbar.LENGTH_LONG)
+            val v: View = snack.view
+            val textView: TextView = v.findViewById(R.id.snackbar_text)
+            textView.setTextColor(Color.WHITE)
+            snack.setAction(action) {
+                context?.startActivity(Intent(context, activityname))
+                (context as Activity).finish()
+            }
+            snack.show()
+
+        }
+    }
+
+    fun getDate(dateString: String): String {
+        val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        formatter.timeZone = TimeZone.getTimeZone("UTC ")
+        var value: Date? = null
+        try {
+            value = formatter.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
+        dateFormatter.timeZone = TimeZone.getDefault()
+        if (value != null)
+            return dateFormatter.format(value)
+        else
+            return ""
+    }
+
+    fun getTime(dateString: String): String {
+        val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+        formatter.timeZone = TimeZone.getTimeZone("UTC ")
+        var value: Date? = null
+        try {
+            value = formatter.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        val dateFormatter = SimpleDateFormat("hh:mm a")
+        dateFormatter.timeZone = TimeZone.getDefault()
+        if (value != null)
+            return dateFormatter.format(value)
+        else
+            return ""
     }
 
 }
