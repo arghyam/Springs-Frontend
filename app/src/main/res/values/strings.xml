@@ -94,4 +94,6 @@
     <string name="enter_household">Enter the household number the spring supports</string>
     <string name="back_confirmation">Are you sure you want to go back?</string>
     <string name="title_favourites">Favourites</string>
+    <string name="time">1:35 PM  </string>
+    <string name="date_notification">  April 21,2019</string>
 </resources>

@@ -33,6 +33,7 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
+import com.arghyam.notification.NotificationActivity
 import com.arghyam.profile.viewmodel.ProfileViewModel
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,6 +43,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.activity_landing.*
 
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
@@ -49,6 +51,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
     var mContent : Fragment? = null
+    private var notification: Boolean = true
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +63,19 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         initViewModel()
         showHome()
-
+        initbell()
     }
 
+    private fun initbell() {
+        if(notification){
+            badge.visibility = View.VISIBLE
+            notification_count.text = "1"
+        }
+        bell.setOnClickListener{
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(this, NotificationActivity::class.java))
+        }
+    }
 //    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
 //        super.onSaveInstanceState(outState, outPersistentState)
 //        supportFragmentManager.putFragment(outState!!,"HomeFragment",mContent!!)
