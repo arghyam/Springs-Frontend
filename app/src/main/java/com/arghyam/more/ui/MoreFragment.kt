@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 
 import com.arghyam.R
+import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.ui.LoginActivity
@@ -61,6 +62,10 @@ class MoreFragment : Fragment() {
             startActivity(Intent(activity!!, LoginActivity::class.java))
             activity!!.finish()
         }
+
+        admin_layout.setOnClickListener {
+            startActivity(Intent(activity!!, AdminPanelActivity::class.java))
+        }
     }
 
 
@@ -70,6 +75,7 @@ class MoreFragment : Fragment() {
             rootView.user_details.visibility = GONE
             rootView.sign_out.visibility = GONE
             rootView.sign_in_for_guest.visibility = VISIBLE
+            rootView.admin_layout.visibility = GONE
         }
         return rootView
     }
