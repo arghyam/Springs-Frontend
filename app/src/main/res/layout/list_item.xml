@@ -17,6 +17,7 @@
                 android:layout_height="wrap_content"
                 android:text="Admin"
                 android:padding="10dp"
+                android:fontFamily="@font/roboto"
                 android:textColor="@color/bokara_grey"/>
         <CheckBox
                 android:layout_marginStart="30dp"
@@ -25,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="Reviewer"
                 android:padding="10dp"
+                android:fontFamily="@font/roboto"
                 android:textColor="@color/bokara_grey"/>
 
 

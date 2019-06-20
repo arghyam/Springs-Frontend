@@ -39,7 +39,7 @@
         <EditText
                 android:id="@+id/user_search_input"
                 android:layout_toRightOf="@+id/back_icon"
-                android:hint="@string/search_hint"
+                android:hint="@string/user_search_hint"
                 android:padding="10dp"
                 android:textSize="14sp"
                 android:textColorHint="#61000000"
@@ -50,13 +50,14 @@
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:drawableRight="@drawable/ic_search"/>
+                android:drawableRight="@drawable/ic_search"
+                android:fontFamily="@font/roboto"/>
 
     </RelativeLayout>
 
 
     <ExpandableListView
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="140dp"
             android:id="@+id/user_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
