@@ -42,6 +42,7 @@ import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
 import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -324,8 +325,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     accuracy = mLocation!!.accuracy,
                     village = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
-                    images = imagesList
-
+                    images = imagesList,
+                    userID = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
                 )
             )
         )

@@ -31,6 +31,7 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.commons.utils.DecimalDigitsInputFilter
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -516,7 +517,8 @@ class AddDischargeActivity : AppCompatActivity() {
                     status = "created",
                     seasonality = "Sessional",
                     months = months,
-                    images = imagesList
+                    images = imagesList,
+                    userId = SharedPreferenceFactory(this@AddDischargeActivity).getString(Constants.USER_ID)!!
                 )
             )
         )

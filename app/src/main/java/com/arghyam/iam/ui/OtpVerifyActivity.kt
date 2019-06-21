@@ -23,6 +23,7 @@ import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.REFRESH_TOKEN
+import com.arghyam.commons.utils.Constants.USER_ID
 import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
@@ -111,24 +112,28 @@ class OtpVerifyActivity : AppCompatActivity() {
         })
         verifyOtpViewModel?.resendOtpError()?.observe(this@OtpVerifyActivity, Observer {
             ArghyamUtils().longToast(
-                    this@OtpVerifyActivity,
-                    "There has been some error while resending the otp, Please try again"
+                this@OtpVerifyActivity,
+                "There has been some error while resending the otp, Please try again"
             )
         })
     }
 
     private fun saveAccessToken(it: ResponseModel) {
         var accessTokenResponse: AccessTokenModel = Gson().fromJson(
-                ArghyamUtils().convertToString(it.response.responseObject),
-                object : TypeToken<AccessTokenModel>() {}.type
+            ArghyamUtils().convertToString(it.response.responseObject),
+            object : TypeToken<AccessTokenModel>() {}.type
         )
         SharedPreferenceFactory(this@OtpVerifyActivity).setString(
-                ACCESS_TOKEN,
-                accessTokenResponse.accessTokenResponseDTO.access_token
+            ACCESS_TOKEN,
+            accessTokenResponse.accessTokenResponseDTO.access_token
         )
         SharedPreferenceFactory(this@OtpVerifyActivity).setString(
-                REFRESH_TOKEN,
-                accessTokenResponse.accessTokenResponseDTO.refresh_token
+            REFRESH_TOKEN,
+            accessTokenResponse.accessTokenResponseDTO.refresh_token
+        )
+        SharedPreferenceFactory(this@OtpVerifyActivity).setString(
+            USER_ID,
+            accessTokenResponse.accessTokenResponseDTO.user_id
         )
     }
 
@@ -140,9 +145,9 @@ class OtpVerifyActivity : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(
-                        this@OtpVerifyActivity,
-                        "You have reached the maximum limit, Please try again",
-                        Toast.LENGTH_LONG
+                    this@OtpVerifyActivity,
+                    "You have reached the maximum limit, Please try again",
+                    Toast.LENGTH_LONG
                 ).show()
             }
         }
@@ -150,19 +155,19 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun makeResendOtpCall() {
         var requestModel = RequestModel(
-                id = VERIFY_OTP_ID,
-                ver = BuildConfig.VER,
-                ets = BuildConfig.ETS,
-                params = Params(
-                        did = "",
-                        key = "",
-                        msgid = ""
-                ),
-                request = RequestPersonDataModel(
-                        person = PersonModel(
-                                username = phoneNumber.substring(4, phoneNumber.length)
-                        )
+            id = VERIFY_OTP_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestPersonDataModel(
+                person = PersonModel(
+                    username = phoneNumber.substring(4, phoneNumber.length)
                 )
+            )
         )
         verifyOtpViewModel?.resendOtpApi(this@OtpVerifyActivity, requestModel)
     }
@@ -224,20 +229,20 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun verifyOtpApiCall() {
         var requestModel = RequestModel(
-                id = VERIFY_OTP_ID,
-                ver = BuildConfig.VER,
-                ets = BuildConfig.ETS,
-                params = Params(
-                        did = "",
-                        key = "",
-                        msgid = ""
-                ),
-                request = RequestPersonDataModel(
-                        person = VerifyOtpRequestModel(
-                                phoneNumber = phoneNumber.substring(4, phoneNumber.length),
-                                otp = getOtp()
-                        )
+            id = VERIFY_OTP_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestPersonDataModel(
+                person = VerifyOtpRequestModel(
+                    phoneNumber = phoneNumber.substring(4, phoneNumber.length),
+                    otp = getOtp()
                 )
+            )
         )
         verifyOtpViewModel?.verifyOtpApi(this@OtpVerifyActivity, requestModel)
     }
@@ -297,9 +302,9 @@ class OtpVerifyActivity : AppCompatActivity() {
 
             override fun onError() {
                 Toast.makeText(
-                        this@OtpVerifyActivity,
-                        "Error while fetching otp, please enter it manually",
-                        Toast.LENGTH_SHORT
+                    this@OtpVerifyActivity,
+                    "Error while fetching otp, please enter it manually",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         })
