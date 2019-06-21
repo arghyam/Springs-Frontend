@@ -35,7 +35,6 @@ import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.LandingViewModel
-import com.arghyam.notification.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_home.*

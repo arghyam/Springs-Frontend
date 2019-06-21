@@ -11,11 +11,6 @@ import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.model.NotificationDataModel
 import kotlinx.android.synthetic.main.activity_notification.*
 
-
-
-
-
-
 class NotificationActivity : AppCompatActivity() {
 
     private var adapter: NotificationAdapter? = null
@@ -74,6 +69,7 @@ class NotificationActivity : AppCompatActivity() {
         listView.adapter = adapter
 
         listView.onItemClickListener =
+
             AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
                 val (notification, time, date) = dataModels!![position]
                 Log.e("Anirudh", "Clicked$notification $time $date")
