@@ -47,10 +47,12 @@ import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
 import androidx.core.content.ContextCompat.getSystemService
-
-
-
-
+import com.arghyam.notification.ui.activity.NotificationActivity
+import kotlinx.android.synthetic.main.fragment_favourites.*
+import kotlinx.android.synthetic.main.fragment_home.badge
+import kotlinx.android.synthetic.main.fragment_home.bell
+import kotlinx.android.synthetic.main.fragment_home.notification_count
+import kotlinx.android.synthetic.main.fragment_home.progressBar
 
 
 /**
@@ -69,6 +71,8 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
     private var firstCallMade: Boolean = false
+    private var notification: Boolean = true
+
 
     /**
      * Initialize newInstance for passing paameters
@@ -81,6 +85,16 @@ class HomeFragment : Fragment() {
             return fragmentHome
         }
 
+    }
+    private fun initbell() {
+        if(notification){
+            badge.visibility = View.VISIBLE
+            notification_count.text = "1"
+        }
+        bell.setOnClickListener{
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+        }
     }
 
     private val mGpsSwitchStateReceiver = object : BroadcastReceiver() {
@@ -153,6 +167,7 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
+        initbell()
     }
 
     private fun init() {

@@ -8,57 +8,7 @@
         android:fitsSystemWindows="true"
         android:layout_height="match_parent"
         tools:context=".landing.ui.activity.LandingActivity">
-    <com.google.android.material.appbar.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="5"
-                android:orientation="horizontal">
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="0dp"
-                    app:title="@string/app_name"
-                    android:layout_weight="4.8"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-            <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-            >
-                <ImageView
-                        android:id="@+id/bell"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        app:srcCompat="@drawable/ic_ui_bell"/>
-                <ImageView
-                        android:id="@+id/badge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignEnd="@id/bell"
-                        app:srcCompat="@drawable/ic_badge"
-                        android:visibility="gone"
-                />
-                <TextView
-                        android:id="@+id/notification_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignStart="@id/badge"
-                        android:layout_alignTop="@id/badge"
-                        android:layout_alignEnd="@id/badge"
-                        android:layout_alignBottom="@id/badge"
-                        android:gravity="center"
-                        android:textSize="10sp"
-                        android:textColor="@color/white"
-                />
-            </RelativeLayout>
-        </LinearLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
             android:id="@+id/content"

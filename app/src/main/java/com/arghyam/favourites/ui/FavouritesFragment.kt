@@ -1,5 +1,6 @@
 package com.arghyam.favourites.ui
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.arghyam.landing.model.AllSpringModel
 import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
+import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_favourites.*
@@ -46,6 +48,7 @@ class FavouritesFragment : Fragment() {
     private var count: Int = 1
     private var maxItem: Int = 0
 
+    private var notification: Boolean = true
 
     companion object {
         fun newInstance(): FavouritesFragment {
@@ -78,8 +81,19 @@ class FavouritesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
+        initbell()
     }
 
+    private fun initbell() {
+        if(notification){
+            badge.visibility = View.VISIBLE
+            notification_count.text = "1"
+        }
+        bell.setOnClickListener{
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+        }
+    }
     private fun init() {
         initComponent()
         if (ArghyamUtils().permissionGranted(
