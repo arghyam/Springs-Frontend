@@ -48,8 +48,6 @@ import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
 
 
-
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -79,7 +77,8 @@ class HomeFragment : Fragment() {
         }
 
     }
-    private lateinit var intentFilter:IntentFilter
+
+    private lateinit var intentFilter: IntentFilter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getViewModel()
@@ -90,7 +89,7 @@ class HomeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
-        activity?.registerReceiver(gpsSwitchStateReceiver,intentFilter)
+        activity?.registerReceiver(gpsSwitchStateReceiver, intentFilter)
     }
 
     override fun onStop() {
@@ -142,11 +141,20 @@ class HomeFragment : Fragment() {
                 val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
                 if (isGpsEnabled) {
-                    Log.e("Anirudh","GPS Enabled")
+                    getAllSpringRequest()
+                    errorItems.visibility = GONE
+//                    errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+                    springsLocation.visibility = VISIBLE
                 } else {
                     springsList.clear()
-                    init()
-                    Log.e("Anirudh","GPS Disabled")                }
+                    adapter.notifyDataSetChanged()
+                    count=1
+                    activity?.let { ArghyamUtils().turnOnLocation(it) }!!
+                    errorItems.visibility = VISIBLE
+                    errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+                    springsLocation.visibility = GONE
+                    Log.e("Anirudh", "GPS Disabled")
+                }
             }
         }
     }
