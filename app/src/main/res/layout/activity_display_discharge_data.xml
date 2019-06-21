@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".notification.ui.activity.DisplayDischargeDataActivity">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <TextView
+                    android:id="@+id/submitted_by"
+                    android:padding="@dimen/padding_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:text="Submitted by Ramesh Agarwal"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/grey"/>
+            <LinearLayout
+                    android:elevation="2dp"
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/padding_16"
+                    android:background="@drawable/box_shadow"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Volume of the container"
+                        android:paddingTop="4dp"
+                        android:textSize="@dimen/text_size_14"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:id="@+id/volumeOfContainer"
+                        android:layout_width="wrap_content"
+                        android:text="5 Litres"
+                        android:textSize="@dimen/text_size_18"
+                        android:textColor="@color/bokara_grey"
+                        android:paddingTop="15dp"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/grey"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_16"
+                    android:background="@drawable/box_shadow"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:paddingTop="@dimen/padding_4"
+                        android:text="Container fill time"
+                        android:layout_height="wrap_content"/>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/box_shadow"
+                        android:paddingTop="15dp"
+                        android:orientation="vertical">
+
+
+                    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="match_parent"
+                                 android:background="@color/snow"
+                                 android:stretchColumns="1">
+
+                        <TableRow>
+                            <TextView
+                                    android:layout_column="1"
+                                    android:text="Attempt 1"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                            <TextView
+                                    android:id="@+id/tv_attempt1"
+                                    android:text="01:12"
+                                    android:gravity="right"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                    android:layout_column="1"
+                                    android:text="Attempt 2"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                            <TextView
+                                    android:id="@+id/tv_attempt2"
+                                    android:text="01:32"
+                                    android:gravity="right"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                    android:layout_column="1"
+                                    android:text="Attempt 3"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                            <TextView
+                                    android:id="@+id/tv_attempt3"
+                                    android:text="01:10"
+                                    android:gravity="right"
+                                    android:textColor="@color/ship_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20"/>
+                        </TableRow>
+
+                    </TableLayout>
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:background="@drawable/box_shadow"/>
+                    <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="20dp"
+                            android:background="@color/snow"
+                            android:stretchColumns="1">
+
+                        <TableRow>
+
+                            <TextView
+                                    android:layout_column="1"
+                                    android:text="Average"
+                                    android:textColor="@color/bokara_grey"
+                                    android:textSize="@dimen/test_size_16"
+
+                                    android:padding="@dimen/padding_20" android:textStyle="bold"/>
+                            <TextView
+                                    android:id="@+id/average_time"
+                                    android:text="01:10"
+                                    android:gravity="right"
+                                    android:textColor="@color/bokara_grey"
+                                    android:textSize="@dimen/test_size_16"
+                                    android:padding="@dimen/padding_20" android:textStyle="bold"/>
+
+                        </TableRow>
+
+                    </TableLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/grey"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/padding_16"
+                    android:orientation="vertical"
+                    android:background="@drawable/box_shadow"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Discharge image"
+                        android:textColor="@color/textcolor"
+                        android:textSize="@dimen/text_size_14"
+                        android:layout_height="wrap_content"/>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+
+                    <ImageView
+                            android:src="@drawable/img"
+                            android:id="@+id/discharge_image1"
+                            android:layout_width="363dp"
+                            android:foreground="@drawable/image_box"
+                            android:scaleType="fitXY"
+                            android:layout_height="135dp"/>
+                    <ImageView
+                            android:src="@drawable/img"
+                            android:id="@+id/discharge_image2"
+                            android:layout_width="363dp"
+                            android:foreground="@drawable/image_box"
+                            android:scaleType="fitXY"
+                            android:layout_height="135dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/grey"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:paddingTop="15dp"
+                    android:background="@drawable/box_shadow"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:orientation="horizontal">
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_background"
+                        android:text="REJECT"
+                        android:textColor="@color/colorPrimary"
+                        android:clickable="true"
+                />
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="45dp"
+                        android:background="@drawable/button_background_approve"
+                        android:textColor="@color/white"
+                        android:text="APPROVE"
+                        android:clickable="true"
+                />
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/grey"/>
+
+            </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

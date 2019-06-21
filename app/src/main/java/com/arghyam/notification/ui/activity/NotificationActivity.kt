@@ -1,5 +1,6 @@
-package com.arghyam.notification
+package com.arghyam.notification.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -73,6 +74,7 @@ class NotificationActivity : AppCompatActivity() {
             AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
                 val (notification, time, date) = dataModels!![position]
                 Log.e("Anirudh", "Clicked$notification $time $date")
+                this.startActivity(Intent(this, DisplayDischargeDataActivity::class.java))
             }
     }
     override fun onSupportNavigateUp(): Boolean {
