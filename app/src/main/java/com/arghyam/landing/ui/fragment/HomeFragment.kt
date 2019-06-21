@@ -46,9 +46,6 @@ import android.content.IntentFilter
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
-import androidx.core.content.ContextCompat.getSystemService
-
-
 
 
 
@@ -82,38 +79,24 @@ class HomeFragment : Fragment() {
         }
 
     }
-
-    private val mGpsSwitchStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-
-            if (intent.action!!.matches("android.location.PROVIDERS_CHANGED".toRegex())) {
-                Log.e("Anirudh", "gps")
-            }
-        }
-    }
+    private lateinit var intentFilter:IntentFilter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getViewModel()
         setObserver()
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun registerReceiver() {
+    override fun onStart() {
+        super.onStart()
+        intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        activity?.registerReceiver(gpsSwitchStateReceiver,intentFilter)
+    }
 
-        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        lm!!.addGpsStatusListener { event ->
-            when (event) {
-                GPS_EVENT_STARTED -> {
-                    Log.e("Anirudh","gps Enabled")
-                }
-                GPS_EVENT_STOPPED -> {
-                    Log.e("Anirudh","gps Disabled")
-                }
-            }// do your tasks
-            // do your tasks
-        }
+    override fun onStop() {
+        super.onStop()
+        activity?.unregisterReceiver(gpsSwitchStateReceiver)
+
     }
 
     private fun getViewModel() {
@@ -150,6 +133,24 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private val gpsSwitchStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+
+            if (LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
+
+                val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+                if (isGpsEnabled) {
+                    Log.e("Anirudh","GPS Enabled")
+                } else {
+                    springsList.clear()
+                    init()
+                    Log.e("Anirudh","GPS Disabled")                }
+            }
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
@@ -180,12 +181,7 @@ class HomeFragment : Fragment() {
         }
         initFab()
         reload()
-        registerReceiver()
-
     }
-
-
-
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
