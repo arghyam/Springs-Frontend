@@ -48,7 +48,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
     var mContent : Fragment? = null
-
+    private var notification: Boolean = true
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
