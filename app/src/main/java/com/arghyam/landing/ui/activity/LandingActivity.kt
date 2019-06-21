@@ -53,6 +53,8 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
+        val toolbar = toolbar
+//        setSupportActionBar(toolbar)
 //        if(savedInstanceState!=null){
 //            mContent = supportFragmentManager.getFragment(savedInstanceState, "HomeFragment")
 //        }
@@ -60,19 +62,19 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         initViewModel()
         showHome()
-        initbell()
+//        initbell()
     }
 
-    private fun initbell() {
-        if(notification){
-            badge.visibility = View.VISIBLE
-            notification_count.text = "1"
-        }
-        bell.setOnClickListener{
-            Log.e("Anirudh", "bell clicked")
-            this.startActivity(Intent(this, NotificationActivity::class.java))
-        }
-    }
+//    private fun initbell() {
+//        if(notification){
+//            badge.visibility = View.VISIBLE
+//            notification_count.text = "1"
+//        }
+//        bell.setOnClickListener{
+//            Log.e("Anirudh", "bell clicked")
+//            this.startActivity(Intent(this, NotificationActivity::class.java))
+//        }
+//    }
 //    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
 //        super.onSaveInstanceState(outState, outPersistentState)
 //        supportFragmentManager.putFragment(outState!!,"HomeFragment",mContent!!)

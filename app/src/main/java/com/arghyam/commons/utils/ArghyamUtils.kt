@@ -9,7 +9,9 @@ import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -19,6 +21,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
 import java.text.ParseException
