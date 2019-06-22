@@ -4,6 +4,7 @@ import android.content.Context
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
+import com.arghyam.admin.repository.GetRegisteredUsersRepository
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Module
@@ -130,4 +131,9 @@ class AppModule(private val arghyamApplication: ArghyamApplication) {
         return AdditionalDetailsRepository()
     }
 
+    @Provides
+    @Singleton
+    fun providesGetRegisteredUsersRepository(): GetRegisteredUsersRepository {
+        return GetRegisteredUsersRepository()
+    }
 }

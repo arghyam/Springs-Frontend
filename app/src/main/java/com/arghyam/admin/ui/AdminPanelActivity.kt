@@ -16,6 +16,7 @@ import com.arghyam.R
 import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
 import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.admin.adapter.ExpandableListAdapter
+import com.arghyam.admin.model.AllUsersDataModel
 import com.arghyam.admin.model.AllUsersDetailsModel
 import com.arghyam.admin.repository.GetRegisteredUsersRepository
 import com.arghyam.admin.viewmodel.GetRegisteredUsersViewModel
@@ -74,16 +75,16 @@ class AdminPanelActivity : AppCompatActivity() {
 
     private fun saveRegisteredUsers(responseModel: ResponseModel) {
         if (responseModel.response.responseCode == "200") {
-            var responseData: AllUsersDetailsModel = Gson().fromJson(
+            var responseData: List<AllUsersDataModel> = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
-                object : TypeToken<AllUsersDetailsModel>() {}.type
+                object : TypeToken<List<AllUsersDataModel>>() {}.type
             )
             var i: Int = 0
-            while (i < responseData.users.size) {
+            while (i < responseData.size) {
                 user.add(
                     User(
-                        responseData.users[i].firstName,
-                        responseData.users[i].username,
+                        responseData[i].firstName,
+                        responseData[i].username,
                         mutableListOf("Admin", "Reviewer")
                     )
                 )
