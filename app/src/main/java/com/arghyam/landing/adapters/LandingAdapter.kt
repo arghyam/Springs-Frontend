@@ -3,6 +3,7 @@ package com.arghyam.landing.adapters
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,9 +50,10 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         })
         holder.springItemADD.setOnClickListener(View.OnClickListener {
             if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN) == "") {
+                Log.e("Anirudh","Adddischarge")
                 ArghyamUtils().makeSnackbar(
-                    holder.springItemADD,
-                    "SignIn To Continue",
+                    it,
+                    "Sign In to Continue",
                     "SIGN IN",
                     context,
                     LoginActivity::class.java

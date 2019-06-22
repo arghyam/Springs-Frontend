@@ -21,10 +21,11 @@ class NotificationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
+        initToolBar()
 
-        assert(supportActionBar != null)   //null check
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        title = "Notifications"
+//        assert(supportActionBar != null)   //null check
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        title = "Notifications"
 
 
         listView = notification_list
@@ -77,10 +78,20 @@ class NotificationActivity : AppCompatActivity() {
                 this.startActivity(Intent(this, DisplayDischargeDataActivity::class.java))
             }
     }
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
+
+
+        private fun initToolBar() {
+            setSupportActionBar(notification_toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+
+        override fun onSupportNavigateUp(): Boolean {
+            onBackPressed()
+            return true
+        }
+
+
+
 }
 
 

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.arghyam.R
+import kotlinx.android.synthetic.main.activity_display_discharge_data.*
+import kotlinx.android.synthetic.main.activity_notification.*
 
 
 class DisplayDischargeDataActivity : AppCompatActivity() {
@@ -13,10 +15,17 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_discharge_data)
 
-        assert(supportActionBar != null)   //null check
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        title = "Discharge Data"
+        initToolBar()
+    }
 
+    private fun initToolBar() {
+        setSupportActionBar(display_discharge_toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

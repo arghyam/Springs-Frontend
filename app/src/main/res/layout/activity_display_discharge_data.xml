@@ -2,9 +2,24 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
         tools:context=".notification.ui.activity.DisplayDischargeDataActivity">
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/display_discharge_toolbar"
+                android:layout_width="match_parent"
+                app:title="Notification"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
 
 
@@ -238,7 +253,7 @@
                     android:layout_height="2dip"
                     android:background="@color/grey"/>
 
-            </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 

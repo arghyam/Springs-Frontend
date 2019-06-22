@@ -18,6 +18,8 @@ import com.arghyam.myactivity.ui.MyActivityFragment
 import com.bumptech.glide.Glide.init
 import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
+import kotlinx.android.synthetic.main.fragment_more.*
+import kotlinx.android.synthetic.main.fragment_more.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -71,6 +73,10 @@ class MoreFragment : Fragment() {
             rootView.sign_out.visibility = GONE
             rootView.sign_in_for_guest.visibility = VISIBLE
         }
+        else{
+            rootView.app_bar.visibility = GONE
+        }
+
         return rootView
     }
 
