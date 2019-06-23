@@ -34,8 +34,8 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        var username: String = (getGroup(groupPosition) as com.arghyam.admin.ui.User).username
-        var phoneNumber: String = (getGroup(groupPosition) as com.arghyam.admin.ui.User).phoneNumber
+        var username: String? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).username
+        var phoneNumber: String? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).phoneNumber
         var role: List<String>? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).role
         var convertView = convertView
         if (convertView == null) {

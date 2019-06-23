@@ -74,6 +74,7 @@ class AdminPanelActivity : AppCompatActivity() {
     }
 
     private fun saveRegisteredUsers(responseModel: ResponseModel) {
+        Log.e("response", ArghyamUtils().convertToString(responseModel.response.responseObject))
         if (responseModel.response.responseCode == "200") {
             var responseData: List<AllUsersDataModel> = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
@@ -181,4 +182,4 @@ class AdminPanelActivity : AppCompatActivity() {
 }
 
 
-data class User(var username: String, var phoneNumber: String, var role: List<String>?)
+data class User(var username: String?, var phoneNumber: String?, var role: List<String>?)
