@@ -42,13 +42,10 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.IntentFilter
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
-import androidx.core.content.ContextCompat.getSystemService
 import com.arghyam.notification.ui.activity.NotificationActivity
-import kotlinx.android.synthetic.main.fragment_favourites.*
 import kotlinx.android.synthetic.main.fragment_home.badge
 import kotlinx.android.synthetic.main.fragment_home.bell
 import kotlinx.android.synthetic.main.fragment_home.notification_count
