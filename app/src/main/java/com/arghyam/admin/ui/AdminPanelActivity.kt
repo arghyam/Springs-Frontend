@@ -1,21 +1,44 @@
 package com.arghyam.admin.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProviders
+import com.arghyam.ArghyamApplication
 import com.arghyam.R
+import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
+import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.admin.adapter.ExpandableListAdapter
+import com.arghyam.admin.model.AllUsersDataModel
+import com.arghyam.admin.model.AllUsersDetailsModel
+import com.arghyam.admin.repository.GetRegisteredUsersRepository
+import com.arghyam.admin.viewmodel.GetRegisteredUsersViewModel
+import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.model.AllSpringDetailsModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_admin_panel.*
 import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import javax.inject.Inject
 
 class AdminPanelActivity : AppCompatActivity() {
 
     private var user: ArrayList<User> = ArrayList()
+    private lateinit var mGetRegisteredUsersViewModel: GetRegisteredUsersViewModel
+
+    @Inject
+    lateinit var mRegisteredUsersRepository: GetRegisteredUsersRepository
+    lateinit var listAdapter: ExpandableListAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,16 +48,61 @@ class AdminPanelActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initComponent()
+        initRepository()
+        observeData()
+        makeApiCall()
         initToolBar()
-        initData()
         textChangeListenerForSearchEditText()
         clearSearchEditText()
+    }
+
+    private fun initRepository() {
+        mGetRegisteredUsersViewModel = ViewModelProviders.of(this).get(GetRegisteredUsersViewModel::class.java)
+        mGetRegisteredUsersViewModel.setegisteredUsersRepository(mRegisteredUsersRepository)
+    }
+
+    private fun observeData() {
+        mGetRegisteredUsersViewModel.getAdditionalDataSuccess().observe(this, androidx.lifecycle.Observer {
+            Log.d("registeredUsers", "success")
+            initData(it)
+        })
+
+        mGetRegisteredUsersViewModel.getAdditionalDataError().observe(this, androidx.lifecycle.Observer {
+            Log.d("registeredUsers", "Api Error")
+        })
+    }
+
+    private fun saveRegisteredUsers(responseModel: ResponseModel) {
+        Log.e("response", ArghyamUtils().convertToString(responseModel.response.responseObject))
+        if (responseModel.response.responseCode == "200") {
+            var responseData: List<AllUsersDataModel> = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<List<AllUsersDataModel>>() {}.type
+            )
+            var i: Int = 0
+            while (i < responseData.size) {
+                user.add(
+                    User(
+                        responseData[i].firstName,
+                        responseData[i].username,
+                        mutableListOf("Admin", "Reviewer")
+                    )
+                )
+                i++
+            }
+//            listAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun clearSearchEditText() {
         user_search_input.onRightDrawableClicked {
             user_search_input.text.clear()
         }
+    }
+
+    private fun makeApiCall() {
+        mGetRegisteredUsersViewModel.getRegisteredUsersApi(this)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -52,8 +120,6 @@ class AdminPanelActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun textChangeListenerForSearchEditText() {
         user_search_input.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -65,19 +131,20 @@ class AdminPanelActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s?.isEmpty()!!) {
-                    user_search_input.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_search,0)
+                if (s?.isEmpty()!!) {
+                    user_search_input.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_search, 0)
                 } else {
-                    user_search_input.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_close,0)
+                    user_search_input.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_close, 0)
                 }
             }
 
         })
     }
 
-    private fun initData() {
-        loadData()
-        var listAdapter = ExpandableListAdapter(this, user as ArrayList<com.arghyam.admin.adapter.User>)
+    private fun initData(responseModel: ResponseModel) {
+//        loadData()
+        saveRegisteredUsers(responseModel)
+        listAdapter = ExpandableListAdapter(this, user as ArrayList<com.arghyam.admin.adapter.User>)
         user_list.setAdapter(listAdapter)
     }
 
@@ -108,7 +175,11 @@ class AdminPanelActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
+
+    private fun initComponent() {
+        (this.application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
 }
 
 
-data class User(var username: String, var phoneNumber: String, var role: List<String>?)
+data class User(var username: String?, var phoneNumber: String?, var role: List<String>?)
