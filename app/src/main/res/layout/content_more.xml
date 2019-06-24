@@ -280,7 +280,7 @@
                     android:paddingLeft="16dp"
                     android:layout_toRightOf="@+id/about_img"
                     android:id="@+id/tv_about"
-                    android:text="Aboutl"
+                    android:text="About"
                     android:textSize="16sp"/>
 
             <ImageView
