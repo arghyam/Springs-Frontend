@@ -158,9 +158,7 @@
                         android:textColor="@color/white"
                         android:drawableRight="@drawable/ic_tick_icon"
                         android:textSize="30sp"
-                        android:text="Ramesh Anand"
                         android:singleLine="true">
-
                 </EditText>
 
             </com.google.android.material.textfield.TextInputLayout>
