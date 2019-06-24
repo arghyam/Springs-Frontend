@@ -9,7 +9,9 @@
     <color name="ship_grey">#595958</color>
     <color name="gainsboro">#D8D8D8</color>
     <color name="gainsboro_50">#80D8D8D8</color>
+    <color name="grey">#D8D8D8</color>
     <color name="snow">#FAFAFA</color>
+    <color name="textcolor">#595958</color>
     <color name="jumbo">#8b8b8c</color>
     <color name="black">#000000</color>
     <color name="background">#F5F5F5</color>
@@ -18,5 +20,7 @@
     <color name="grey_98">#989898</color>
     <color name="blue">#0D65D9</color>
     <color name="selected">#FAFCFF</color>
+    <color name="lighter_grey">#8C8C8B</color>
+    <color name="button">#33FFFFFF</color>
 
 </resources>

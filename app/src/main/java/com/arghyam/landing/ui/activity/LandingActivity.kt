@@ -4,14 +4,12 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
@@ -33,7 +31,7 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
-import com.arghyam.profile.viewmodel.ProfileViewModel
+import com.arghyam.notification.ui.activity.NotificationActivity
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.karumi.dexter.Dexter
@@ -42,6 +40,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.activity_landing.*
 
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
@@ -49,6 +48,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
     var mContent : Fragment? = null
+    private var notification: Boolean = true
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +60,8 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         initViewModel()
         showHome()
-
     }
+
 
 //    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
 //        super.onSaveInstanceState(outState, outPersistentState)

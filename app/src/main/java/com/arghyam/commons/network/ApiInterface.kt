@@ -48,4 +48,7 @@ interface ApiInterface {
     @GET(" /api/v1/getRegisteredUsers")
     fun getRegisteredUsers(): Call<ResponseModel>
 
+    @POST("/api/v1/user/getUserProfile")
+    fun getUserProfile(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
+
 }

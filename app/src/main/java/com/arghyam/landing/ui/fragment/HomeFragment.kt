@@ -1,6 +1,7 @@
 package com.arghyam.landing.ui.fragment
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -39,6 +40,16 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.location.LocationManager
+import android.location.GpsStatus.GPS_EVENT_STOPPED
+import android.location.GpsStatus.GPS_EVENT_STARTED
+import com.arghyam.notification.ui.activity.NotificationActivity
+import kotlinx.android.synthetic.main.fragment_home.badge
+import kotlinx.android.synthetic.main.fragment_home.bell
+import kotlinx.android.synthetic.main.fragment_home.notification_count
+import kotlinx.android.synthetic.main.fragment_home.progressBar
 
 
 /**
@@ -56,8 +67,9 @@ class HomeFragment : Fragment() {
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
-
     private var firstCallMade: Boolean = false
+    private var notification: Boolean = true
+
 
     /**
      * Initialize newInstance for passing paameters
@@ -72,11 +84,48 @@ class HomeFragment : Fragment() {
 
     }
 
+    private val mGpsSwitchStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+
+            if (intent.action!!.matches("android.location.PROVIDERS_CHANGED".toRegex())) {
+                Log.e("Anirudh", "gps")
+            }
+        }
+    }
+
+    private fun initbell() {
+        if(notification){
+            badge.visibility = View.VISIBLE
+            notification_count.text = "1"
+        }
+        bell.setOnClickListener{
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getViewModel()
         setObserver()
+
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun registerReceiver() {
+
+        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        lm!!.addGpsStatusListener { event ->
+            when (event) {
+                GPS_EVENT_STARTED -> {
+                    Log.e("Anirudh","gps Enabled")
+                }
+                GPS_EVENT_STOPPED -> {
+                    Log.e("Anirudh","gps Disabled")
+                }
+            }// do your tasks
+            // do your tasks
+        }
     }
 
     private fun getViewModel() {
@@ -116,6 +165,7 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
+        initbell()
     }
 
     private fun init() {
@@ -143,7 +193,11 @@ class HomeFragment : Fragment() {
         }
         initFab()
         reload()
+        registerReceiver()
+
     }
+
+
 
 
     private fun initComponent() {
