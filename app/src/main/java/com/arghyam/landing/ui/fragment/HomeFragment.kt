@@ -262,14 +262,39 @@ class HomeFragment : Fragment() {
         }
     }
 
+//    private fun reload() {
+//        reload.setOnClickListener {
+//            Log.e("Anirudh", "reloaded")
+//            springsList.clear()
+//            adapter.notifyDataSetChanged()
+//            count = 1
+////            initApiCall()
+//            getAllSpringRequest()
+//        }
+//    }
+
     private fun reload() {
         reload.setOnClickListener {
             Log.e("Anirudh", "reloaded")
-            springsList.clear()
-            adapter.notifyDataSetChanged()
-            count = 1
-//            initApiCall()
-            getAllSpringRequest()
+            if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
+                if (!firstCallMade) {
+                    springsList.clear()
+                    adapter.notifyDataSetChanged()
+                    count = 1
+                    initApiCall()
+                }
+            } else {
+                Log.e("call", "from observer")
+                activity?.let { ArghyamUtils().turnOnLocation(it) }!!
+                errorItems.visibility = VISIBLE
+                errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
+                springsLocation.visibility = GONE
+                firstCallMade = false
+            }
+//            springsList.clear()
+//            adapter.notifyDataSetChanged()
+//            count = 1
+//            getAllSpringRequest()
         }
     }
 
