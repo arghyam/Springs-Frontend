@@ -43,6 +43,9 @@ interface ApiInterface {
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/springs")
-    fun springDetails(@Body springDetailsRequetModel: RequestModel): Call<ResponseModel>
+    fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
+
+    @GET(" /api/v1/getRegisteredUsers")
+    fun getRegisteredUsers(): Call<ResponseModel>
 
 }

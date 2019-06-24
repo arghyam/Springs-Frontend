@@ -2,6 +2,7 @@ package com.arghyam.commons.di
 
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.ui.NewSpringActivity
+import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.example.ui.ExampleActivity
 import com.arghyam.favourites.ui.FavouritesFragment
 import com.arghyam.iam.ui.LoginActivity
@@ -41,5 +42,7 @@ interface AppComponent {
     fun inject(springDetailsActivity: SpringDetailsActivity)
 
     fun inject(dischargeDataFragment: DischargeDataFragment)
+
+    fun inject(adminPanelActivity: AdminPanelActivity)
 
 }
