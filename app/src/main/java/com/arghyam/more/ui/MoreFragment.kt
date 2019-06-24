@@ -17,6 +17,7 @@ import com.arghyam.BuildConfig
 
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_USER_PROFILE
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE
@@ -91,6 +92,10 @@ class MoreFragment : Fragment() {
             startActivity(Intent(activity!!, LoginActivity::class.java))
             activity!!.finish()
         }
+
+        admin_layout.setOnClickListener {
+            startActivity(Intent(activity!!, AdminPanelActivity::class.java))
+        }
     }
 
     private fun initUpdateProfile() {
@@ -152,6 +157,7 @@ class MoreFragment : Fragment() {
             rootView.user_details.visibility = GONE
             rootView.sign_out.visibility = GONE
             rootView.sign_in_for_guest.visibility = VISIBLE
+            rootView.admin_layout.visibility = GONE
         }
         else{
             rootView.app_bar.visibility = GONE
