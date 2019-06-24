@@ -19,6 +19,7 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.GET_USER_PROFILE
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE
 import com.arghyam.commons.utils.SharedPreferenceFactory
@@ -48,7 +49,7 @@ class MoreFragment : Fragment() {
     lateinit var updateUserProfileRepository: UpdateUserProfileRepository
     private var getUserProfileViewModel: GetUserProfileViewModel? = null
     private var updateUserProfileViewModel: UpdateUserProfileViewModel? = null
-    lateinit private var responseData : UserProfileDataDetailsModel
+    lateinit private var responseData: UserProfileDataDetailsModel
 
     /**
      * Initialize newInstance for passing paameters
@@ -71,6 +72,7 @@ class MoreFragment : Fragment() {
         initGetUserProfile()
 
     }
+
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
@@ -96,6 +98,13 @@ class MoreFragment : Fragment() {
         admin_layout.setOnClickListener {
             startActivity(Intent(activity!!, AdminPanelActivity::class.java))
         }
+        sign_out.setOnClickListener {
+            if (SharedPreferenceFactory(activity!!.applicationContext).getString(ACCESS_TOKEN) != "") {
+                SharedPreferenceFactory(activity!!.applicationContext).setString(ACCESS_TOKEN, "")
+            }
+            startActivity(Intent(activity!!, LoginActivity::class.java))
+            activity!!.finish()
+        }
     }
 
     private fun initUpdateProfile() {
@@ -109,7 +118,7 @@ class MoreFragment : Fragment() {
         updateUserProfileViewModel?.updateUserProfileRepository(updateUserProfileRepository)
     }
 
-    private fun updateUserProfileRequest(){
+    private fun updateUserProfileRequest() {
         var updateUserProfileObject = RequestModel(
             id = UPDATE_USER_PROFILE,
             ver = BuildConfig.VER,
@@ -129,13 +138,17 @@ class MoreFragment : Fragment() {
         updateUserProfileViewModel?.getUserProfileApi(context!!, updateUserProfileObject)
     }
 
-    private fun initUpdateUserProfile(){
+    private fun initUpdateUserProfile() {
         updateUserProfileViewModel?.updateUserProfileResponse()?.observe(this, Observer {
             updateUserProfileData(it)
         })
         updateUserProfileViewModel?.updateUserProfileError()?.observe(this, Observer {
             Log.e("error", it)
         })
+
+        if (updateUserProfileViewModel?.updateUserProfileError()?.hasObservers()!!) {
+            updateUserProfileViewModel?.updateUserProfileError()?.removeObservers(this)
+        }
     }
 
     private fun updateUserProfileData(responseModel: ResponseModel) {
@@ -158,8 +171,7 @@ class MoreFragment : Fragment() {
             rootView.sign_out.visibility = GONE
             rootView.sign_in_for_guest.visibility = VISIBLE
             rootView.admin_layout.visibility = GONE
-        }
-        else{
+        } else {
             rootView.app_bar.visibility = GONE
         }
 
@@ -202,6 +214,9 @@ class MoreFragment : Fragment() {
         getUserProfileViewModel?.getUserProfileError()?.observe(this, Observer {
             Log.e("error", it)
         })
+        if (getUserProfileViewModel?.getUserProfileError()?.hasObservers()!!) {
+            getUserProfileViewModel?.getUserProfileError()?.removeObservers(this)
+        }
 
     }
 
@@ -221,13 +236,4 @@ class MoreFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (getUserProfileViewModel?.getUserProfileError()?.hasObservers()!!) {
-            getUserProfileViewModel?.getUserProfileError()?.removeObservers(this)
-        }
-        if (updateUserProfileViewModel?.updateUserProfileError()?.hasObservers()!!) {
-            updateUserProfileViewModel?.updateUserProfileError()?.removeObservers(this)
-        }
-    }
 }
