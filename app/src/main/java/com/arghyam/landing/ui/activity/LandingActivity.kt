@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
@@ -47,7 +48,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     var landingViewModel: LandingViewModel? = null
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
-    var mContent : Fragment? = null
+    var mContent: Fragment? = null
     private var notification: Boolean = true
     lateinit var navView: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,9 +96,17 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_fav -> {
-                    CURRENT_TAG = TAG_FAVOURITES
-                    val fragment = FavouritesFragment.newInstance()
-                    addFragment(fragment)
+                    if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
+                        ArghyamUtils().makeSnackbar(
+                            findViewById(R.id.content), "SignIn to continue", "SIGN IN",
+                            applicationContext,
+                            LoginActivity::class.java
+                        )
+                    } else {
+                        CURRENT_TAG = TAG_FAVOURITES
+                        val fragment = FavouritesFragment.newInstance()
+                        addFragment(fragment)
+                    }
                     return true
                 }
                 R.id.navigation_search -> {
@@ -107,7 +116,12 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_my_activty -> {
-                    if (SharedPreferenceFactory(this@LandingActivity).getString(Constants.ACCESS_TOKEN) != "") {
+                    if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
+                        ArghyamUtils().makeSnackbar(
+                            findViewById(R.id.content), "SignIn to continue", "SIGN IN",
+                            applicationContext,
+                            LoginActivity::class.java)
+                    } else {
                         CURRENT_TAG = TAG_MY_ACTIVITY
                         val fragment = MyActivityFragment.newInstance()
                         addFragment(fragment)

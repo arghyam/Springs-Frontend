@@ -7,10 +7,13 @@ import android.content.IntentSender
 import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
 import android.view.View
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
@@ -18,9 +21,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.marginTop
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -110,18 +115,18 @@ class ArghyamUtils {
 
 
     fun makeSnackbar(view: View, message: String, action: String, context: Context?, activityname: Class<*>) {
-        view.let { it1 ->
-            val snack: TSnackbar = TSnackbar.make(it1, message, TSnackbar.LENGTH_LONG)
-            val v: View = snack.view
-            val textView: TextView = v.findViewById(R.id.snackbar_text)
-            textView.setTextColor(Color.WHITE)
-            snack.setAction(action) {
-                context?.startActivity(Intent(context, activityname))
-                (context as Activity).finish()
-            }
-            snack.show()
-
+        val snack: TSnackbar = TSnackbar.make(view, message, TSnackbar.LENGTH_LONG)
+        val v: View = snack.view
+        var params2: CoordinatorLayout.LayoutParams = v.layoutParams as (CoordinatorLayout.LayoutParams)
+        params2.setMargins(0,198,0,0)
+        v.layoutParams=params2
+        val textView: TextView = v.findViewById(R.id.snackbar_text)
+        textView.setTextColor(Color.WHITE)
+        snack.setAction(action) {
+            context?.startActivity(Intent(context, activityname))
+            (context as Activity).finish()
         }
+        snack.show()
     }
 
     fun getDate(dateString: String): String {
