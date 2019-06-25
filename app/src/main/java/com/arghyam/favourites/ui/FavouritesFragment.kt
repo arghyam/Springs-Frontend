@@ -7,7 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,6 +21,7 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.adapter.FavouritesAdapter
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.favourites.model.FavSpringDetailsModel
@@ -25,6 +29,7 @@ import com.arghyam.favourites.viewmodel.FavouritesViewModel
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.model.AllSpringModel
 import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.repository.GetAllSpringRepository
@@ -33,6 +38,8 @@ import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_favourites.*
+import kotlinx.android.synthetic.main.fragment_favourites.toolbar
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 
@@ -63,7 +70,6 @@ class FavouritesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -81,21 +87,22 @@ class FavouritesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-        initbell()
     }
 
-    private fun initbell() {
-        if(notification){
+    private fun initbell(notificationCount:Int) {
+        if(notificationCount>0){
             badge.visibility = View.VISIBLE
-            notification_count.text = "1"
+            notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener{
             Log.e("Anirudh", "bell clicked")
             this.startActivity(Intent(activity!!, NotificationActivity::class.java))
         }
     }
+
     private fun init() {
         initComponent()
+        initNotifications()
         if (ArghyamUtils().permissionGranted(
                 context!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -111,9 +118,29 @@ class FavouritesFragment : Fragment() {
         }
     }
 
+    private fun initNotifications() {
+        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
+            notauser.visibility = VISIBLE
+            scrollView.visibility = GONE
+            bell.visibility = GONE
+            initsigninbutton()
+        }
+        else{
+            notauser.visibility = GONE
+            bell.visibility = VISIBLE
+        }
+    }
+
+    private fun initsigninbutton() {
+        sign_in_button_fav.setOnClickListener {
+            startActivity(Intent(activity!!, LoginActivity::class.java))
+            activity!!.finish()
+        }
+    }
+
     private fun initGetAllSpring() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
-            progressBar.visibility = View.GONE
+            progressBar.visibility = GONE
             saveGetAllSpringsData(it)
 //            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
 //                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
@@ -157,6 +184,8 @@ class FavouritesFragment : Fragment() {
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+        val toolbar = toolbar as Toolbar
+        toolbar.title = "Favourites"
     }
 
     private fun getAllSpringRequest() {

@@ -40,16 +40,18 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
+import androidx.appcompat.widget.Toolbar
 import com.arghyam.notification.ui.activity.NotificationActivity
-import kotlinx.android.synthetic.main.fragment_home.badge
-import kotlinx.android.synthetic.main.fragment_home.bell
-import kotlinx.android.synthetic.main.fragment_home.notification_count
 import kotlinx.android.synthetic.main.fragment_home.progressBar
+import kotlinx.android.synthetic.main.toolbar.*
+
+
+
+
 
 
 /**
@@ -68,7 +70,6 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
     private var firstCallMade: Boolean = false
-    private var notification: Boolean = true
 
 
     /**
@@ -84,19 +85,11 @@ class HomeFragment : Fragment() {
 
     }
 
-    private val mGpsSwitchStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
 
-            if (intent.action!!.matches("android.location.PROVIDERS_CHANGED".toRegex())) {
-                Log.e("Anirudh", "gps")
-            }
-        }
-    }
-
-    private fun initbell() {
-        if(notification){
+    private fun initbell(notificationCount:Int) {
+        if(notificationCount>0){
             badge.visibility = View.VISIBLE
-            notification_count.text = "1"
+            notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener{
             Log.e("Anirudh", "bell clicked")
@@ -104,10 +97,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun initNotifications() {
+        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
+            bell.visibility = GONE
+        }
+        else
+            bell.visibility = VISIBLE
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getViewModel()
         setObserver()
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -165,11 +165,11 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-        initbell()
     }
 
     private fun init() {
         initComponent()
+        initNotifications()
         if (ArghyamUtils().permissionGranted(
                 context!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION

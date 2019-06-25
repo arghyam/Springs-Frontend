@@ -10,6 +10,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
@@ -34,7 +35,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
-import kotlinx.android.synthetic.main.fragment_more.view.*
+import kotlinx.android.synthetic.main.fragment_more.*
+import kotlinx.android.synthetic.main.fragment_more.view.toolbar
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 /**
@@ -49,7 +52,7 @@ class MoreFragment : Fragment() {
     lateinit var updateUserProfileRepository: UpdateUserProfileRepository
     private var getUserProfileViewModel: GetUserProfileViewModel? = null
     private var updateUserProfileViewModel: UpdateUserProfileViewModel? = null
-    lateinit private var responseData: UserProfileDataDetailsModel
+    private lateinit var responseData: UserProfileDataDetailsModel
 
     /**
      * Initialize newInstance for passing paameters
@@ -70,11 +73,13 @@ class MoreFragment : Fragment() {
         initRepository()
         getUserProfileRequest()
         initGetUserProfile()
-
     }
+
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+        val toolbar = toolbar as Toolbar
+        toolbar.title = "More"
     }
 
     private fun initClick() {
@@ -172,7 +177,7 @@ class MoreFragment : Fragment() {
             rootView.sign_in_for_guest.visibility = VISIBLE
             rootView.admin_layout.visibility = GONE
         } else {
-            rootView.app_bar.visibility = GONE
+            rootView.toolbar.visibility = GONE
         }
 
         return rootView
