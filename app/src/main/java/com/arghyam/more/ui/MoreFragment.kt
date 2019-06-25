@@ -205,7 +205,7 @@ class MoreFragment : Fragment() {
             ),
             request = GetUserProfileModel(
                 person = LoggedInUserProfileModel(
-                    phonenumber = "7022973997"
+                    id = context?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }!!
                 )
             )
         )
