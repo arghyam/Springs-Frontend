@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
@@ -20,6 +21,9 @@ import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.activity_main.view.toolbar
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.list_spring.view.*
 
 
@@ -50,7 +54,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         })
         holder.springItemADD.setOnClickListener(View.OnClickListener {
             if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN) == "") {
-                Log.e("Anirudh","Adddischarge")
+                Log.e("Anirudh", "Adddischarge")
                 ArghyamUtils().makeSnackbar(
                     it,
                     "Sign In to Continue",
@@ -101,7 +105,5 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         val ownership: TextView = view.ownership_value
         val springcode: TextView = view.springcode
         val village: TextView = view.village_name
-
-
     }
 }

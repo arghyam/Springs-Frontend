@@ -42,6 +42,9 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.activity_landing.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
@@ -99,7 +102,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
                         ArghyamUtils().makeSnackbar(
                             findViewById(R.id.content), "SignIn to continue", "SIGN IN",
-                            applicationContext,
+                            this@LandingActivity,
                             LoginActivity::class.java
                         )
                     } else {
@@ -119,8 +122,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
                         ArghyamUtils().makeSnackbar(
                             findViewById(R.id.content), "SignIn to continue", "SIGN IN",
-                            applicationContext,
-                            LoginActivity::class.java)
+                            this@LandingActivity,
+                            LoginActivity::class.java
+                        )
                     } else {
                         CURRENT_TAG = TAG_MY_ACTIVITY
                         val fragment = MyActivityFragment.newInstance()

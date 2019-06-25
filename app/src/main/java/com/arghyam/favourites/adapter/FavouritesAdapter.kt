@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
@@ -19,9 +20,11 @@ import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.fragment_favourites.view.*
 import kotlinx.android.synthetic.main.list_spring.view.*
 
-class FavouritesAdapter (private val springList: ArrayList<FavSpringDataModel>, val context: Context) : RecyclerView.Adapter<FavouritesAdapter.ViewHolder>(){
+class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, val context: Context) :
+    RecyclerView.Adapter<FavouritesAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
         return ViewHolder(v)
@@ -48,13 +51,13 @@ class FavouritesAdapter (private val springList: ArrayList<FavSpringDataModel>, 
         holder.springItemADD.setOnClickListener(View.OnClickListener {
             if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN) == "") {
                 ArghyamUtils().makeSnackbar(
-                    holder.springItemADD,
+                    it,
                     "SignIn To Continue",
                     "SIGN IN",
                     context,
                     LoginActivity::class.java
                 )
-            } else{
+            } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
                 context.startActivity(dataIntent)
@@ -63,9 +66,9 @@ class FavouritesAdapter (private val springList: ArrayList<FavSpringDataModel>, 
         })
         holder.favourite.setOnClickListener {
         }
-        holder.ownership.text= springs.ownershipType
-        holder.springcode.text= springs.springCode
-        holder.village.text= springs.village
+        holder.ownership.text = springs.ownershipType
+        holder.springcode.text = springs.springCode
+        holder.village.text = springs.village
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -79,7 +82,5 @@ class FavouritesAdapter (private val springList: ArrayList<FavSpringDataModel>, 
         val ownership: TextView = view.ownership_value
         val springcode: TextView = view.springcode
         val village: TextView = view.village_name
-
-
     }
 }

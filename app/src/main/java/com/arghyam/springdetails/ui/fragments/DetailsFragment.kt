@@ -38,6 +38,8 @@ import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_display_discharge_data.*
+import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
 import java.util.*
