@@ -9,6 +9,7 @@ import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.iam.ui.OtpVerifyActivity
 import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.more.ui.MoreFragment
+import com.arghyam.myactivity.ui.MyActivityFragment
 import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
@@ -47,5 +48,7 @@ interface AppComponent {
     fun inject(moreFragment: MoreFragment)
 
     fun inject(adminPanelActivity: AdminPanelActivity)
+
+    fun inject(myActivityFragment: MyActivityFragment)
 
 }
