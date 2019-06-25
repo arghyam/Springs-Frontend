@@ -1,3 +1,3 @@
 package com.arghyam.more.model
 
-class LoggedInUserProfileModel(var id:String)
+class LoggedInUserProfileModel(var phonenumber:String)

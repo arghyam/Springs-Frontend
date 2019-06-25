@@ -193,6 +193,7 @@ class MoreFragment : Fragment() {
     }
 
     private fun getUserProfileRequest() {
+        Log.e("Anirudh", context?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) })
         var getUserProfileObject = RequestModel(
             id = GET_USER_PROFILE,
             ver = BuildConfig.VER,
@@ -204,7 +205,7 @@ class MoreFragment : Fragment() {
             ),
             request = GetUserProfileModel(
                 person = LoggedInUserProfileModel(
-                    id = context?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }!!
+                    phonenumber = context?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) }!!
                 )
             )
         )

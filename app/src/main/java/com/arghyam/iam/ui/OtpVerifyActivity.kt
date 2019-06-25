@@ -24,6 +24,7 @@ import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.REFRESH_TOKEN
 import com.arghyam.commons.utils.Constants.USER_ID
+import com.arghyam.commons.utils.Constants.USER_PHONE
 import com.arghyam.commons.utils.Constants.VERIFY_OTP_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
@@ -135,9 +136,13 @@ class OtpVerifyActivity : AppCompatActivity() {
             USER_ID,
             accessTokenResponse.userId
         )
+        SharedPreferenceFactory(this@OtpVerifyActivity).setString(
+            USER_PHONE,
+            accessTokenResponse.username
+        )
 
         Log.e(
-            "id", SharedPreferenceFactory(this@OtpVerifyActivity).getString(
+            "useridotp", SharedPreferenceFactory(this@OtpVerifyActivity).getString(
                 USER_ID
             )
         )
