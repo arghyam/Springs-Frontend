@@ -39,6 +39,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 
+
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
     var landingViewModel: LandingViewModel? = null
@@ -92,6 +93,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_fav -> {
+
                     CURRENT_TAG = TAG_FAVOURITES
                     val fragment = FavouritesFragment.newInstance()
                     addFragment(fragment)
@@ -104,6 +106,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_my_activty -> {
+
                     CURRENT_TAG = TAG_MY_ACTIVITY
                     val fragment = MyActivityFragment.newInstance()
                     addFragment(fragment)

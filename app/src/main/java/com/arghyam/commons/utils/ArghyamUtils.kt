@@ -14,6 +14,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
@@ -23,9 +24,9 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.marginTop
+import androidx.core.view.size
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
-import kotlinx.android.synthetic.main.activity_main.view.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,11 +116,12 @@ class ArghyamUtils {
 
 
     fun makeSnackbar(view: View, message: String, action: String, context: Context?, activityname: Class<*>) {
+        val attrs: IntArray = intArrayOf(R.attr.actionBarSize)
         val snack: TSnackbar = TSnackbar.make(view, message, TSnackbar.LENGTH_LONG)
         val v: View = snack.view
         var params2: CoordinatorLayout.LayoutParams = v.layoutParams as (CoordinatorLayout.LayoutParams)
-        params2.setMargins(0,198,0,0)
-        v.layoutParams=params2
+        params2.setMargins(0, context!!.obtainStyledAttributes(attrs).getDimensionPixelSize(0,-1), 0, 0)
+        v.layoutParams = params2
         val textView: TextView = v.findViewById(R.id.snackbar_text)
         textView.setTextColor(Color.WHITE)
         snack.setAction(action) {
