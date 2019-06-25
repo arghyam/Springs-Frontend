@@ -133,6 +133,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
+        Log.e("use_id", "abcd" + SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!)
         init()
     }
 
@@ -216,8 +217,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun initUploadImageApis() {
+
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            imagesList.add(it.response.imageName)
+            Log.e("ResponseImage", it.response.imageUrl+"aaa")
+
+            imagesList.add(it.response.imageUrl)
             Log.d("imagesList", imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
@@ -326,7 +330,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     village = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList,
-                    userID = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
+                    userId = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
                 )
             )
         )
@@ -627,7 +631,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
     }
 
-    private fun hideSoftKeyboard(){
+    private fun hideSoftKeyboard() {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }

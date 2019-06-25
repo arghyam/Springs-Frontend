@@ -173,8 +173,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
-            Log.e("stefy", it?.response!!.imageName)
-            imagesList.add(it.response.imageName)
+            Log.e("stefy", it?.response!!.imageUrl)
+            imagesList.add(it.response.imageUrl)
         })
         uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
             Log.e("stefy error", it)

@@ -435,9 +435,9 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                 additionalInfo = AdditionalDetailsModel(
                     springCode = springCode,
                     seasonality = seasonality,
-                    waterUseList = waterUse,
+                    usage = waterUse,
                     months = selectedMonth,
-                    household = houseNumber.toString()
+                    numberOfHousehold = houseNumber
                 )
             )
         )

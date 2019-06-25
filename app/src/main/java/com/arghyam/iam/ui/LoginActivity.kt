@@ -97,7 +97,6 @@ class LoginActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<LoginResponseObject>() {}.type
         )
-        SharedPreferenceFactory(this@LoginActivity).setString(Constants.USER_ID, loginResponseObject.userId)
         gotoOtpActivity(loginResponseObject.newUserCreated)
     }
 

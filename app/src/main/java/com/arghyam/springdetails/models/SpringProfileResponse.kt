@@ -18,7 +18,7 @@ class SpringProfileResponse(
     var village: String,
     var numberOfHouseholds: Int,
     var ownershipType: String,
-    var usage: String,
+    var usage: ArrayList<String>,
     var images: ArrayList<String>,
     var extraInformation: ExtraInfoDischarge,
     var createdTimeStamp: String,

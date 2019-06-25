@@ -133,8 +133,15 @@ class OtpVerifyActivity : AppCompatActivity() {
         )
         SharedPreferenceFactory(this@OtpVerifyActivity).setString(
             USER_ID,
-            accessTokenResponse.accessTokenResponseDTO.user_id
+            accessTokenResponse.userId
         )
+
+        Log.e(
+            "id", SharedPreferenceFactory(this@OtpVerifyActivity).getString(
+                USER_ID
+            )
+        )
+
     }
 
     private fun initResendCodeButton() {
