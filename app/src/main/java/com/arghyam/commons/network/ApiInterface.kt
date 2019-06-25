@@ -51,4 +51,7 @@ interface ApiInterface {
     @POST("/api/v1/user/getUserProfile")
     fun getUserProfile(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
 
+    @POST("/api/v1/user/myActivities")
+    fun getMyActivities(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
+
 }

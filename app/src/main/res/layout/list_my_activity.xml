@@ -48,6 +48,7 @@
 
 
             <RelativeLayout
+                    android:id="@+id/my_activity_relative_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp">
@@ -88,5 +89,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+
 
 </LinearLayout>
