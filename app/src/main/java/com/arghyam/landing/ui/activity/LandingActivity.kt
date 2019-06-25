@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -14,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
-import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
@@ -32,7 +30,6 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
-import com.arghyam.notification.ui.activity.NotificationActivity
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.karumi.dexter.Dexter
@@ -41,7 +38,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.activity_landing.*
 
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
@@ -96,17 +92,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_fav -> {
-                    if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
-                        ArghyamUtils().makeSnackbar(
-                            findViewById(R.id.content), "SignIn to continue", "SIGN IN",
-                            applicationContext,
-                            LoginActivity::class.java
-                        )
-                    } else {
-                        CURRENT_TAG = TAG_FAVOURITES
-                        val fragment = FavouritesFragment.newInstance()
-                        addFragment(fragment)
-                    }
+                    CURRENT_TAG = TAG_FAVOURITES
+                    val fragment = FavouritesFragment.newInstance()
+                    addFragment(fragment)
                     return true
                 }
                 R.id.navigation_search -> {
@@ -116,16 +104,9 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
                     return true
                 }
                 R.id.navigation_my_activty -> {
-                    if (SharedPreferenceFactory(this@LandingActivity).getString(ACCESS_TOKEN) == "") {
-                        ArghyamUtils().makeSnackbar(
-                            findViewById(R.id.content), "SignIn to continue", "SIGN IN",
-                            applicationContext,
-                            LoginActivity::class.java)
-                    } else {
-                        CURRENT_TAG = TAG_MY_ACTIVITY
-                        val fragment = MyActivityFragment.newInstance()
-                        addFragment(fragment)
-                    }
+                    CURRENT_TAG = TAG_MY_ACTIVITY
+                    val fragment = MyActivityFragment.newInstance()
+                    addFragment(fragment)
                     return true
                 }
                 R.id.navigation_more -> {
