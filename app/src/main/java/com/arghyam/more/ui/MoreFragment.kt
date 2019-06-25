@@ -37,7 +37,6 @@ import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
 import kotlinx.android.synthetic.main.fragment_more.*
 import kotlinx.android.synthetic.main.fragment_more.view.toolbar
-import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 /**

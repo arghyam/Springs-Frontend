@@ -116,12 +116,12 @@ class ArghyamUtils {
 
 
     fun makeSnackbar(view: View, message: String, action: String, context: Context?, activityname: Class<*>) {
-        Log.e("height",R.attr.actionBarSize.toString()+" value")
+        val attrs: IntArray = intArrayOf(R.attr.actionBarSize)
         val snack: TSnackbar = TSnackbar.make(view, message, TSnackbar.LENGTH_LONG)
         val v: View = snack.view
         var params2: CoordinatorLayout.LayoutParams = v.layoutParams as (CoordinatorLayout.LayoutParams)
-        params2.setMargins(0,R.attr.actionBarSize,0,0)
-        v.layoutParams=params2
+        params2.setMargins(0, context!!.obtainStyledAttributes(attrs).getDimensionPixelSize(0,-1), 0, 0)
+        v.layoutParams = params2
         val textView: TextView = v.findViewById(R.id.snackbar_text)
         textView.setTextColor(Color.WHITE)
         snack.setAction(action) {
