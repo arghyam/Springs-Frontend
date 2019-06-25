@@ -10,7 +10,7 @@
         tools:context=".landing.ui.activity.LandingActivity">
 
 
-    <FrameLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -20,8 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-
-    </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
