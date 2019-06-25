@@ -42,6 +42,7 @@ import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
 import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -132,6 +133,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
+        Log.e("use_id", "abcd" + SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!)
         init()
     }
 
@@ -215,8 +217,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun initUploadImageApis() {
+
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            imagesList.add(it.response.imageName)
+            Log.e("ResponseImage", it.response.imageUrl+"aaa")
+
+            imagesList.add(it.response.imageUrl)
             Log.d("imagesList", imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
@@ -324,8 +329,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     accuracy = mLocation!!.accuracy,
                     village = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
-                    images = imagesList
-
+                    images = imagesList,
+                    userId = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
                 )
             )
         )
@@ -626,7 +631,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
     }
 
-    private fun hideSoftKeyboard(){
+    private fun hideSoftKeyboard() {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }

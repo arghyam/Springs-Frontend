@@ -12,7 +12,7 @@ class CreateSpringResponseObject(
     var village: String,
     var numberOfHouseholds: Int,
     var ownershipType: String,
-    var usage: String,
+    var usage: ArrayList<String>,
     var images: ArrayList<String>,
     var extraInformation: ExtraInfo,
     var createdTimeStamp: String,

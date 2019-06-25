@@ -1,6 +1,6 @@
 package com.arghyam.iam.model
 
-open class AccessTokenModel(var accessTokenResponseDTO : AccessTokenResponseModel)
+open class AccessTokenModel(var accessTokenResponseDTO: AccessTokenResponseModel, var username:String,var userId: String)
 
 open class AccessTokenResponseModel(
     var access_token: String,
