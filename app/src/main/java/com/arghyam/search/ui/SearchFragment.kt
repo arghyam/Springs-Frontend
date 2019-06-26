@@ -47,11 +47,6 @@ import androidx.core.view.MenuItemCompat.getActionView
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class SearchFragment : Fragment() {
 
    private var recentSearchList = ArrayList<RecentSearchModel>()
@@ -155,17 +150,20 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(s?.length!! > 0){
                     search_icon.setImageResource(R.drawable.ic_close)
+                    recentSearchRecyclerView.visibility = GONE
+                    searchResultRecyclerView.visibility = VISIBLE
+                    recent_search.text = "Search results"
+                    initRecyclerview()
 
                 } else {
                     search_icon.setImageResource(R.drawable.ic_search)
+
                 }
 
             }
 
         })
     }
-
-
 
     private fun initRecyclerview() {
         if(recentSearchRecyclerView.visibility == VISIBLE) {
@@ -175,7 +173,6 @@ class SearchFragment : Fragment() {
             recentSearchList.add(RecentSearchModel("Spring 1"))
             recentSearchList.add(RecentSearchModel("Spring 2"))
             recentSearchList.add(RecentSearchModel("Spring 3"))
-
 
 //                 displayedList.addAll(recentSearchList)
         }
@@ -187,12 +184,12 @@ class SearchFragment : Fragment() {
             val adapter = activity?.let { SearchResultsAdapter(springsList, it) }
             searchResultRecyclerView.adapter = adapter
 
-//            springsList.add(LandingModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
-//            springsList.add(LandingModel("Recent Spring 2", "Village 2", "https://picsum.photos/200/300"))
-//            springsList.add(LandingModel("Recent Spring 3", "Village 3", "https://picsum.photos/200/300"))
-//            springsList.add(LandingModel("Recent Spring 4", "Village 4", "https://picsum.photos/200/300"))
-//            springsList.add(LandingModel("Recent Spring 5", "Village 5", "https://picsum.photos/200/300"))
-//            Log.d("searchspringsList", springsList.toString())
+            springsList.add(LandingModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
+            springsList.add(LandingModel("Recent Spring 2", "Village 2", "https://picsum.photos/200/300"))
+            springsList.add(LandingModel("Recent Spring 3", "Village 3", "https://picsum.photos/200/300"))
+            springsList.add(LandingModel("Recent Spring 4", "Village 4", "https://picsum.photos/200/300"))
+            springsList.add(LandingModel("Recent Spring 5", "Village 5", "https://picsum.photos/200/300"))
+            Log.d("searchspringsList", springsList.toString())
 
         }
 
@@ -204,16 +201,12 @@ class SearchFragment : Fragment() {
             startActivity(intent)
         }
 
-        search_spring.setOnClickListener(){
-            recentSearchRecyclerView.visibility = GONE
-            searchResultRecyclerView.visibility = VISIBLE
-            recent_search.text = "Search results"
-            initRecyclerview()
-        }
-
         search_icon.setOnClickListener {
             if(search_input.text.length > 0){
                 search_input.setText("")
+                recentSearchRecyclerView.visibility = VISIBLE
+                searchResultRecyclerView.visibility = GONE
+                recent_search.text = "Recent search"
             }
         }
 
@@ -222,12 +215,9 @@ class SearchFragment : Fragment() {
     private var recentSearchInterface = object : RecentSearchInterface {
         override fun onRecentSearchItemClickListener(position: Int) {
            Log.e("recent search name",recentSearchList[position].recentSearchName)
-
             var searchResultsList = ArrayList<LandingModel>()
 
         }
     }
-
-
 
 }
