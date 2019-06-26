@@ -97,4 +97,8 @@
     <string name="time">1:35 PM</string>
     <string name="date_notification">April 21,2019</string>
     <string name="user_search_hint">Search by name or mobile number</string>
+    <string name="no_recent_searches">No Recent Searches</string>
+    <string name="search_results">Search Results</string>
+    <string name="recent_search">Recent search</string>
+    <string name="search_by_geography">Search by geography</string>
 </resources>
