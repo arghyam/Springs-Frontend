@@ -383,7 +383,6 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"
                 android:textColor="#FFFFFF"/>
