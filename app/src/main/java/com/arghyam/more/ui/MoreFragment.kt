@@ -255,10 +255,6 @@ class MoreFragment : Fragment() {
             )
             tv_username.text = responseData.firstName
             tv_user_phone.text = responseData.username
-            Log.e(
-                "UserProfile", ArghyamUtils().convertToString(responseData.firstName)
-            )
-
         }
     }
 

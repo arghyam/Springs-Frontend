@@ -14,6 +14,8 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE_ID
+import com.arghyam.commons.utils.Constants.USER_NAME
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.RequestPersonDataModel
@@ -115,6 +117,7 @@ class ProfileActivity : AppCompatActivity() {
             )
         )
         profileViewModel?.userProfileApi(this, userProfileObject)
+        SharedPreferenceFactory(this).setString(USER_NAME,fullName.text.toString().trim())
     }
 
     private fun textChangedListener(): TextWatcher {

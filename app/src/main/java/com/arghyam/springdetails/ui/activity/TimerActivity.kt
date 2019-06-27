@@ -181,6 +181,12 @@ class TimerActivity : AppCompatActivity() {
             seconds = (milliSecondTime / 1000).toInt()
             timer.text = ArghyamUtils().secondsToMinutes(seconds)
             handler.postDelayed(this, 0)
+            if (seconds == 5975){
+                ArghyamUtils().longToast(this@TimerActivity,"Longer than expected")
+                Log.e("Anirudh","Timer: " +  ArghyamUtils().secondsToMinutes(seconds))
+                handler.postDelayed(this, 0)
+                timerButton.performClick()
+            }
         }
 
     }

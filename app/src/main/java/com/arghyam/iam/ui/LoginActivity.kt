@@ -18,11 +18,14 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.IS_NEW_USER
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
+import com.arghyam.commons.utils.Constants.USER_NAME
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.*
 import com.arghyam.iam.repository.IamRepository
 import com.arghyam.iam.viewmodel.IamViewModel
 import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.more.model.*
+import com.arghyam.more.repository.GetUserProfileRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_login.*
@@ -37,6 +40,11 @@ class LoginActivity : AppCompatActivity() {
     private var iamViewModel: IamViewModel? = null
 
     private var phoneNumber: String = ""
+    private var getUserProfileViewModel: GetUserProfileViewModel? = null
+    private var updateUserProfileViewModel: UpdateUserProfileViewModel? = null
+    private lateinit var responseData: UserProfileDataDetailsModel
+    @Inject
+    lateinit var getUserProfileRepository: GetUserProfileRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +54,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initUser()
         initArgs()
         initMobileInput()
         initGetOtp()
         initRepository()
         initApiCalls()
+    }
+
+    private fun initUser() {
+        initRepository()
+        getUserProfileRequest()
+        initGetUserProfile()
     }
 
     private fun initArgs() {
@@ -81,7 +96,6 @@ class LoginActivity : AppCompatActivity() {
         iamViewModel?.getLoginError()?.observe(this, Observer {
             Log.e("error", it)
         })
-
     }
 
     private fun gotoOtpActivity(isNewUser: Boolean) {
@@ -97,7 +111,15 @@ class LoginActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<LoginResponseObject>() {}.type
         )
-        gotoOtpActivity(loginResponseObject.newUserCreated)
+        if (SharedPreferenceFactory(this@LoginActivity).getString(USER_NAME)!="") {
+            gotoOtpActivity(loginResponseObject.newUserCreated)
+            Log.e("Anirudh","Not a new user")
+        }
+        else{
+            gotoOtpActivity(true)
+            Log.e("Anirudh","new user")
+        }
+
     }
 
     private fun initMobileInput() {
@@ -170,6 +192,50 @@ class LoginActivity : AppCompatActivity() {
     private fun initRepository() {
         iamViewModel = ViewModelProviders.of(this).get(IamViewModel::class.java)
         iamViewModel?.setIamRepository(iamRepository)
+        getUserProfileViewModel = ViewModelProviders.of(this).get(GetUserProfileViewModel::class.java)
+        getUserProfileViewModel?.getUserProfileRepository(getUserProfileRepository)
+    }
+
+
+    private fun getUserProfileRequest() {
+        Log.e("Anirudh", this?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) })
+        var getUserProfileObject = RequestModel(
+            id = Constants.GET_USER_PROFILE,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = GetUserProfileModel(
+                person = LoggedInUserProfileModel(
+                    phonenumber = this?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) }!!
+                )
+            )
+        )
+        getUserProfileViewModel?.getUserProfileApi(this, getUserProfileObject)
+    }
+
+    private fun initGetUserProfile() {
+        getUserProfileViewModel?.getUserProfileResponse()?.observe(this, Observer {
+            saveUserProfileData(it)
+        })
+        getUserProfileViewModel?.getUserProfileError()?.observe(this, Observer {
+            Log.e("error", it)
+        })
+        if (getUserProfileViewModel?.getUserProfileError()?.hasObservers()!!) {
+            getUserProfileViewModel?.getUserProfileError()?.removeObservers(this)
+        }
+
+    }
+    private fun saveUserProfileData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            responseData = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<UserProfileDataDetailsModel>() {}.type
+            )
+        }
     }
 
 }

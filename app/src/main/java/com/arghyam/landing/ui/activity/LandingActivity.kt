@@ -51,6 +51,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
+
 //        if(savedInstanceState!=null){
 //            mContent = supportFragmentManager.getFragment(savedInstanceState, "HomeFragment")
 //        }

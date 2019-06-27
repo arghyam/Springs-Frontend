@@ -268,11 +268,15 @@ class DetailsFragment : Fragment() {
 
     private fun initImageAdapter(responseModel: ResponseModel) {
         Log.d("responseCheck", responseModel.response.responseObject.toString())
-        var springProfileResponse: SpringProfileResponse = Gson().fromJson(
+        springProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
 
+        if (springProfileResponse.images.size == 1){
+            left_scroll.visibility = GONE
+            right_scroll.visibility = GONE
+        }
         val adapter = activity?.let { ImageAdapter(it, imageSample(springProfileResponse)) }
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
@@ -282,13 +286,28 @@ class DetailsFragment : Fragment() {
     private fun setupAutoPager() {
         val handler = Handler()
 
+        Log.e("Anirudh", currentPage.toString()+" "+springProfileResponse.images.size)
         val update = Runnable {
-            images_view_pager.setCurrentItem(currentPage, true)
             if (currentPage == Integer.MAX_VALUE) {
                 currentPage = 0
             } else {
                 ++currentPage
             }
+            images_view_pager.setCurrentItem(currentPage, true)
+
+        }
+        left_scroll.setOnClickListener {
+            if (currentPage>=1)
+                --currentPage
+            Log.e("Anirudh", currentPage.toString())
+            images_view_pager.setCurrentItem(currentPage, true)
+
+        }
+        right_scroll.setOnClickListener {
+            if (currentPage<springProfileResponse.images.size-1)
+                ++currentPage
+            Log.e("Anirudh", currentPage.toString())
+            images_view_pager.setCurrentItem(currentPage, true)
         }
 
 

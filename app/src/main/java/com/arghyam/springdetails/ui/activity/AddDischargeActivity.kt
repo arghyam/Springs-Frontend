@@ -73,7 +73,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
-    lateinit var dischargeDataResponseObject:AddDischargeResponseModel
+    lateinit var dischargeDataResponseObject: AddDischargeResponseModel
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
@@ -97,7 +97,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun getSpringId() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
-        Log.e("Anirudh",springCode)
+        Log.e("Anirudh", springCode)
     }
 
     private fun init() {
@@ -115,13 +115,14 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initvolumecontrol() {
-        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,2))
+        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3, 2))
     }
 
     private fun validateData(): Boolean {
-        return ((!volumeOfContainer.text.toString().trim().equals("") && !volumeOfContainer.text.toString().trim().equals(
-            "0"
-        )) && imageList.size != 0 && timerList.size != 0)
+        return ((!volumeOfContainer.text.toString().trim().equals("") &&
+                !volumeOfContainer.text.toString().trim().equals("0") &&
+                volumeOfContainer.text.toString().toFloat() > 0.1) &&
+                imageList.size != 0 && timerList.size != 0)
     }
 
     private fun updateSubmitColor() {
@@ -237,7 +238,6 @@ class AddDischargeActivity : AppCompatActivity() {
         }
         goBack = true
     }
-
 
 
     private fun startTimer() {
@@ -464,14 +464,14 @@ class AddDischargeActivity : AppCompatActivity() {
         )
 
         springCode = dischargeDataResponseObject.springCode
-        Log.d("springCode----",springCode)
+        Log.d("springCode----", springCode)
         gotoSpringDetailsActivity(dischargeDataResponseObject)
     }
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
-        intent.putExtra("SpringCode",springCode)
-        intent.putExtra("SpringCode",dischargeDataResponseObject.springCode)
+        intent.putExtra("SpringCode", springCode)
+        intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -496,7 +496,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
 
     private fun addDischargeDataOnClick() {
-        val months:ArrayList<String> = ArrayList()
+        val months: ArrayList<String> = ArrayList()
         months.add("January")
         months.add("April")
         var createSpringObject = RequestModel(
