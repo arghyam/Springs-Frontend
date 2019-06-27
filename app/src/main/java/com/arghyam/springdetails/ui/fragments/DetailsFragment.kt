@@ -38,8 +38,6 @@ import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_display_discharge_data.*
-import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
 import java.util.*
@@ -108,8 +106,6 @@ class DetailsFragment : Fragment() {
 
         springCode = intent.getStringExtra("SpringCode")
 
-        Log.d("Anirudh", "" + springCode)
-
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -136,7 +132,6 @@ class DetailsFragment : Fragment() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-        Log.e("Anirudh", springProfileResponse.toString())
         initSetData(springProfileResponse)
         imageSample(springProfileResponse)
     }
@@ -146,9 +141,22 @@ class DetailsFragment : Fragment() {
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         if (!springProfileResponse.createdTimeStamp.equals(null)) {
-            date.text = "${ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)}"
-            time.text = "${ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)}"
+            date.text = ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)
+            time.text = ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)
         }
+        if (springProfileResponse.usage[0] != ""){
+            Log.e("Anirudh", springProfileResponse.usage[0]+" usage")
+            seasonality = springProfileResponse.extraInformation.dischargeData[0].seasonality
+            selectedMonthNames = ArghyamUtils().convertToNames(springProfileResponse.extraInformation.dischargeData[0].months)
+            waterUse = springProfileResponse.usage
+            houseHoldNumber = springProfileResponse.numberOfHouseholds
+            showAdditionalData()
+        }
+
+        Log.e("Spring usage", springProfileResponse.usage.toString())
+//        for (a in 0 until springProfileResponse.extraInformation.dischargeData[0].months.size){
+//            Log.e("Months",springProfileResponse.extraInformation.dischargeData[0].months[a])
+//        }
 
 
 //        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
