@@ -304,7 +304,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun springNameListener(): Boolean {
         Log.e("Anirudh name", spring_name.text.toString())
-        return !(spring_name.text == null || spring_name.text.toString().equals(""))
+        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3)
     }
 
     private fun createSpringOnClick() {

@@ -97,4 +97,5 @@
     <string name="time">1:35 PM</string>
     <string name="date_notification">April 21,2019</string>
     <string name="user_search_hint">Search by name or mobile number</string>
+    <string name="discharge_image">Discharge image</string>
 </resources>
