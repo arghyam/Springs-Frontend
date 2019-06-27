@@ -66,15 +66,18 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
 
-                <Button android:layout_width="wrap_content"
-                        android:background="@drawable/start_button"
-                        android:textColor="@color/white"
-                        android:id="@+id/timerButton"
-                        android:text="@string/start"
-                        android:textSize="@dimen/text_size_18"
-                        android:layout_marginTop="@dimen/margin_40"
-                        android:layout_marginBottom="24dp"
-                        android:layout_height="match_parent"/>
+            <Button android:layout_width="wrap_content"
+                    android:background="@drawable/start_button"
+                    android:textColor="@color/white"
+                    android:id="@+id/timerButton"
+                    android:text="@string/start"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textSize="@dimen/text_size_18"
+                    android:layout_marginTop="@dimen/margin_40"
+                    android:layout_marginBottom="@dimen/margin_40"
+                    android:layout_height="match_parent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
@@ -154,6 +157,9 @@
                 android:layout_height="45dp"
                 android:background="@color/cornflower_blue"
                 android:text="DONE"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_margin="@dimen/margin_16"
                 android:textSize="@dimen/text_size_18"
                 android:textColor="#FFFFFF"/>

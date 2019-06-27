@@ -269,6 +269,9 @@
                 android:layout_height="45dp"
                 android:background="#0D65D9"
                 android:text="SEARCH"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:textSize="18sp"
                 android:layout_alignParentBottom="true"
                 android:textColor="#FFFFFF"/>

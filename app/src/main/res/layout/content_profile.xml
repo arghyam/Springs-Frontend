@@ -87,6 +87,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginTop="40dp"
                 android:text="@string/continue_button"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:background="@color/colorAccent"
                 android:id="@+id/submit"
                 tools:ignore="MissingConstraints"/>
