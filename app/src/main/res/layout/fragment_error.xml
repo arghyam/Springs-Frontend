@@ -68,6 +68,9 @@
                     android:id="@+id/continueButton"
                     android:text="@string/continue_button"
                     android:background="@color/colorPrimaryDark"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:layout_height="45dp"/>
         </LinearLayout>
 
