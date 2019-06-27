@@ -1,24 +1,25 @@
 package com.arghyam.more.ui
 
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
-
 import com.arghyam.R
-import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.admin.ui.AdminPanelActivity
+import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.GET_USER_PROFILE
@@ -36,7 +37,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
 import kotlinx.android.synthetic.main.fragment_more.*
-import kotlinx.android.synthetic.main.fragment_more.view.toolbar
+import kotlinx.android.synthetic.main.fragment_more.view.*
 import javax.inject.Inject
 
 /**
@@ -103,12 +104,32 @@ class MoreFragment : Fragment() {
             startActivity(Intent(activity!!, AdminPanelActivity::class.java))
         }
         sign_out.setOnClickListener {
-            if (SharedPreferenceFactory(activity!!.applicationContext).getString(ACCESS_TOKEN) != "") {
-                SharedPreferenceFactory(activity!!.applicationContext).setString(ACCESS_TOKEN, "")
-            }
-            startActivity(Intent(activity!!, LoginActivity::class.java))
-            activity!!.finish()
+            showDialog(it)
         }
+    }
+
+    private fun showDialog(it: View?) {
+
+        val dialogBuilder = AlertDialog.Builder(context!!)
+        dialogBuilder.setMessage("You will lose entered data")
+
+            .setPositiveButton("YES", DialogInterface.OnClickListener { dialog, which ->
+
+                if (SharedPreferenceFactory(activity!!.applicationContext).getString(ACCESS_TOKEN) != "") {
+                    SharedPreferenceFactory(activity!!.applicationContext).setString(ACCESS_TOKEN, "")
+                }
+                startActivity(Intent(activity!!, LoginActivity::class.java))
+                activity!!.finish()
+                dialog.cancel()
+            })
+            .setNegativeButton("CANCEL", DialogInterface.OnClickListener { dialog, which ->
+                dialog.cancel()
+            })
+        val alert = dialogBuilder.create()
+        alert.setTitle("Are you sure?")
+        alert.show()
+
+
     }
 
     private fun initUpdateProfile() {
@@ -169,7 +190,7 @@ class MoreFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_more, container, false)
+        var rootView = inflater.inflate(R.layout.fragment_more, container, false)
         if (SharedPreferenceFactory(activity!!).getString(Constants.ACCESS_TOKEN) == "") {
             rootView.user_details.visibility = GONE
             rootView.sign_out.visibility = GONE

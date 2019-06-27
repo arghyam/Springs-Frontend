@@ -304,7 +304,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_14"
                 android:padding="@dimen/padding_16"
-                android:text="@string/discharge_data"
+                android:text="@string/discharge_image"
                 android:textColor="@color/bokara_grey"/>
 
         <LinearLayout
