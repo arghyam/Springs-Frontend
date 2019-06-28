@@ -160,6 +160,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint=""
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:textColor="@color/white"
                         android:drawableRight="@drawable/ic_tick_icon"
                         android:textSize="30sp"
@@ -223,6 +224,7 @@
                 android:background="#D8D8D8"/>
 
         <RelativeLayout
+                android:id="@+id/faq_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -272,6 +274,7 @@
 
 
         <RelativeLayout
+                android:id="@+id/about_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -320,6 +323,7 @@
                 android:layout_marginLeft="55dp"/>
 
         <RelativeLayout
+                android:id="@+id/help_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

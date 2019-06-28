@@ -93,7 +93,7 @@
                     android:textSize="@dimen/text_size_14"
                     android:padding="@dimen/padding_16"
                     android:text="Container fill time"
-                    android:textColor="@color/bokara_grey"/>
+                    android:textColor="@color/textcolor"/>
 
             <LinearLayout
                     android:id="@+id/stop_watch"
@@ -110,14 +110,14 @@
                     android:background="@drawable/image_border">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_camera"/>
+                        android:layout_width="20dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/ic_stopwatch"/>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
+                        android:paddingTop="5dp"
                         android:textSize="@dimen/text_size_14"
                         android:textColor="#262524"
                         android:text="@string/stopwatch"/>
@@ -307,7 +307,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_14"
                     android:padding="@dimen/padding_16"
-                    android:text="@string/discharge_data"
+                    android:text="@string/discharge_image"
                     android:textColor="@color/bokara_grey"/>
 
             <LinearLayout
@@ -325,8 +325,8 @@
                     android:background="@drawable/image_border">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="22dp"
                         app:srcCompat="@drawable/ic_camera"/>
 
                 <TextView

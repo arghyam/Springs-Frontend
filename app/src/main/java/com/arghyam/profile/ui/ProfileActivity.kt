@@ -85,11 +85,16 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initSubmit() {
         submit.setOnClickListener {
-            if (fullName.text.trim().length >= 3) {
-                updateUserProfileOnClickListener()
+
+            if (fullName.text == null || fullName.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@ProfileActivity, "Please enter the full name")
+            } else if( fullName.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@ProfileActivity, "Full name should contain atleast 3 characters")
+
             } else {
-                ArghyamUtils().longToast(this@ProfileActivity, "Please enter atleast 3 characters")
+                updateUserProfileOnClickListener()
             }
+
 
         }
     }
@@ -128,11 +133,14 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s?.trim()!!.length >= 3) {
+
+                if (s?.trim()!!.length >= 3 ) {
                     submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                 } else {
                     submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
+
+
             }
         }
     }
