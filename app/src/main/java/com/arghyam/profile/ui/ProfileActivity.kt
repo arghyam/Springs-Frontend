@@ -91,7 +91,10 @@ class ProfileActivity : AppCompatActivity() {
             } else if( fullName.text.toString().trim().length < 3){
                 ArghyamUtils().longToast(this@ProfileActivity, "Full name should contain atleast 3 characters")
 
-            } else {
+            } else if( fullName.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@ProfileActivity, "Spring name should not start with space")
+            }
+            else {
                 updateUserProfileOnClickListener()
             }
 
@@ -127,16 +130,17 @@ class ProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                if (s?.trim()!!.length >= 3 ) {
+                if((s.toString().startsWith(" "))){
+                    submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+                }
+                else if (s.toString().length >= 3 ) {
                     submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-                } else {
+                }  else {
                     submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
 

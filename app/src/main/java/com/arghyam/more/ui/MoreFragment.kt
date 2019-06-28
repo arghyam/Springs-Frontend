@@ -98,6 +98,8 @@ class MoreFragment : Fragment() {
                 ArghyamUtils().longToast(context!!, "Please enter name")
             } else if (save_name.text.toString().trim().length < 3) {
                 ArghyamUtils().longToast(context!!, "Name should contain atleast 3 characters")
+            } else if( save_name.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(context!!, "Full name should not start with space")
             } else {
                 initUpdateProfile()
                 rl_edit_name.visibility = VISIBLE
@@ -178,7 +180,7 @@ class MoreFragment : Fragment() {
             ),
             request = UpdateUserProfileModel(
                 person = UpdateLoggedInUserProfileModel(
-                    name = save_name.text.toString(),
+                    name = save_name.text.toString().trim(),
                     phonenumber = tv_user_phone.text.toString()
                 )
             )
