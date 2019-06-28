@@ -2,11 +2,13 @@ package com.arghyam.FAQS.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.FAQS.adapter.FaqAdapter
 import com.arghyam.FAQS.model.FaqModel
 import com.arghyam.R
 import kotlinx.android.synthetic.main.activity_add_discharge.*
+import kotlinx.android.synthetic.main.activity_faq.*
 import kotlinx.android.synthetic.main.content_faq.*
 
 class FaqActivity : AppCompatActivity() {
@@ -26,8 +28,10 @@ class FaqActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        val toolbar = toolbar as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Add Discharge Data"
     }
 
     override fun onBackPressed() {

@@ -19,6 +19,7 @@
                     android:layout_height="250dp">
             </androidx.viewpager.widget.ViewPager>
             <RelativeLayout
+                    android:id="@+id/left_scroll"
                     android:layout_width="60dp"
                     android:gravity="center"
                     android:layout_height="fill_parent">
@@ -28,6 +29,7 @@
                         app:srcCompat="@drawable/ic_previous_img"/>
             </RelativeLayout>
             <RelativeLayout
+                    android:id="@+id/right_scroll"
                     android:layout_width="60dp"
                     android:gravity="center"
                     android:layout_gravity="right"

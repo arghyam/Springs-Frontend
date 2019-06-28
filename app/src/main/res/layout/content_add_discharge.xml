@@ -9,10 +9,15 @@
         tools:showIn="@layout/activity_add_discharge"
         tools:context=".springdetails.ui.activity.AddDischargeActivity">
 
+    <include
+            android:id="@+id/mtoolbar"
+            layout="@layout/toolbar"/>
+
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:scrollbars="vertical"
             android:layout_height="match_parent"
+            android:layout_below="@+id/mtoolbar"
             android:layout_above="@+id/sumbit_layout">
 
         <LinearLayout android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,7 +76,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
-    lateinit var dischargeDataResponseObject:AddDischargeResponseModel
+    lateinit var dischargeDataResponseObject: AddDischargeResponseModel
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
@@ -125,13 +126,14 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initvolumecontrol() {
-        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3,2))
+        volumeOfContainer.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(3, 2))
     }
 
     private fun validateData(): Boolean {
-        return ((!volumeOfContainer.text.toString().trim().equals("") && !volumeOfContainer.text.toString().trim().equals(
-            "0"
-        )) && imageList.size != 0 && timerList.size != 0)
+        return ((!volumeOfContainer.text.toString().trim().equals("") &&
+                !volumeOfContainer.text.toString().trim().equals("0") &&
+                volumeOfContainer.text.toString().toFloat() > 0.1) &&
+                imageList.size != 0 && timerList.size != 0)
     }
 
     private fun updateSubmitColor() {
@@ -177,8 +179,10 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        val toolbar = mtoolbar as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Add Discharge Data"
     }
 
     private fun initUploadImageApis() {
@@ -247,7 +251,6 @@ class AddDischargeActivity : AppCompatActivity() {
         }
         goBack = true
     }
-
 
 
     private fun startTimer() {
@@ -479,8 +482,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
-        intent.putExtra("SpringCode",springCode)
-        intent.putExtra("SpringCode",dischargeDataResponseObject.springCode)
+        intent.putExtra("SpringCode", springCode)
+        intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -505,7 +508,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
 
     private fun addDischargeDataOnClick() {
-        val months:ArrayList<String> = ArrayList()
+        val months: ArrayList<String> = ArrayList()
         months.add("January")
         months.add("April")
         var createSpringObject = RequestModel(
