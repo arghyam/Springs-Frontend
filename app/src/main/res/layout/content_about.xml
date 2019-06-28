@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="1">
+
+        <ImageView
+                android:layout_width="@dimen/image_200"
+                android:layout_height="@dimen/image_100"
+                android:src="@drawable/ic_for_water"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bokara_grey"
+                android:id="@+id/tv_version"
+                android:text="@string/version_number"
+                android:textSize="@dimen/text_size_16"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/lighter_grey"
+                android:id="@+id/tv_year"
+                android:paddingTop="@dimen/padding_16"
+                android:text="@string/year_arghyam"
+                android:textSize="@dimen/text_size_16"/>
+
+    </LinearLayout>
+
+</LinearLayout>

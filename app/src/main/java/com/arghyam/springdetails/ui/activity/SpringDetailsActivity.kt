@@ -31,6 +31,8 @@ class SpringDetailsActivity : AppCompatActivity() {
     private lateinit var springCode: String
     @Inject
     lateinit var springDetailsRepository: SpringDetailsRepository
+    private var springName: String? = null
+
 
     private var springDetailsViewModel: SpringDetailsViewModel? = null
 
@@ -43,16 +45,16 @@ class SpringDetailsActivity : AppCompatActivity() {
     private fun getSpringId() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
+        springName = dataIntent.getStringExtra("springName")
         Log.e("Code", springCode)
-
     }
 
     private fun init() {
-        initToolBar()
         initComponent()
         getSpringId()
         initRepository()
         initSpringDetails()
+        initToolBar()
         initViewPager()
     }
 
@@ -61,6 +63,7 @@ class SpringDetailsActivity : AppCompatActivity() {
     }
 
     private fun initToolBar() {
+        this?.title = springName.toString()
         setSupportActionBar(details_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

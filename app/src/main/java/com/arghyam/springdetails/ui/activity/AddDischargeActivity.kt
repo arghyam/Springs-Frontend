@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Html
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,6 +52,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.activity_add_discharge.*
+import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -82,6 +85,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private lateinit var containerString: String
     private var volOfContainer: Float? = null
     private var litresPerSec: ArrayList<Float> = ArrayList()
+    private var springName: String? = null
 
     @Inject
     lateinit var dischargeDataRepository: DischargeDataRepository
@@ -97,7 +101,8 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun getSpringId() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
-        Log.e("Anirudh", springCode)
+        springName = dataIntent.getStringExtra("springName")
+        Log.e("Anirudh",springCode)
     }
 
     private fun init() {
@@ -112,6 +117,12 @@ class AddDischargeActivity : AppCompatActivity() {
         initApiResponseCalls()
         initClicks()
         initvolumecontrol()
+        initSet()
+    }
+
+    private fun initSet(){
+        var  dischargeSpring : String = "Add additional details for "+ "<b> ${springName} </b>"
+        add_discharge_name.text = Html.fromHtml(dischargeSpring)
     }
 
     private fun initvolumecontrol() {
@@ -168,8 +179,10 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        val toolbar = mtoolbar as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Add Discharge Data"
     }
 
     private fun initUploadImageApis() {
@@ -464,7 +477,6 @@ class AddDischargeActivity : AppCompatActivity() {
         )
 
         springCode = dischargeDataResponseObject.springCode
-        Log.d("springCode----", springCode)
         gotoSpringDetailsActivity(dischargeDataResponseObject)
     }
 

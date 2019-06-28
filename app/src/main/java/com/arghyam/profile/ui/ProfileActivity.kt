@@ -87,11 +87,19 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initSubmit() {
         submit.setOnClickListener {
-            if (fullName.text.trim().length >= 3) {
-                updateUserProfileOnClickListener()
-            } else {
-                ArghyamUtils().longToast(this@ProfileActivity, "Please enter atleast 3 characters")
+
+            if (fullName.text == null || fullName.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@ProfileActivity, "Please enter the full name")
+            } else if( fullName.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@ProfileActivity, "Full name should contain atleast 3 characters")
+
+            } else if( fullName.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@ProfileActivity, "Spring name should not start with space")
             }
+            else {
+                updateUserProfileOnClickListener()
+            }
+
 
         }
     }
@@ -125,17 +133,21 @@ class ProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s?.trim()!!.length >= 3) {
-                    submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-                } else {
+
+                if((s.toString().startsWith(" "))){
                     submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
+                else if (s.toString().length >= 3 ) {
+                    submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+                }  else {
+                    submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+                }
+
+
             }
         }
     }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View.GONE
@@ -51,6 +52,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var houseHoldNumber: EditText
     private var goBack: Boolean = false
     private lateinit var springCode: String
+    private var springName: String? = null
 
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
@@ -68,6 +70,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
     private fun init() {
         initComponent()
+
         initViews()
         initToolbar()
         addCalender()
@@ -75,15 +78,19 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         initRepository()
         observeData()
         initClick()
+
         initListener()
         initIntent()
+        initSet()
     }
 
     private fun initIntent() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
+        springName = dataIntent.getStringExtra("springName")
         Log.d("Anirudh", "" + springCode)
     }
+
 
     private fun observeData() {
         mAdditionalDetailsViewModel.getAdditionalDataSuccess().observe(this, androidx.lifecycle.Observer {
@@ -124,6 +131,11 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                 submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
             }
         }
+    }
+
+    private fun initSet(){
+       var  additionalSpring : String = "Add additional details for "+ "<b> ${springName} </b>"
+        additional_spring.text = Html.fromHtml(additionalSpring)
     }
 
     private fun initCheckBoxListeners() {

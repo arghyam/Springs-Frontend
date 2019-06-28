@@ -17,7 +17,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
+import com.arghyam.FAQS.ui.FaqActivity
 import com.arghyam.R
+import com.arghyam.about.AboutActivity
 import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
@@ -25,6 +27,7 @@ import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.GET_USER_PROFILE
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE
 import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.help.ui.HelpActivity
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -90,9 +93,18 @@ class MoreFragment : Fragment() {
 
         }
         save_name.setOnClickListener {
-            initUpdateProfile()
-            rl_edit_name.visibility = VISIBLE
-            edit_name_layout.visibility = GONE
+
+            if (save_name.text == null || save_name.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(context!!, "Please enter name")
+            } else if (save_name.text.toString().trim().length < 3) {
+                ArghyamUtils().longToast(context!!, "Name should contain atleast 3 characters")
+            } else if( save_name.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(context!!, "Full name should not start with space")
+            } else {
+                initUpdateProfile()
+                rl_edit_name.visibility = VISIBLE
+                edit_name_layout.visibility = GONE
+            }
         }
 
         sign_in_button.setOnClickListener {
@@ -106,6 +118,19 @@ class MoreFragment : Fragment() {
         sign_out.setOnClickListener {
             showDialog(it)
         }
+        about_layout.setOnClickListener      {
+            startActivity(Intent(activity!!, AboutActivity::class.java))
+        }
+        faq_layout.setOnClickListener {
+            startActivity(Intent(activity!!, FaqActivity::class.java))
+
+        }
+        help_layout.setOnClickListener {
+            startActivity(Intent(activity!!, HelpActivity::class.java))
+
+        }
+
+
     }
 
     private fun showDialog(it: View?) {
@@ -155,7 +180,7 @@ class MoreFragment : Fragment() {
             ),
             request = UpdateUserProfileModel(
                 person = UpdateLoggedInUserProfileModel(
-                    name = save_name.text.toString(),
+                    name = save_name.text.toString().trim(),
                     phonenumber = tv_user_phone.text.toString()
                 )
             )

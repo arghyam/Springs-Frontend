@@ -88,6 +88,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+    private var springName: String? = null
 
     private var photoFile: File? = null
 
@@ -256,7 +257,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+
+        springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        intent.putExtra("springName",springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -268,12 +272,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if (spring_name.text == null || spring_name.text.toString().equals("")) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
-            } else if (radioGroup.checkedRadioButtonId == -1) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
+            } else if( spring_name.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should contain atleast 3 characters")
+
+            } else if( spring_name.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should not start with space")
+            }
+            else if (radioGroup.checkedRadioButtonId == -1) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the ownership type")
             } else if (imageList.size <= 0) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
@@ -307,7 +317,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun springNameListener(): Boolean {
         Log.e("Anirudh name", spring_name.text.toString())
-        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3)
+        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3 || spring_name.text.toString().startsWith(" "))
     }
 
     private fun createSpringOnClick() {
@@ -323,7 +333,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    springName = spring_name.text.toString(),
+                    springName = spring_name.text.toString().trim(),
                     tenantId = "",
                     orgId = "",
                     latitude = mLocation!!.latitude,
