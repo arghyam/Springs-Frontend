@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
@@ -43,6 +44,7 @@ import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
 import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
+import com.arghyam.commons.utils.ProgressRequestBody
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
@@ -62,7 +64,7 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.content_new_spring.toolbar
-import kotlinx.android.synthetic.main.fragment_my_activity.*
+import kotlinx.android.synthetic.main.list_image_uploader.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -70,9 +72,11 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+    GoogleApiClient.OnConnectionFailedListener,ProgressRequestBody.ProgressListener {
+
 
     private var goBack: Boolean = false
     private var imageCount: Int = 0
@@ -220,12 +224,14 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun initUploadImageApis() {
-
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("ResponseImage", it.response.imageUrl+"aaa")
-
+            Log.e("Anirudh","upload called")
+//            status.text = "uploaded"
+//            progress.visibility = GONE
+//            image_loader.visibility = VISIBLE
             imagesList.add(it.response.imageUrl)
-            Log.d("imagesList", imagesList.toString())
+            progress
+
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -376,7 +382,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun isvalid() {
-        Log.e("Anirudh", "isvalid")
+//        Log.e("Anirudh", "isvalid")
         var validated: Boolean = validateListener()
         if (validated) {
             valid()
@@ -525,7 +531,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
-
     private fun onImageRemove(position: Int) {
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
@@ -592,14 +597,46 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         addBitmapToList(bitmap)
         makeUploadApiCall(bitmap)
     }
-
+    var body:MultipartBody.Part? = null
     private fun makeUploadApiCall(bitmap: Bitmap?) {
-        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
-        if (null != body) {
-            uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body)
-        }
+        body = getMultipartBodyFromBitmap(bitmap)
+//        progress.progress = 0
+        uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
+        MyAsyncTask().execute()
     }
 
+    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
+
+        private var result: String = ""
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            if (null != body) {
+                uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
+            }
+//            Thread.sleep( 1 * 500 )
+//            progress.progress = 20
+//            Thread.sleep( 1 * 500 )
+//            progress.progress = 50
+//            Thread.sleep( 1 * 500 )
+//            progress.progress = 80
+            return null
+        }
+
+        override fun onProgressUpdate(vararg values: Int?) {
+            super.onProgressUpdate(*values)
+            Log.e("Anirudh progress",values.toString())
+            var percent = values as Int
+            progress.progress = values[0]!!
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            Log.e("Anirudh result",result.toString())
+            progress.progress = 100
+            //set result in textView
+            upload_status.text = "uploaded"
+        }
+    }
     private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
         var body: MultipartBody.Part? = null
         try {
@@ -639,6 +676,13 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun hideSoftKeyboard() {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+
+    override fun onProgressUpdate(percent: Float) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.e("Anirudh",percent.toString())
+        progress.setProgress(percent.roundToInt())
     }
 
 }
