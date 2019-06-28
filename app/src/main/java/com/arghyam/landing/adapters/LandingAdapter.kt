@@ -92,8 +92,6 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         holder.ownership.text = springs.ownershipType
         holder.springcode.text = springs.springCode
         holder.village.text = springs.village
-
-
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -85,6 +85,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+    private var springName: String? = null
 
     private var photoFile: File? = null
 
@@ -253,7 +254,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+
+        springName = spring_name.text.toString()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        intent.putExtra("springName",springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
