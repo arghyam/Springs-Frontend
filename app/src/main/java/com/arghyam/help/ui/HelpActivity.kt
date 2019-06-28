@@ -4,14 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.arghyam.R
 import kotlinx.android.synthetic.main.activity_help.*
+import android.util.Log
+import androidx.appcompat.widget.Toolbar
+import com.arghyam.commons.utils.URLSpanNoUnderline
+import kotlinx.android.synthetic.main.content_help.*
 import android.text.style.URLSpan
-import android.text.SpannableString
 import android.text.Spannable
-import android.widget.TextView
-import android.text.TextPaint
-
-
-
+import com.arghyam.commons.utils.StringUtil
+import java.net.URL
 
 
 class HelpActivity : AppCompatActivity() {
@@ -25,11 +25,20 @@ class HelpActivity : AppCompatActivity() {
 
     private fun init() {
         initToolbar()
+        initEmail()
+    }
+
+    private fun initEmail() {
+        StringUtil().removeUnderlines(email.text as Spannable)
+        StringUtil().removeUnderlines(phone_1.text as Spannable)
+        StringUtil().removeUnderlines(phone_2 .text as Spannable)
     }
 
     private fun initToolbar() {
+        val toolbar = toolbar as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Help"
     }
 
 
