@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:paddingLeft="@dimen/padding_16"
+            android:paddingTop="@dimen/padding_16">
+
+        <ImageView
+
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="3dp"
+                app:srcCompat="@drawable/ic_mail_help"
+        />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/padding_16">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_us"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/textcolor"
+            />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/margin_8"
+                    android:autoLink="email"
+                    android:text="@string/help_mail"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/colorPrimary"/>
+
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:id="@+id/view"
+                    android:layout_marginTop="@dimen/padding_16"
+                    android:background="@color/gainsboro"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_16"
+            android:paddingTop="@dimen/padding_16">
+
+        <ImageView
+
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@drawable/ic_help_phone"
+        />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/padding_16">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_us"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/textcolor"
+            />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/help_num_one"
+                    android:paddingTop="@dimen/margin_8"
+                    android:textSize="@dimen/text_size_16"
+                    android:autoLink="phone"
+                    android:textColor="@color/colorPrimary"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/help_num_two"
+                    android:textSize="@dimen/text_size_16"
+                    android:paddingTop="@dimen/margin_8"
+                    android:autoLink="phone"
+                    android:textColor="@color/colorPrimary"/>
+
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="@dimen/padding_16"
+                    android:background="@color/gainsboro"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

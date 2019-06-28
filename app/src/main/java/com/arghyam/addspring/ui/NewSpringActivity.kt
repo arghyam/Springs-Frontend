@@ -265,12 +265,16 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if (spring_name.text == null || spring_name.text.toString().equals("")) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
-            } else if (radioGroup.checkedRadioButtonId == -1) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
+            } else if( spring_name.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should contain atleast 3 characters")
+
+            }
+            else if (radioGroup.checkedRadioButtonId == -1) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the ownership type")
             } else if (imageList.size <= 0) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
