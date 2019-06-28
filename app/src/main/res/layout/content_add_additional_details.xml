@@ -16,9 +16,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             <TextView
+                    android:id="@+id/additional_spring"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add additional details for Guarikand"
+                    android:text=""
                     android:textColor="#262524"
                     android:textSize="14sp"
                     android:padding="16dp"
