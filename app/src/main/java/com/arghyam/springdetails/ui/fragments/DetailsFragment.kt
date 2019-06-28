@@ -203,13 +203,8 @@ class DetailsFragment : Fragment() {
 
                 intent.putExtra("SpringCode", springCode)
                 intent.putExtra("springName", springName)
-
-                Log.d("spring_name", ""+ springName)
-
                 Log.e("Code in details", springCode)
                 startActivityForResult(intent, REQUEST_CODE)
-
-
 //                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
 //                startActivityForResult(intent, REQUEST_CODE)
             }
@@ -268,6 +263,7 @@ class DetailsFragment : Fragment() {
 
             } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
+                intent.putExtra("springName", springName)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivity(intent)

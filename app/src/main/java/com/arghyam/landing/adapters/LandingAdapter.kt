@@ -40,7 +40,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val springs: AllSpringDataModel = springList[position]
-        holder.springNameText.text = springs.orgId
+        holder.springNameText.text = springs.springName
         holder.villageNameText.text = springs.village
         Glide.with(context)
             .load(springs.images[0])
@@ -48,6 +48,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
+            dataIntent.putExtra("springName", springs.springName)
             context.startActivity(dataIntent)
 
             return@OnClickListener
@@ -65,6 +66,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
+                dataIntent.putExtra("springName", springs.springName)
                 context.startActivity(dataIntent)
             }
             return@OnClickListener
