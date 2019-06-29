@@ -131,7 +131,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun validateData(): Boolean {
         return ((!volumeOfContainer.text.toString().trim().equals("") &&
-                !volumeOfContainer.text.toString().trim().equals("0") &&
+                 !volumeOfContainer.text.toString().trim().equals(".") &&
+                 !volumeOfContainer.text.toString().trim().equals("0") &&
                 volumeOfContainer.text.toString().toFloat() > 0.1) &&
                 imageList.size != 0 && timerList.size != 0)
     }
