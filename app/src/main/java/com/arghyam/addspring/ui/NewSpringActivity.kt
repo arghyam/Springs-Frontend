@@ -16,10 +16,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,19 +66,16 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
-import kotlinx.android.synthetic.main.content_new_spring.toolbar
 import kotlinx.android.synthetic.main.list_image_uploader.*
-import okhttp3.MediaType
+import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener,ProgressRequestBody.ProgressListener {
+    GoogleApiClient.OnConnectionFailedListener, ProgressRequestBody.UploadCallbacks {
 
 
     private var goBack: Boolean = false
@@ -225,12 +225,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("Anirudh","upload called")
-//            status.text = "uploaded"
-//            progress.visibility = GONE
-//            image_loader.visibility = VISIBLE
+            Log.e("Anirudh", "upload called")
             imagesList.add(it.response.imageUrl)
-            progress
+            progress.progress = 0
 
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
@@ -597,10 +594,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         addBitmapToList(bitmap)
         makeUploadApiCall(bitmap)
     }
-    var body:MultipartBody.Part? = null
+
+    var body: MultipartBody.Part? = null
     private fun makeUploadApiCall(bitmap: Bitmap?) {
         body = getMultipartBodyFromBitmap(bitmap)
-//        progress.progress = 0
         uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
         MyAsyncTask().execute()
     }
@@ -613,47 +610,36 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             if (null != body) {
                 uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
             }
-//            Thread.sleep( 1 * 500 )
-//            progress.progress = 20
-//            Thread.sleep( 1 * 500 )
-//            progress.progress = 50
-//            Thread.sleep( 1 * 500 )
-//            progress.progress = 80
             return null
-        }
-
-        override fun onProgressUpdate(vararg values: Int?) {
-            super.onProgressUpdate(*values)
-            Log.e("Anirudh progress",values.toString())
-            var percent = values as Int
-            progress.progress = values[0]!!
         }
 
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
-            Log.e("Anirudh result",result.toString())
-            progress.progress = 100
-            //set result in textView
-            upload_status.text = "uploaded"
+            Log.e("Anirudh", "postexecute")
+//            progress.progress = 100
+//            //set result in textView
+//            imageRecyclerView[count-2].upload_status.text = ""
         }
     }
+
     private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
         var body: MultipartBody.Part? = null
         try {
             var filesDir: File = applicationContext.filesDir
-            var file: File = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
-            val bos: ByteArrayOutputStream = ByteArrayOutputStream()
+            var file = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
+            val bos = ByteArrayOutputStream()
             var mBitMap: Bitmap = bitmap!!
             mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
             var bitmapdata = bos.toByteArray()
-            var fos: FileOutputStream = FileOutputStream(file)
+            var fos = FileOutputStream(file)
             fos.write(bitmapdata)
             fos.flush()
             fos.close()
-            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            /*var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)*/
+             */
+            var reqFile = ProgressRequestBody(file, this)
             body = MultipartBody.Part.createFormData("file", file.name, reqFile)
         } catch (ex: Exception) {
-
         }
         return body
     }
@@ -664,7 +650,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageUploaderAdapter.notifyDataSetChanged()
         count++
     }
-
 
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
@@ -678,11 +663,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    override fun onProgressUpdate(percentage: Int) {
+        imageRecyclerView[count - 2].progress.progress = percentage
+        Log.e("Anirudh", percentage.toString())
+        if (percentage > 95) {
+            progress.progress = 100
+            //set result in textView
+            imageRecyclerView[count - 2].progress.visibility = GONE
+            imageRecyclerView[count - 2].image_loader.visibility = VISIBLE
+            imageRecyclerView[count - 2].upload_status.text = ""
+            MyAsyncTask().cancel(true)
+        }
 
-    override fun onProgressUpdate(percent: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        Log.e("Anirudh",percent.toString())
-        progress.setProgress(percent.roundToInt())
     }
 
 }

@@ -56,7 +56,10 @@
                 android:layout_marginTop="20dp"
                 android:progressBackgroundTint="#6BA5F2"
                 android:progressBackgroundTintMode="multiply"
-                android:max="100"/>
+                android:max="100"
+                android:progress="0"
+
+        />
 
         <View
                 android:id="@+id/image_loader"
