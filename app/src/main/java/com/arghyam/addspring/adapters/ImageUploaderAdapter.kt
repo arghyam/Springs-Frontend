@@ -1,6 +1,7 @@
 package com.arghyam.addspring.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class ImageUploaderAdapter(
         holder.springRemove.setOnClickListener {
             imageInterface.onRemove(position)
         }
+        Log.e("position", position.toString())
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
