@@ -227,8 +227,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
             Log.e("Anirudh", "upload called")
             imagesList.add(it.response.imageUrl)
-            progress.progress = 0
-
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -599,27 +597,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun makeUploadApiCall(bitmap: Bitmap?) {
         body = getMultipartBodyFromBitmap(bitmap)
         uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
-        MyAsyncTask().execute()
-    }
-
-    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
-
-        private var result: String = ""
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            if (null != body) {
-                uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
-            }
-            return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            Log.e("Anirudh", "postexecute")
-//            progress.progress = 100
-//            //set result in textView
-//            imageRecyclerView[count-2].upload_status.text = ""
-        }
     }
 
     private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
@@ -637,6 +614,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             fos.close()
             /*var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)*/
              */
+            Log.e("Anirudh filedesc", file.length().toString()+" "+file.toString())
             var reqFile = ProgressRequestBody(file, this)
             body = MultipartBody.Part.createFormData("file", file.name, reqFile)
         } catch (ex: Exception) {
@@ -666,13 +644,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onProgressUpdate(percentage: Int) {
         imageRecyclerView[count - 2].progress.progress = percentage
         Log.e("Anirudh", percentage.toString())
-        if (percentage > 95) {
+        if (percentage == 100) {
             progress.progress = 100
             //set result in textView
             imageRecyclerView[count - 2].progress.visibility = GONE
             imageRecyclerView[count - 2].image_loader.visibility = VISIBLE
             imageRecyclerView[count - 2].upload_status.text = ""
-            MyAsyncTask().cancel(true)
         }
 
     }
