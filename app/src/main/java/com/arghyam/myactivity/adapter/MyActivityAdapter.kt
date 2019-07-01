@@ -33,6 +33,7 @@ class MyActivityAdapter(val myActivityList: ArrayList<MyActivityModel>, val cont
         holder.activity.setOnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", myActivities.springCode)
+            dataIntent.putExtra("springName", myActivities.springName)
             context.startActivity(dataIntent)
 
             return@setOnClickListener
