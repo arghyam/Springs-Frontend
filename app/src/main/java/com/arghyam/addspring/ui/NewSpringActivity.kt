@@ -23,6 +23,7 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.get
+import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -108,7 +109,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var mLocation: Location? = null
     var count: Int = 1
     var imageuploadcount: Int = -1
-    var imageUploadArrayList = ArrayList<Int>()
     var imageList = ArrayList<ImageEntity>()
 
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
@@ -144,7 +144,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
-        Log.e("use_id", "abcd" + SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!)
         init()
     }
 
@@ -229,7 +228,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("Anirudh", "upload called")
             imagesList.add(it.response.imageUrl)
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
@@ -262,7 +260,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
-        Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -296,22 +293,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun locationListener(): Boolean {
-        Log.e("Anirudh loc", mLocation.toString())
         return mLocation != null
     }
 
     private fun imageUploadListener(): Boolean {
-        Log.e("Anirudh imgupload", imagesList.size.toString())
         return imagesList.size > 0
     }
 
     private fun ownershipTypeListener(): Boolean {
-        Log.e("Anirudh ownership", radioGroup.checkedRadioButtonId.toString())
         return (radioGroup.checkedRadioButtonId != -1)
     }
 
     private fun springNameListener(): Boolean {
-        Log.e("Anirudh name", spring_name.text.toString())
         return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3)
     }
 
@@ -381,7 +374,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun isvalid() {
-//        Log.e("Anirudh", "isvalid")
         var validated: Boolean = validateListener()
         if (validated) {
             valid()
@@ -398,14 +390,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun toggleLocation() {
-        card_device.visibility = View.VISIBLE
-        tv_coordinates.visibility = View.VISIBLE
-//        tv_address.visibility = View.VISIBLE
-//        address_layout.visibility = View.VISIBLE
-//        tv_address.visibility = View.VISIBLE
-//        address_layout.visibility = View.VISIBLE
-        tl_cooridinates.visibility = View.VISIBLE
-        location_layout.visibility = View.GONE
+        card_device.visibility = VISIBLE
+        tv_coordinates.visibility = VISIBLE
+        tl_cooridinates.visibility = VISIBLE
+        location_layout.visibility = GONE
     }
 
 
@@ -531,7 +519,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
 
         override fun onSuccess(position: Int) {
-            Log.e("Log", position.toString())
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
@@ -544,26 +531,23 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         onremoved(position)
     }
 
-    private fun onremoved(position:Int) {
-        Log.e("Anirudh","Called")
+    private fun onremoved(position: Int) {
         imageRecyclerView[position].progress.visibility = VISIBLE
         imageRecyclerView[position].image_loader.visibility = GONE
         imageRecyclerView[position].upload_status.text = "uploading"
+        if (position == 0 && imageList.size > 0) {
+            imageRecyclerView[position].progress.visibility = GONE
+            imageRecyclerView[position].image_loader.visibility = VISIBLE
+            imageRecyclerView[position].upload_status.text = ""
+            imageRecyclerView[position + 1].progress.visibility = VISIBLE
+            imageRecyclerView[position + 1].image_loader.visibility = GONE
+            imageRecyclerView[position + 1].upload_status.text = "uploading"
+            imageUploaderAdapter.notifyDataSetChanged()
+        }
         imageUploaderAdapter.notifyItemRemoved(position)
 
+
     }
-//
-//        Log.e("Anirudh 2", position.toString()+imageList.size)
-//
-//        if (position == 0 && imageList.size>=1){
-//            position ++
-//        }
-//        Log.e("Anirudh 3", position.toString()+imageList.size)
-//
-//        isvalid()
-////        Log.e("Anirudh 2", posval.toString()+imageList.size)
-//
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -644,8 +628,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             while (a < 100) {
                 Thread.sleep(10)
+                for (i in 0 until imageRecyclerView.size)
                 imageRecyclerView[imageuploadcount].progress.progress = a
-                a += 1
+                a += 10
             }
             return null
         }
@@ -657,6 +642,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
             imageRecyclerView[imageuploadcount].upload_status.text = ""
+//            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
+
         }
     }
 
@@ -690,7 +677,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageUploaderAdapter.notifyDataSetChanged()
         count++
         imageuploadcount++
-        imageUploadArrayList.add(count)
+
     }
 
     private fun initRepository() {
@@ -704,21 +691,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
-//    override fun onProgressUpdate(percentage: Int) {
-//        imageRecyclerView[count - 2].progress.progress = percentage
-//        Log.e("Anirudh", percentage.toString())
-//        MyAsyncTask().cancel(true)
-//
-//    }
-//
-//    override fun onFinish() {
-//        progress.progress = 100
-//        //set result in textView
-//        imageRecyclerView[count - 2].progress.visibility = GONE
-//        imageRecyclerView[count - 2].image_loader.visibility = VISIBLE
-//        imageRecyclerView[count - 2].upload_status.text = ""
-//    }
 
 }
 
