@@ -19,9 +19,9 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.repository.UploadImageRepository
-import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.GET_ADDITIONAL_DETAILS
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
@@ -29,17 +29,14 @@ import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.springdetails.adapter.ImageAdapter
-import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
-import com.arghyam.springdetails.models.SpringDetailsModel
-import com.arghyam.springdetails.models.SpringProfileResponse
+import com.arghyam.springdetails.models.*
+import com.arghyam.springdetails.repository.GetAdditionalDetailsRepository
 import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_display_discharge_data.*
-import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.spring_details.*
 import java.util.*
@@ -68,15 +65,18 @@ class DetailsFragment : Fragment() {
     @Inject
     lateinit var springDetailsRepository: SpringDetailsRepository
 
+    @Inject
+    lateinit var getAdditionalDetailsRepository: GetAdditionalDetailsRepository
+
     private var springDetailsViewModel: SpringDetailsViewModel? = null
+
+    private var getAdditionalDetialsViewModel: GetAdditionalDetialsViewModel? = null
 
 
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
 
     private var waterUse: ArrayList<String> = ArrayList()
-
-    private lateinit var uploadImageViewModel: UploadImageViewModel
 
     //...
     var currentPage = 0
@@ -99,17 +99,42 @@ class DetailsFragment : Fragment() {
         initRepository()
         initClick()
         initSpringDetails()
+        initGetAdditionalDetails()
         initAddDischargeData()
         initSpringDetailsResponse()
+        initAdditionalDetailsResponse()
     }
 
+    private fun initAdditionalDetailsResponse() {
+        getAdditionalDetialsViewModel?.getAdditionalDetailsResponse()?.observe(this, Observer {
+            saveAdditionalDetailsData(it)
+        })
+        getAdditionalDetialsViewModel?.getAdditionalDetailsError()?.observe(this, Observer {
+            Log.e("error", it)
+        })
+    }
+
+    private fun saveAdditionalDetailsData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode.equals("200")) {
+            var additionalDetailsResponse: AdditionalDetailsResponse = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<AdditionalDetailsResponse>() {}.type
+            )
+            if (additionalDetailsResponse.springCode != null) {
+                Log.e("Anirudh", additionalDetailsResponse.numberOfHousehold.toString())
+                seasonality = additionalDetailsResponse.seasonality
+                selectedMonthNames = additionalDetailsResponse.months
+                waterUse = additionalDetailsResponse.usage
+                houseHoldNumber = additionalDetailsResponse.numberOfHousehold
+                showAdditionalData()
+            }
+        }
+    }
 
     private fun initComponent() {
         intent = activity?.intent!!
 
         springCode = intent.getStringExtra("SpringCode")
-
-        Log.d("Anirudh", "" + springCode)
 
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
@@ -137,7 +162,6 @@ class DetailsFragment : Fragment() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-        Log.e("Anirudh", springProfileResponse.toString())
         initSetData(springProfileResponse)
         imageSample(springProfileResponse)
     }
@@ -150,9 +174,14 @@ class DetailsFragment : Fragment() {
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         if (!springProfileResponse.createdTimeStamp.equals(null)) {
-            date.text = "${ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)}"
-            time.text = "${ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)}"
+            date.text = ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)
+            time.text = ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)
         }
+
+        Log.e("Spring usage", springProfileResponse.usage.toString())
+//        for (a in 0 until springProfileResponse.extraInformation.dischargeData[0].months.size){
+//            Log.e("Months",springProfileResponse.extraInformation.dischargeData[0].months[a])
+//        }
 
 
 //        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
@@ -162,6 +191,7 @@ class DetailsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initSpringDetails()
+        initGetAdditionalDetails()
     }
 
     private fun initSpringDetails() {
@@ -182,7 +212,25 @@ class DetailsFragment : Fragment() {
             )
         )
         springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
+    }
 
+    private fun initGetAdditionalDetails() {
+        var springAdditionalDetailsObject = RequestModel(
+            id = GET_ADDITIONAL_DETAILS,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringAdditionalDetailsDataModel(
+                additionalInfo = SpringDetailsModel(
+                    springCode = springCode
+                )
+            )
+        )
+        getAdditionalDetialsViewModel?.getAdditionalDetailsApi(context!!, springAdditionalDetailsObject)
     }
 
     private fun initClick() {
@@ -350,8 +398,8 @@ class DetailsFragment : Fragment() {
         springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
         springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
 
-        uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
-        uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+        getAdditionalDetialsViewModel = ViewModelProviders.of(this).get(GetAdditionalDetialsViewModel::class.java)
+        getAdditionalDetialsViewModel?.setAdditionalDetailsRepository(getAdditionalDetailsRepository)
     }
 
 
