@@ -346,7 +346,6 @@ class DetailsFragment : Fragment() {
             }
             i--
         }
-
         return imagelist
     }
 
