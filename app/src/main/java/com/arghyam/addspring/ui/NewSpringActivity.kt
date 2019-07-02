@@ -12,7 +12,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -501,7 +505,16 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                         img_GPS.setBackgroundResource(0)
 
                     } else {
-                        tv_reposition.text = "Click on to reposition your gps"
+
+                      var text:String = "Click on $ to reposition your gps"
+                        var index :Int =text.indexOf("$")
+                        var span: Spannable = Spannable.Factory.getInstance().newSpannable(text);
+                        span.setSpan( ImageSpan(getBaseContext(), R.drawable.ic_reposition),
+                        index, index + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_reposition.text= span
+
+//                        tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
                         ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 25mts")
 
