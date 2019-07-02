@@ -425,6 +425,8 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calender.add("Dec")
     }
 
+
+
     private fun saveData() {
         var houseNumber: Int = Integer.parseInt(houseHoldNumber.text.toString())
         getSelectedCheckboxes()
@@ -466,6 +468,21 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun getSeasonality() {
         if (perennialRadio.isChecked) {
             seasonality = "Perennial"
+            if (selectedMonth.size==0){
+                selectedMonth.add(1)
+                selectedMonth.add(2)
+                selectedMonth.add(3)
+                selectedMonth.add(4)
+                selectedMonth.add(5)
+                selectedMonth.add(6)
+                selectedMonth.add(7)
+                selectedMonth.add(8)
+                selectedMonth.add(9)
+                selectedMonth.add(10)
+                selectedMonth.add(11)
+                selectedMonth.add(12)
+            }
+            convertToNames()
         } else {
             seasonality = "Seasonal"
             convertToNames()

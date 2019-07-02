@@ -14,10 +14,9 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class SpringDetailsRepository @Inject constructor() {
-
-    fun springDetailsApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val springDetailsCall = RestClient.getWebServiceData()?.springDetails(requestModel)
+class GetAdditionalDetailsRepository @Inject constructor() {
+    fun getAdditionalDetailsApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+        val springDetailsCall = RestClient.getWebServiceData()?.getAdditionalDetails(requestModel)
         springDetailsCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
@@ -44,5 +43,4 @@ class SpringDetailsRepository @Inject constructor() {
             }
         })
     }
-
 }

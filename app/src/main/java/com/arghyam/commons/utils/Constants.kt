@@ -26,6 +26,7 @@ object Constants {
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.createSpring"
     var GET_ALL_SPRINGS_ID = "open-saber.registry.search"
+    var GET_ADDITIONAL_DETAILS = "open-saber.registry.read"
     var GET_USER_PROFILE = "forWater.user.getUserprofile"
     var UPDATE_USER_PROFILE = "forWater.user.updateUserprofile"
     var TENANTID = ""
