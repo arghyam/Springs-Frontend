@@ -102,13 +102,13 @@ class AddDischargeActivity : AppCompatActivity() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
         springName = dataIntent.getStringExtra("springName")
-        Log.e("Anirudh",springCode)
+        Log.e("Anirudh",""+springCode)
     }
 
     private fun init() {
         initApplicationComponent()
-        initRepository()
         getSpringId()
+        initRepository()
         initViewComponents()
         initListeners()
         initToolbar()
@@ -274,8 +274,6 @@ class AddDischargeActivity : AppCompatActivity() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
         Log.d("Anirudh", "" + springCode)
-
-
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -484,6 +482,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
+        intent.putExtra("springName", springName)
         intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)

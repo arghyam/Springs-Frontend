@@ -151,7 +151,7 @@ class MoreFragment : Fragment() {
                 dialog.cancel()
             })
         val alert = dialogBuilder.create()
-        alert.setTitle("Are you sure?")
+        alert.setTitle("Are you sure do you want to sign out?")
         alert.show()
 
 
