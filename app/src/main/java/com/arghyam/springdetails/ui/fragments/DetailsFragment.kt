@@ -331,7 +331,7 @@ class DetailsFragment : Fragment() {
         images_view_pager.addOnPageChangeListener(imageChangeListener())
         images_view_pager.adapter = adapter
         setupAutoPager()
-        if (imagelist.size == 1){
+        if (imagelist.size == 1) {
             left_scroll.visibility = GONE
             right_scroll.visibility = GONE
         }
@@ -341,7 +341,7 @@ class DetailsFragment : Fragment() {
     private fun setupAutoPager() {
         val handler = Handler()
 
-        Log.e("Anirudh", currentPage.toString()+" "+imagelist.size)
+        Log.e("Anirudh", currentPage.toString() + " " + imagelist.size)
         val update = Runnable {
             if (currentPage == Integer.MAX_VALUE) {
                 currentPage = 0
@@ -352,14 +352,14 @@ class DetailsFragment : Fragment() {
 
         }
         left_scroll.setOnClickListener {
-            if (currentPage>=1)
+            if (currentPage >= 1)
                 --currentPage
             Log.e("Anirudh", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
 
         }
         right_scroll.setOnClickListener {
-            if (currentPage<imagelist.size-1)
+            if (currentPage < imagelist.size - 1)
                 ++currentPage
             Log.e("Anirudh", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
@@ -375,24 +375,26 @@ class DetailsFragment : Fragment() {
     }
 
     var MAX_IMAGES = 3
-    var imagelist:ArrayList<String> = ArrayList()
+    var imagelist: ArrayList<String> = ArrayList()
 
     private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
-        for (i in 0 until springProfileResponse.images.size) {
-            imagelist.add(springProfileResponse.images[i])
-            Log.e("Anirudh","images added response " + i)
-            MAX_IMAGES--
-        }
-        var i:Int = springProfileResponse.extraInformation.dischargeData.size-1
-        while (i >= 0){
-            for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size){
-                if (MAX_IMAGES>0){
-                    Log.e("Anirudh","images added" + MAX_IMAGES+ "   j"+j+"  i"+i)
+        var i: Int = springProfileResponse.extraInformation.dischargeData.size - 1
+        while (i >= 0) {
+            for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size) {
+                if (MAX_IMAGES > 0) {
+                    Log.e("Anirudh", "images added" + MAX_IMAGES + "   j" + j + "  i" + i)
                     imagelist.add(springProfileResponse.extraInformation.dischargeData[i].images[j])
                     MAX_IMAGES--
                 }
             }
             i--
+        }
+        if (MAX_IMAGES > 0) {
+            for (i in 0 until springProfileResponse.images.size) {
+                imagelist.add(springProfileResponse.images[i])
+                Log.e("Anirudh", "images added response " + i)
+                MAX_IMAGES--
+            }
         }
         return imagelist
     }
