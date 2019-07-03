@@ -51,8 +51,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.activity_add_discharge.*
-import kotlinx.android.synthetic.main.content_add_additional_details.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -102,7 +100,7 @@ class AddDischargeActivity : AppCompatActivity() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
         springName = dataIntent.getStringExtra("springName")
-        Log.e("Anirudh",""+springCode)
+        Log.e("Anirudh", "" + springCode)
     }
 
     private fun init() {
@@ -120,8 +118,8 @@ class AddDischargeActivity : AppCompatActivity() {
         initSet()
     }
 
-    private fun initSet(){
-        var  dischargeSpring : String = "Add additional details for "+ "<b> ${springName} </b>"
+    private fun initSet() {
+        var dischargeSpring: String = "Add additional details for " + "<b> ${springName} </b>"
         add_discharge_name.text = Html.fromHtml(dischargeSpring)
     }
 
@@ -130,11 +128,23 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun validateData(): Boolean {
-        return ((!volumeOfContainer.text.toString().trim().equals("") &&
-                 !volumeOfContainer.text.toString().trim().equals(".") &&
-                 !volumeOfContainer.text.toString().trim().equals("0") &&
-                volumeOfContainer.text.toString().toFloat() > 0.1) &&
-                imageList.size != 0 && timerList.size != 0)
+        return (
+                imageList.size != 0 && timerList.size != 0 && volumeCheck())
+    }
+
+    private fun volumeCheck(): Boolean {
+
+        if (!volumeOfContainer.text.toString().trim().equals("")) {
+
+            if (!volumeOfContainer.text.toString().trim().equals(".") &&
+                    !volumeOfContainer.text.toString().trim().equals("0") &&
+                   volumeOfContainer.text.toString().toFloat() > 0.1)
+
+                return true
+
+        }
+
+        return false
     }
 
     private fun updateSubmitColor() {
@@ -188,7 +198,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
+            //            Log.e("stefy", it?.response!!.imageUrl)
             imagesList.add(it.response.imageUrl)
         })
         uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
@@ -443,7 +453,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun showToast() {
         if (volumeOfContainer.text.toString().equals("")) {
-            ArghyamUtils().longToast(this, "Add The volume of the container")
+            ArghyamUtils().longToast(this, "Add the volume of the container")
             return
         }
         if (timerList.size == 0) {
@@ -454,6 +464,13 @@ class AddDischargeActivity : AppCompatActivity() {
             ArghyamUtils().longToast(this, "Add atleast one image of the discharge")
             return
         }
+        if (!validateData()) {
+            ArghyamUtils().longToast(this@AddDischargeActivity, "Volume of container is invalid")
+            return
+
+        }
+
+
     }
 
 
@@ -491,14 +508,14 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
-        if (!containerString.equals(""))
+        if (!containerString.equals("") && !containerString.equals("."))
             volOfContainer = containerString.toFloat()
         if (timerList.size != 0) {
             dischargeTime.add(timerList[0].seconds.toString())
             dischargeTime.add(timerList[1].seconds.toString())
             dischargeTime.add(timerList[2].seconds.toString())
         }
-        if (!containerString.equals("") && timerList.size != 0) {
+        if (!containerString.equals("") && !containerString.equals(".")  && timerList.size != 0) {
             val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
             litresPerSec.add(lps)
             litresPerSec.add(lps)
@@ -534,6 +551,6 @@ class AddDischargeActivity : AppCompatActivity() {
                 )
             )
         )
-        addDischargeDataViewModel?.addDischargeApi(this, createSpringObject)
+        addDischargeDataViewModel?.addDischargeApi(this, springCode, createSpringObject)
     }
 }
