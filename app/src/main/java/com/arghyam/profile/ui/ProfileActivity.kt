@@ -12,6 +12,7 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE_ID
 import com.arghyam.commons.utils.Constants.USER_NAME
@@ -105,6 +106,9 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUserProfileOnClickListener() {
+
+       var userId = SharedPreferenceFactory(this@ProfileActivity).getString(Constants.USER_ID)!!
+
         var userProfileObject = RequestModel(
             id = UPDATE_USER_PROFILE_ID,
             ver = BuildConfig.VER,
@@ -124,7 +128,7 @@ class ProfileActivity : AppCompatActivity() {
                 )
             )
         )
-        profileViewModel?.userProfileApi(this, userProfileObject)
+        profileViewModel?.userProfileApi(this, userId , userProfileObject)
         SharedPreferenceFactory(this).setString(USER_NAME,fullName.text.toString().trim())
     }
 
