@@ -17,10 +17,11 @@ class SearchRepository @Inject constructor()  {
 
     fun searchDataApiRequest(
         context: Context,
+        springCode:String,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val makeSearchCall = RestClient.getWebServiceData()?.uploadAdditionalData(requestModel)
+        val makeSearchCall = RestClient.getWebServiceData()?.uploadAdditionalData(springCode,requestModel)
         makeSearchCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

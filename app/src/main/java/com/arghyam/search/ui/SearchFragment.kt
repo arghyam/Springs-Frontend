@@ -53,6 +53,7 @@ class SearchFragment : Fragment() {
     private var springsList = ArrayList<LandingModel>()
     private var displayedList = ArrayList<RecentSearchModel>()
     private lateinit var mSearchViewModel: SearchViewModel
+    private lateinit var springCode: String
 
     @Inject
     lateinit var mSearchRepository: SearchRepository
@@ -135,7 +136,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun makeApiCall(mRequestData: RequestModel) {
-        mSearchViewModel.searchApi(activity!!.applicationContext, mRequestData)
+        mSearchViewModel.searchApi(activity!!.applicationContext,springCode, mRequestData)
 
     }
 

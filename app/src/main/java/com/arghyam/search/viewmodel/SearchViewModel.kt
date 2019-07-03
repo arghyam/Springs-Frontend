@@ -21,10 +21,12 @@ class SearchViewModel : ViewModel()  {
         this.searchRepository = searchRepository
     }
 
-    fun searchApi(mContext: Context, requestModel: RequestModel) {
+    fun searchApi(mContext: Context,springCode:String, requestModel: RequestModel) {
         searchRepository!!.searchDataApiRequest(
             mContext,
+            springCode,
             requestModel,
+
             object : ResponseListener<ResponseModel> {
                 override fun onSuccess(response: ResponseModel) {
                     mSearchData.value = response
