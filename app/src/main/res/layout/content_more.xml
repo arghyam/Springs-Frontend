@@ -160,6 +160,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint=""
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:textColor="@color/white"
                         android:drawableRight="@drawable/ic_tick_icon"
                         android:textSize="30sp"
@@ -179,6 +180,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp">
 
             <ImageView
@@ -220,9 +224,13 @@
                 android:background="#D8D8D8"/>
 
         <RelativeLayout
+                android:id="@+id/faq_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp">
 
             <ImageView
@@ -266,9 +274,13 @@
 
 
         <RelativeLayout
+                android:id="@+id/about_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp"
         >
 
@@ -311,9 +323,13 @@
                 android:layout_marginLeft="55dp"/>
 
         <RelativeLayout
+                android:id="@+id/help_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp"
         >
 
@@ -360,6 +376,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp"
         >
 

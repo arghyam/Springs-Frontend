@@ -12,12 +12,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,6 +65,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
+import kotlinx.android.synthetic.main.content_new_spring.toolbar
+import kotlinx.android.synthetic.main.fragment_my_activity.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -85,6 +92,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+    private var springName: String? = null
 
     private var photoFile: File? = null
 
@@ -253,7 +261,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+
+        springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        intent.putExtra("springName",springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -265,12 +276,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if (spring_name.text == null || spring_name.text.toString().equals("")) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
-            } else if (radioGroup.checkedRadioButtonId == -1) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
+            } else if( spring_name.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should contain atleast 3 characters")
+
+            } else if( spring_name.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should not start with space")
+            }
+            else if (radioGroup.checkedRadioButtonId == -1) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the ownership type")
             } else if (imageList.size <= 0) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
@@ -304,7 +321,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun springNameListener(): Boolean {
         Log.e("Anirudh name", spring_name.text.toString())
-        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3)
+        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3 || spring_name.text.toString().startsWith(" "))
     }
 
     private fun createSpringOnClick() {
@@ -320,7 +337,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    springName = spring_name.text.toString(),
+                    springName = spring_name.text.toString().trim(),
                     tenantId = "",
                     orgId = "",
                     latitude = mLocation!!.latitude,
@@ -339,8 +356,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun initToolbar() {
+        val toolbar = toolbar as Toolbar
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        toolbar.title = "New Spring"
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -486,7 +505,16 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                         img_GPS.setBackgroundResource(0)
 
                     } else {
-                        tv_reposition.text = "Click on to reposition your gps"
+
+                      var text:String = "Click on $ to reposition your gps"
+                        var index :Int =text.indexOf("$")
+                        var span: Spannable = Spannable.Factory.getInstance().newSpannable(text);
+                        span.setSpan( ImageSpan(getBaseContext(), R.drawable.ic_reposition),
+                        index, index + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_reposition.text= span
+
+//                        tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
                         ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 25mts")
 

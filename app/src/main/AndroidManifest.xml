@@ -25,13 +25,23 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:usesCleartextTraffic="true">
+        <activity android:name=".help.ui.HelpActivity">
+        </activity>
+        <activity android:name=".FAQS.ui.FaqActivity"
+                  android:label="@string/title_faq"
+        >
+        </activity>
+        <activity
+                android:name=".about.AboutActivity"
+                android:label="@string/title_about">
+        </activity>
         <activity android:name=".notification.ui.activity.DisplayDischargeDataActivity">
         </activity>
         <activity android:name=".notification.ui.activity.NotificationActivity">
         </activity>
-        <activity android:name=".admin.ui.AdminPanelActivity"
-                  android:theme="@style/AppTheme.NoActionBar"
-        ></activity>
+        <activity
+                android:name=".admin.ui.AdminPanelActivity"
+                android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -117,7 +127,10 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
             </intent-filter>
         </receiver>
-        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
+
+        <meta-data
+                android:name="preloaded_fonts"
+                android:resource="@array/preloaded_fonts"/>
     </application>
 
 </manifest>

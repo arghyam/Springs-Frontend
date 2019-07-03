@@ -27,6 +27,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#fff"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="16dp">
 
                 <TextView
@@ -129,6 +132,9 @@
                 android:layout_height="45dp"
                 android:background="#0D65D9"
                 android:text="SEARCH"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"/>
 

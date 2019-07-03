@@ -236,7 +236,9 @@
                         android:background="@drawable/button_background"
                         android:text="REJECT"
                         android:textColor="@color/colorPrimary"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:clickable="true"
+                        android:focusable="true"
                 />
                 <Button
                         android:layout_width="match_parent"
@@ -244,8 +246,10 @@
                         android:layout_height="45dp"
                         android:background="@drawable/button_background_approve"
                         android:textColor="@color/white"
-                        android:text="APPROVE"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:clickable="true"
+                        android:focusable="true"
+                        android:text="APPROVE"
                 />
             </LinearLayout>
             <View

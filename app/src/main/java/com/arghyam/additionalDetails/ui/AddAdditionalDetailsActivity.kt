@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View.GONE
@@ -13,6 +14,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arghyam.ArghyamApplication
@@ -50,6 +52,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private lateinit var houseHoldNumber: EditText
     private var goBack: Boolean = false
     private lateinit var springCode: String
+    private var springName: String? = null
 
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
@@ -67,6 +70,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
     private fun init() {
         initComponent()
+
         initViews()
         initToolbar()
         addCalender()
@@ -74,15 +78,19 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         initRepository()
         observeData()
         initClick()
+
         initListener()
         initIntent()
+        initSet()
     }
 
     private fun initIntent() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
+        springName = dataIntent.getStringExtra("springName")
         Log.d("Anirudh", "" + springCode)
     }
+
 
     private fun observeData() {
         mAdditionalDetailsViewModel.getAdditionalDataSuccess().observe(this, androidx.lifecycle.Observer {
@@ -123,6 +131,11 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                 submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
             }
         }
+    }
+
+    private fun initSet(){
+       var  additionalSpring : String = "Add additional details for "+ "<b> ${springName} </b>"
+        additional_spring.text = Html.fromHtml(additionalSpring)
     }
 
     private fun initCheckBoxListeners() {
@@ -243,7 +256,10 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     }
 
     private fun initToolbar() {
+        val toolbar = toolbar as Toolbar
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Additional Details      "
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -409,6 +425,8 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calender.add("Dec")
     }
 
+
+
     private fun saveData() {
         var houseNumber: Int = Integer.parseInt(houseHoldNumber.text.toString())
         getSelectedCheckboxes()
@@ -450,6 +468,21 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun getSeasonality() {
         if (perennialRadio.isChecked) {
             seasonality = "Perennial"
+            if (selectedMonth.size==0){
+                selectedMonth.add(1)
+                selectedMonth.add(2)
+                selectedMonth.add(3)
+                selectedMonth.add(4)
+                selectedMonth.add(5)
+                selectedMonth.add(6)
+                selectedMonth.add(7)
+                selectedMonth.add(8)
+                selectedMonth.add(9)
+                selectedMonth.add(10)
+                selectedMonth.add(11)
+                selectedMonth.add(12)
+            }
+            convertToNames()
         } else {
             seasonality = "Seasonal"
             convertToNames()
@@ -559,7 +592,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
 
     private fun makeApiCall(mRequestData: RequestModel) {
-        mAdditionalDetailsViewModel.addAdditionalDetailsApi(this, mRequestData)
+        mAdditionalDetailsViewModel.addAdditionalDetailsApi(this,springCode, mRequestData)
 
     }
 

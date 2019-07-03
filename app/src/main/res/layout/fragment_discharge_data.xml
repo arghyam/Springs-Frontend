@@ -18,6 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/colorPrimary"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:text="@string/add_discharge_data"
             android:textColor="@color/white" />
     </RelativeLayout>

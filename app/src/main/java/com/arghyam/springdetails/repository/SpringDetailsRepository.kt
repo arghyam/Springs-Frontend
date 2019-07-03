@@ -42,9 +42,6 @@ class SpringDetailsRepository @Inject constructor() {
                     else -> responseListener.onFailure(t.message)
                 }
             }
-
-
-
         })
     }
 

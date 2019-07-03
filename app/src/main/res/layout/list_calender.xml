@@ -20,6 +20,9 @@
                 android:layout_gravity="bottom"
                 android:text="@string/Jan"
                 android:textAllCaps="false"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:background="@drawable/selector_row_calender"/>
 
     </LinearLayout>

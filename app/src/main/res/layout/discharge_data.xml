@@ -21,18 +21,18 @@
                     android:paddingBottom="16dp"
                     android:paddingRight="16dp"
                     android:layout_width="0dp"
-                    android:layout_weight="3.5"
+                    android:layout_weight="3.8"
                     android:background="@drawable/background_border_head"
                     android:gravity="center_vertical"
                     android:textColor="@color/ship_grey"
-                    android:paddingLeft="48dp"
+                    android:paddingLeft="45dp"
                     android:text="@string/date"
                     android:layout_height="fill_parent"/>
 
             <TextView
                     android:padding="16dp"
                     android:layout_width="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:background="@drawable/background_border_head"
                     android:textColor="@color/ship_grey"
                     android:gravity="center_vertical"
@@ -42,7 +42,7 @@
             <TextView
                     android:padding="16dp"
                     android:layout_width="0dp"
-                    android:layout_weight="3.5"
+                    android:layout_weight="3.8"
                     android:background="@color/snow"
                     android:textColor="@color/ship_grey"
                     android:gravity="center_vertical"

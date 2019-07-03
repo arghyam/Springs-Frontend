@@ -1,424 +1,427 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-                android:focusableInTouchMode="true"
-                android:clickable="true"
-                android:focusable="true"
->
-<ScrollView android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/button_layout">
-    <LinearLayout
-            android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:layout_width="match_parent"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/new_spring_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-        <EditText
-                android:id="@+id/spring_name"
-                android:layout_width="match_parent"
-                android:singleLine="true"
-                android:layout_height="wrap_content"
-                android:hint="Spring name"
-                android:textColorHint="#2372D9"
-                android:textSize="16sp"
-                android:textColor="#262524"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:id="@+id/view"
-                android:background="#e6e6e6" />
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar"
+                android:layout_above="@+id/button_layout">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingBottom="16dp">
 
-
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ownership type"
-                android:textColor="#595958"
-                android:drawablePadding="2dp"
-                android:drawableRight="@drawable/ic_mandatory"
-                android:textSize="14sp"/>
-
-        <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="0dp"
-                android:paddingTop="16dp"
-                >
-
-            <RadioButton
-                    android:id="@+id/radioPublic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Public"/>
-
-            <RadioButton
-                    android:id="@+id/radioPrivate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Private"/>
-
-            <RadioButton
-                    android:id="@+id/radioUnknown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="I don't know"/>
-
-        </RadioGroup>
-        </LinearLayout>
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e6e6e6" />
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#595958"
-                android:textSize="14sp"
-                android:text="Image"
-                android:drawablePadding="2dp"
-                android:drawableRight="@drawable/ic_mandatory"
-                android:paddingBottom="16dp"/>
-
-            <LinearLayout
-                    android:id="@+id/image_upload_layout"
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_spring_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:background="@drawable/image_border">
+                    android:padding="16dp">
 
-                <ImageView
-                        android:layout_width="wrap_content"
+                <EditText
+                        android:id="@+id/spring_name"
+                        android:layout_width="match_parent"
+                        android:singleLine="true"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_camera"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:textSize="11.84sp"
-                        android:textColor="#262524"
-                        android:text="Capture"/>
-
-            </LinearLayout>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#8C8C8B"
-                    android:textSize="12sp"
-                    android:gravity="center"
-                    android:text="@string/max_image"
-                    android:paddingTop="8dp"
-                   />
-
-            <!--<ImageView-->
-                    <!--android:id="@+id/image_load"-->
-                    <!--android:layout_width="100dp"-->
-                    <!--android:layout_height="100dp"-->
-                    <!--app:srcCompat="@drawable/ic_icon_shape"/>-->
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/imageRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_below="@+id/spring_near"
-                    android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e6e6e6" />
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#595958"
-                android:textSize="14sp"
-                android:drawablePadding="2dp"
-                android:drawableRight="@drawable/ic_mandatory"
-                android:text="Location"
-                android:paddingBottom="16dp"
-
-        />
-
-            <LinearLayout
-                    android:id="@+id/location_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginRight="50dp"
-                    android:layout_marginLeft="50dp"
-                    android:background="@drawable/image_border">
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_location"/>
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:textSize="11.84sp"
-                        android:textColor="#262524"
-                        android:text="Get location accuracy"/>
-
-
-
-            </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-                android:id="@+id/card_device"
-                android:visibility="gone"
-                android:elevation="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        >
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="16dp"
-                android:orientation="horizontal">
-
-            <LinearLayout
-                    android:id="@+id/layout_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
-
-                <TextView
-                        android:id="@+id/tv_accuracy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Device accuracy  : 150mts"
+                        android:hint="Spring name"
+                        android:textColorHint="#2372D9"
                         android:textSize="16sp"
                         android:textColor="#262524"/>
 
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:id="@+id/view"
+                    android:background="#e6e6e6"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_reposition"
-                        android:text="Click on to reposition your gps"
-                        android:textSize="12sp"
-                        android:textColor="#8C8C8B"/>
+                        android:text="Ownership type"
+                        android:textColor="#595958"
+                        android:drawablePadding="2dp"
+                        android:drawableRight="@drawable/ic_mandatory"
+                        android:textSize="14sp"/>
+
+                <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="0dp"
+                        android:paddingTop="16dp"
+                >
+
+                    <RadioButton
+                            android:id="@+id/radioPublic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Public"/>
+
+                    <RadioButton
+                            android:id="@+id/radioPrivate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Private"/>
+
+                    <RadioButton
+                            android:id="@+id/radioUnknown"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="I don't know"/>
+
+                </RadioGroup>
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#e6e6e6"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#595958"
+                        android:textSize="14sp"
+                        android:text="Image"
+                        android:drawablePadding="2dp"
+                        android:drawableRight="@drawable/ic_mandatory"
+                        android:paddingBottom="16dp"/>
+
+                <LinearLayout
+                        android:id="@+id/image_upload_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="vertical"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:background="@drawable/image_border">
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_camera"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:textSize="11.84sp"
+                            android:textColor="#262524"
+                            android:text="Capture"/>
+
+                </LinearLayout>
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="#8C8C8B"
                         android:textSize="12sp"
-                        android:textColor="#595958"
-                        android:paddingTop="16dp"
-                        android:text="Note: Recommended accuracy is 25 mts"/>
+                        android:gravity="center"
+                        android:text="@string/max_image"
+                        android:paddingTop="8dp"
+                />
+
+                <!--<ImageView-->
+                <!--android:id="@+id/image_load"-->
+                <!--android:layout_width="100dp"-->
+                <!--android:layout_height="100dp"-->
+                <!--app:srcCompat="@drawable/ic_icon_shape"/>-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/imageRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/spring_near"
+                        android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
-            <ImageView
-                    android:id="@+id/img_GPS"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="right"
-                    android:padding="10dp"
-                    android:background="@drawable/circle_border"
-                    app:srcCompat="@drawable/ic_location"/>
 
-        </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-            <TextView
-                    android:id="@+id/tv_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    android:textColor="#595958"
-                    android:paddingTop="16dp"
-                    android:text="@string/address"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#e6e6e6"/>
 
             <LinearLayout
-                    android:id="@+id/address_layout"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:paddingTop="16dp"
-                    android:layout_height="wrap_content">
-
-                <ImageView
-                        android:layout_gravity="center"
-                        android:layout_width="21dp"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="5dp"
-                        app:srcCompat="@drawable/ic_address"
-                />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                 <TextView
-                        android:id="@+id/tv_address_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#595958"
+                        android:textSize="14sp"
+                        android:drawablePadding="2dp"
+                        android:drawableRight="@drawable/ic_mandatory"
+                        android:text="Location"
+                        android:paddingBottom="16dp"
+
+                />
+
+                <LinearLayout
+                        android:id="@+id/location_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginLeft="50dp"
+                        android:background="@drawable/image_border">
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_location"/>
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:textSize="11.84sp"
+                            android:textColor="#262524"
+                            android:text="Get location accuracy"/>
+
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                        android:id="@+id/card_device"
+                        android:visibility="gone"
+                        android:elevation="3dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                >
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="16dp"
+                            android:orientation="horizontal">
+
+                        <LinearLayout
+                                android:id="@+id/layout_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                            <TextView
+                                    android:id="@+id/tv_accuracy"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Device accuracy  : 150mts"
+                                    android:textSize="16sp"
+                                    android:textColor="#262524"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/tv_reposition"
+                                    android:text="Click on to reposition your gps"
+                                    android:textSize="12sp"
+                                    android:textColor="#8C8C8B"/>
+
+                            <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="12sp"
+                                    android:textColor="#595958"
+                                    android:paddingTop="16dp"
+                                    android:text="Note: Recommended accuracy is 25 mts"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                                android:id="@+id/img_GPS"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="right"
+                                android:padding="10dp"
+                                android:background="@drawable/circle_border"
+                                app:srcCompat="@drawable/ic_location"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                        android:id="@+id/tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:layout_marginLeft="16dp"
-                        android:gravity="center"
-                        android:textColor="#262524"
-                        android:text="Gaurikund, near Mandakni River, Uttarakhand"/>
+                        android:visibility="gone"
+                        android:textColor="#595958"
+                        android:paddingTop="16dp"
+                        android:text="@string/address"/>
 
-            </LinearLayout>
-
-        <TextView
-                android:id="@+id/tv_coordinates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                android:paddingTop="16dp"
-                android:textColor="#595958"
-                android:text="Coordinates"/>
-
-
-            <TableLayout
-                    android:id="@+id/tl_cooridinates"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                <TableRow
-                android:paddingTop="16dp">
-
+                <LinearLayout
+                        android:id="@+id/address_layout"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:paddingTop="16dp"
+                        android:layout_height="wrap_content">
 
                     <ImageView
                             android:layout_gravity="center"
                             android:layout_width="21dp"
-                            android:paddingRight="5dp"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_latitude"
-                    />
-
-                    <TextView
-                            android:text="@string/latitude"
-                            android:textSize="@dimen/text_size_16"
-                            android:textColor="@color/ship_grey"
-                            android:layout_marginLeft="16dp"
-                            android:layout_weight="1"
-                    />
-
-                    <TextView
-                            android:id="@+id/latitude"
-                            android:text=":  13.6675"
-                            android:layout_weight="4"
-                            android:textSize="@dimen/text_size_16"
-                            android:textColor="@color/bokara_grey"/>
-
-                </TableRow>
-
-                <TableRow
-                        android:paddingTop="16dp">
-
-
-                    <ImageView
-                            android:layout_gravity="center"
-                            android:layout_width="21dp"
                             android:paddingRight="5dp"
+                            app:srcCompat="@drawable/ic_address"
+                    />
+
+                    <TextView
+                            android:id="@+id/tv_address_location"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_latitude"
-                    />
-
-                    <TextView
-                            android:text="@string/longitude"
-                            android:textSize="@dimen/text_size_16"
-                            android:layout_weight="1"
+                            android:textSize="14sp"
                             android:layout_marginLeft="16dp"
-                            android:textColor="@color/ship_grey"
+                            android:gravity="center"
+                            android:textColor="#262524"
+                            android:text="Gaurikund, near Mandakni River, Uttarakhand"/>
 
-                    />
+                </LinearLayout>
 
-                    <TextView
-                            android:id="@+id/longitude"
-                            android:text=":  13.6675"
-                            android:layout_weight="4"
-                            android:textSize="@dimen/text_size_16"
-                            android:textColor="@color/bokara_grey"/>
-
-                </TableRow>
-
-                <TableRow
-                        android:paddingTop="16dp">
+                <TextView
+                        android:id="@+id/tv_coordinates"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:paddingTop="16dp"
+                        android:textColor="#595958"
+                        android:text="Coordinates"/>
 
 
-                    <ImageView
-                            android:layout_gravity="center"
-                            android:layout_width="21dp"
-                            android:paddingRight="5dp"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/ic_altitude"
-                    />
+                <TableLayout
+                        android:id="@+id/tl_cooridinates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
-                    <TextView
-                            android:text="@string/altitude"
-                            android:textSize="@dimen/text_size_16"
-                            android:layout_marginLeft="16dp"
-                            android:textColor="@color/ship_grey"
-                            android:layout_weight="1"
+                    <TableRow
+                            android:paddingTop="16dp">
 
-                    />
 
-                    <TextView
-                            android:id="@+id/altitude"
-                            android:text=":  13.6675"
-                            android:layout_weight="4"
-                            android:textSize="@dimen/text_size_16"
-                            android:textColor="@color/bokara_grey"/>
+                        <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="21dp"
+                                android:paddingRight="5dp"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/ic_latitude"
+                        />
 
-                </TableRow>
+                        <TextView
+                                android:text="@string/latitude"
+                                android:textSize="@dimen/text_size_16"
+                                android:textColor="@color/ship_grey"
+                                android:layout_marginLeft="16dp"
+                                android:layout_weight="1"
+                        />
 
-            </TableLayout>
+                        <TextView
+                                android:id="@+id/latitude"
+                                android:text=":  13.6675"
+                                android:layout_weight="4"
+                                android:textSize="@dimen/text_size_16"
+                                android:textColor="@color/bokara_grey"/>
 
-        <!--<TextView-->
+                    </TableRow>
+
+                    <TableRow
+                            android:paddingTop="16dp">
+
+
+                        <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="21dp"
+                                android:paddingRight="5dp"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/ic_latitude"
+                        />
+
+                        <TextView
+                                android:text="@string/longitude"
+                                android:textSize="@dimen/text_size_16"
+                                android:layout_weight="1"
+                                android:layout_marginLeft="16dp"
+                                android:textColor="@color/ship_grey"
+
+                        />
+
+                        <TextView
+                                android:id="@+id/longitude"
+                                android:text=":  13.6675"
+                                android:layout_weight="4"
+                                android:textSize="@dimen/text_size_16"
+                                android:textColor="@color/bokara_grey"/>
+
+                    </TableRow>
+
+                    <TableRow
+                            android:paddingTop="16dp">
+
+
+                        <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="21dp"
+                                android:paddingRight="5dp"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/ic_altitude"
+                        />
+
+                        <TextView
+                                android:text="@string/altitude"
+                                android:textSize="@dimen/text_size_16"
+                                android:layout_marginLeft="16dp"
+                                android:textColor="@color/ship_grey"
+                                android:layout_weight="1"
+
+                        />
+
+                        <TextView
+                                android:id="@+id/altitude"
+                                android:text=":  13.6675"
+                                android:layout_weight="4"
+                                android:textSize="@dimen/text_size_16"
+                                android:textColor="@color/bokara_grey"/>
+
+                    </TableRow>
+
+                </TableLayout>
+
+                <!--<TextView-->
                 <!--android:id="@+id/latitude"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
@@ -428,7 +431,7 @@
                 <!--android:paddingTop="16dp"/>-->
 
 
-        <!--<TextView-->
+                <!--<TextView-->
                 <!--android:id="@+id/longitude"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
@@ -438,39 +441,36 @@
                 <!--android:paddingTop="16dp"-->
                 <!--/>-->
 
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:paddingBottom="8dp"
+                    android:background="#e6e6e6"/>
         </LinearLayout>
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:paddingBottom="8dp"
-                android:background="#e6e6e6" />
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 
-    <View
+    <LinearLayout
+            android:id="@+id/button_layout"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:paddingBottom="8dp"
-            android:background="#e6e6e6" />
-<LinearLayout
-        android:id="@+id/button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="16dp">
-
-
-
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@color/cornflower_blue"
-            android:text="SUBMIT"
-            android:id="@+id/add_spring_submit"
-            android:textSize="18sp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:textColor="#FFFFFF"/>
+            android:padding="16dp">
 
-</LinearLayout>
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/cornflower_blue"
+                android:text="SUBMIT"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:id="@+id/add_spring_submit"
+                android:textSize="18sp"
+                android:layout_alignParentBottom="true"
+                android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

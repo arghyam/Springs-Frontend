@@ -50,6 +50,7 @@ class DischargeDataFragment : Fragment() {
     var springCode: String? = null
 
     lateinit var intent: Intent
+    private var springName: String? = null
 
 
     private var dischargeData: ArrayList<SpringProfileResponse> = ArrayList()
@@ -154,6 +155,7 @@ class DischargeDataFragment : Fragment() {
 
             } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
+                intent.putExtra("springName", springName)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivity(intent)
@@ -184,6 +186,9 @@ class DischargeDataFragment : Fragment() {
     }
 
     private fun initDischargeData(springProfileResponse: SpringProfileResponse) {
+
+        springName = "${springProfileResponse.springName}"
+
         for (dischargeCount in springProfileResponse.extraInformation.dischargeData) {
             if (springProfileResponse.extraInformation.dischargeData.size > 0)
                 dischargeModeList.add(
@@ -191,7 +196,7 @@ class DischargeDataFragment : Fragment() {
                         ArghyamUtils().getDate(dischargeCount.createdTimeStamp),
                         dischargeCount.litresPerSecond[0].toString(),
                         dischargeCount.userId,
-                        true
+                        false
                     )
                 )
             discharge_data_recyclerView.adapter?.notifyDataSetChanged()

@@ -3,7 +3,7 @@ package com.arghyam.commons.utils
 object Constants {
     val USER_ID: String = "userId"
     val USER_PHONE: String = "userPhone"
-
+    var USER_NAME:String = ""
     val IS_USER_CREATED: String ="newUserCreated"
     var POOR_INTERNET_CONNECTION : String = "22"
     var PHONE_NUMBER : String = "phoneNumber"
@@ -26,6 +26,7 @@ object Constants {
     var UPDATE_USER_PROFILE_ID = "forWater.user.updateUserProfile"
     var CREATE_SPRING_ID = "forWater.user.createSpring"
     var GET_ALL_SPRINGS_ID = "open-saber.registry.search"
+    var GET_ADDITIONAL_DETAILS = "open-saber.registry.read"
     var GET_USER_PROFILE = "forWater.user.getUserprofile"
     var UPDATE_USER_PROFILE = "forWater.user.updateUserprofile"
     var TENANTID = ""
