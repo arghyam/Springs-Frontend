@@ -592,7 +592,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
 
 
     private fun makeApiCall(mRequestData: RequestModel) {
-        mAdditionalDetailsViewModel.addAdditionalDetailsApi(this, mRequestData)
+        mAdditionalDetailsViewModel.addAdditionalDetailsApi(this,springCode, mRequestData)
 
     }
 

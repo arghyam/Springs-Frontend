@@ -17,10 +17,11 @@ class AdditionalDetailsRepository @Inject constructor() {
 
     fun addAdditionalDataApiRequest(
         context: Context,
+        springCode:String,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val uploadAdditionalCall = RestClient.getWebServiceData()?.uploadAdditionalData(requestModel)
+        val uploadAdditionalCall = RestClient.getWebServiceData()?.uploadAdditionalData(springCode,requestModel)
         uploadAdditionalCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

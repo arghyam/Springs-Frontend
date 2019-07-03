@@ -33,8 +33,8 @@ interface ApiInterface {
     @Multipart
     fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
-    @POST(" api/v1/createAdditionalInfo")
-    fun uploadAdditionalData(@Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
+    @POST(" api/v1/springs/{springCode}/additionalInfo")
+    fun uploadAdditionalData(@Path("springCode") springCode: String, @Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/createDischargeData")
     fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
