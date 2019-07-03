@@ -30,7 +30,7 @@
                         android:layout_width="match_parent"
                         android:singleLine="true"
                         android:layout_height="wrap_content"
-                        android:hint="Spring name"
+                        android:hint="Spring name*"
                         android:textColorHint="#2372D9"
                         android:textSize="16sp"
                         android:textColor="#262524"/>

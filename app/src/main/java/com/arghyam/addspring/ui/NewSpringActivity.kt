@@ -14,12 +14,9 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.Spannable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.util.Log
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
@@ -27,7 +24,6 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.get
-import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -267,7 +263,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
         springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
-        intent.putExtra("springName",springName)
+        intent.putExtra("springName", springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -281,13 +277,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         add_spring_submit.setOnClickListener {
             if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
-            } else if( spring_name.text.toString().trim().length < 3){
+            } else if (spring_name.text.toString().trim().length < 3) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should contain atleast 3 characters")
 
-            } else if( spring_name.text.toString().startsWith(" ")){
+            } else if (spring_name.text.toString().startsWith(" ")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should not start with space")
-            }
-            else if (radioGroup.checkedRadioButtonId == -1) {
+            } else if (radioGroup.checkedRadioButtonId == -1) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please select the ownership type")
             } else if (imageList.size <= 0) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
@@ -500,13 +495,15 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
                     } else {
 
-                      var text:String = "Click on $ to reposition your gps"
-                        var index :Int =text.indexOf("$")
-                        var span: Spannable = Spannable.Factory.getInstance().newSpannable(text);
-                        span.setSpan( ImageSpan(getBaseContext(), R.drawable.ic_reposition),
-                        index, index + 1,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        tv_reposition.text= span
+                        var text: String = "Click on $ to reposition your gps"
+                        var index: Int = text.indexOf("$")
+                        var span: Spannable = Spannable.Factory.getInstance().newSpannable(text)
+                        span.setSpan(
+                            ImageSpan(baseContext, R.drawable.ic_reposition),
+                            index, index + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        tv_reposition.text = span
 
 //                        tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
@@ -563,9 +560,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             imageRecyclerView[position].progress.visibility = GONE
             imageRecyclerView[position].image_loader.visibility = VISIBLE
             imageRecyclerView[position].upload_status.text = ""
+
             imageRecyclerView[position + 1].progress.visibility = VISIBLE
             imageRecyclerView[position + 1].image_loader.visibility = GONE
             imageRecyclerView[position + 1].upload_status.text = "uploading"
+
             imageUploaderAdapter.notifyDataSetChanged()
         }
         imageUploaderAdapter.notifyItemRemoved(position)
@@ -639,27 +638,32 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         MyAsyncTask().execute()
     }
 
-    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
+    private fun updateProgressbar(progress: Int) {
+        runOnUiThread(object : Runnable {
+            override fun run() {
+                imageList[imageuploadcount].uploadPercentage = progress
+                imageUploaderAdapter.notifyDataSetChanged()
+            }
+        });
+    }
 
+    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
             var a = 0
-
             uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
-            Thread.sleep(100)
-
+            Thread.sleep(1000)
             while (a < 100) {
                 Thread.sleep(10)
-                for (i in 0 until imageRecyclerView.size)
-                imageRecyclerView[imageuploadcount].progress.progress = a
-                a += 1
+                updateProgressbar(++a)
             }
+
             return null
         }
 
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
-            progress.progress = 100
+            updateProgressbar(100)
             //set result in textView
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
