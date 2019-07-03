@@ -136,7 +136,7 @@ class MoreFragment : Fragment() {
     private fun showDialog(it: View?) {
 
         val dialogBuilder = AlertDialog.Builder(context!!)
-        dialogBuilder.setMessage("You will lose entered data")
+        dialogBuilder.setMessage("")
 
             .setPositiveButton("YES", DialogInterface.OnClickListener { dialog, which ->
 

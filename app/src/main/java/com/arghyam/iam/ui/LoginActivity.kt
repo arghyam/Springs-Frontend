@@ -7,6 +7,7 @@ import android.text.Selection
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -54,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initUser()
         initArgs()
         initMobileInput()
