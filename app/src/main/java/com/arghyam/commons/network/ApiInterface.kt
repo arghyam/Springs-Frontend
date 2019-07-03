@@ -48,7 +48,7 @@ interface ApiInterface {
     @POST("/api/v1/getAdditionalDetailsForSpring")
     fun getAdditionalDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
-    @GET(" /api/v1/getRegisteredUsers")
+    @GET(" /api/v1/users")
     fun getRegisteredUsers(): Call<ResponseModel>
 
     @POST("/api/v1/user/getUserProfile")
