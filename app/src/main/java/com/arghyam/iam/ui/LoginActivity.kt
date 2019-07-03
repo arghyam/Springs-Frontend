@@ -111,9 +111,14 @@ class LoginActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<LoginResponseObject>() {}.type
         )
+        Log.e("Anirudh","new or not "+loginResponseObject.newUserCreated)
+
         if (SharedPreferenceFactory(this@LoginActivity).getString(USER_NAME)!="") {
             gotoOtpActivity(loginResponseObject.newUserCreated)
             Log.e("Anirudh","Not a new user")
+        }
+        else if (!loginResponseObject.newUserCreated){
+            gotoOtpActivity(loginResponseObject.newUserCreated)
         }
         else{
             gotoOtpActivity(true)
