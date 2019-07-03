@@ -213,6 +213,10 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private val imageUploadInterface = object : ImageUploadInterface {
+        override fun onSuccess(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
         override fun onCancel(position: Int) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
