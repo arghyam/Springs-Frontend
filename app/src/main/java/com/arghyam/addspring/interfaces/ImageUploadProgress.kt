@@ -1,7 +1,7 @@
 package com.arghyam.addspring.interfaces
 
-interface ImageUploadInterface {
-    fun onSuccess(position: Int)
+interface ImageUploadProgress {
+    fun updateProgress(percent:Int,title: String,msg:String)
     fun onCancel(position: Int)
     fun retry(position: Int)
     fun onRemove(position: Int)

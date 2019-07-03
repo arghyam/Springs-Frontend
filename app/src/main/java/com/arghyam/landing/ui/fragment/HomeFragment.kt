@@ -113,10 +113,10 @@ class HomeFragment : Fragment() {
         lm!!.addGpsStatusListener { event ->
             when (event) {
                 GPS_EVENT_STARTED -> {
-                    Log.e("Anirudh","gps Enabled")
+//                    Log.e("Anirudh","gps Enabled")
                 }
                 GPS_EVENT_STOPPED -> {
-                    Log.e("Anirudh","gps Disabled")
+//                    Log.e("Anirudh","gps Disabled")
                 }
             }// do your tasks
             // do your tasks

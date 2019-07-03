@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
@@ -19,10 +20,14 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,8 +70,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
-import kotlinx.android.synthetic.main.content_new_spring.toolbar
-import kotlinx.android.synthetic.main.fragment_my_activity.*
+import kotlinx.android.synthetic.main.list_image_uploader.*
+import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -78,8 +83,10 @@ import javax.inject.Inject
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
+
     private var goBack: Boolean = false
     private var imageCount: Int = 0
+    val FILE_SIZE_LIMIT: Long = 6291456
 
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
@@ -106,6 +113,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private var mLocation: Location? = null
     var count: Int = 1
+    var imageuploadcount: Int = -1
     var imageList = ArrayList<ImageEntity>()
 
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
@@ -141,7 +149,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_spring)
-        Log.e("use_id", "abcd" + SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!)
         init()
     }
 
@@ -225,12 +232,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun initUploadImageApis() {
-
         uploadImageViewModel.getUploadImageResponse().observe(this@NewSpringActivity, Observer {
-            Log.e("ResponseImage", it.response.imageUrl+"aaa")
-
             imagesList.add(it.response.imageUrl)
-            Log.d("imagesList", imagesList.toString())
         })
         uploadImageViewModel.getImageError().observe(this@NewSpringActivity, Observer {
             Log.e("stefy error", it)
@@ -305,23 +308,19 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun locationListener(): Boolean {
-        Log.e("Anirudh loc", mLocation.toString())
         return mLocation != null
     }
 
     private fun imageUploadListener(): Boolean {
-        Log.e("Anirudh imgupload", imagesList.size.toString())
         return imagesList.size > 0
     }
 
     private fun ownershipTypeListener(): Boolean {
-        Log.e("Anirudh ownership", radioGroup.checkedRadioButtonId.toString())
         return (radioGroup.checkedRadioButtonId != -1)
     }
 
     private fun springNameListener(): Boolean {
-        Log.e("Anirudh name", spring_name.text.toString())
-        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3 || spring_name.text.toString().startsWith(" "))
+        return !(spring_name.text == null || spring_name.text.toString().trim().equals("") || spring_name.text.toString().trim().length < 3)
     }
 
     private fun createSpringOnClick() {
@@ -390,7 +389,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun isvalid() {
-        Log.e("Anirudh", "isvalid")
         var validated: Boolean = validateListener()
         if (validated) {
             valid()
@@ -407,14 +405,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun toggleLocation() {
-        card_device.visibility = View.VISIBLE
-        tv_coordinates.visibility = View.VISIBLE
-//        tv_address.visibility = View.VISIBLE
-//        address_layout.visibility = View.VISIBLE
-//        tv_address.visibility = View.VISIBLE
-//        address_layout.visibility = View.VISIBLE
-        tl_cooridinates.visibility = View.VISIBLE
-        location_layout.visibility = View.GONE
+        card_device.visibility = VISIBLE
+        tv_coordinates.visibility = VISIBLE
+        tl_cooridinates.visibility = VISIBLE
+        location_layout.visibility = GONE
     }
 
 
@@ -545,15 +539,38 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         override fun onRemove(position: Int) {
             onImageRemove(position)
             imageCount--
+            imageuploadcount--
+        }
+
+        override fun onSuccess(position: Int) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
-
 
     private fun onImageRemove(position: Int) {
         imageList.removeAt(position)
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
         isvalid()
+        onremoved(position)
+    }
+
+    private fun onremoved(position: Int) {
+        imageRecyclerView[position].progress.visibility = VISIBLE
+        imageRecyclerView[position].image_loader.visibility = GONE
+        imageRecyclerView[position].upload_status.text = "uploading"
+        if (position == 0 && imageList.size > 0) {
+            imageRecyclerView[position].progress.visibility = GONE
+            imageRecyclerView[position].image_loader.visibility = VISIBLE
+            imageRecyclerView[position].upload_status.text = ""
+            imageRecyclerView[position + 1].progress.visibility = VISIBLE
+            imageRecyclerView[position + 1].image_loader.visibility = GONE
+            imageRecyclerView[position + 1].upload_status.text = "uploading"
+            imageUploaderAdapter.notifyDataSetChanged()
+        }
+        imageUploaderAdapter.notifyItemRemoved(position)
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -616,10 +633,39 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         makeUploadApiCall(bitmap)
     }
 
+    var body: MultipartBody.Part? = null
     private fun makeUploadApiCall(bitmap: Bitmap?) {
-        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
-        if (null != body) {
-            uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body)
+        body = getMultipartBodyFromBitmap(bitmap)
+        MyAsyncTask().execute()
+    }
+
+    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
+
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            var a = 0
+
+            uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
+            Thread.sleep(100)
+
+            while (a < 100) {
+                Thread.sleep(10)
+                for (i in 0 until imageRecyclerView.size)
+                imageRecyclerView[imageuploadcount].progress.progress = a
+                a += 1
+            }
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            progress.progress = 100
+            //set result in textView
+            imageRecyclerView[imageuploadcount].progress.visibility = GONE
+            imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
+            imageRecyclerView[imageuploadcount].upload_status.text = ""
+//            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
+
         }
     }
 
@@ -627,19 +673,22 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         var body: MultipartBody.Part? = null
         try {
             var filesDir: File = applicationContext.filesDir
-            var file: File = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
-            val bos: ByteArrayOutputStream = ByteArrayOutputStream()
+            var file = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
+            val bos = ByteArrayOutputStream()
             var mBitMap: Bitmap = bitmap!!
             mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
             var bitmapdata = bos.toByteArray()
-            var fos: FileOutputStream = FileOutputStream(file)
+            var fos = FileOutputStream(file)
             fos.write(bitmapdata)
             fos.flush()
             fos.close()
-            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
-            body = MultipartBody.Part.createFormData("file", file.name, reqFile)
-        } catch (ex: Exception) {
 
+            if (file.length() < FILE_SIZE_LIMIT) {
+                var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+//                var reqFile = ProgressRequestBody(file, this)
+                body = MultipartBody.Part.createFormData("file", file.name, reqFile)
+            }
+        } catch (ex: Exception) {
         }
         return body
     }
@@ -649,8 +698,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
         imageUploaderAdapter.notifyDataSetChanged()
         count++
-    }
+        imageuploadcount++
 
+    }
 
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
