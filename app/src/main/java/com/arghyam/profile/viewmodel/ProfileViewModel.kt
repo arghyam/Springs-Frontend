@@ -20,8 +20,8 @@ class ProfileViewModel : ViewModel() {
         this.profileRepository = profileRepository
     }
 
-    fun userProfileApi(mContext: Context, requestModel: RequestModel) {
-        profileRepository!!.profileApiRequest(mContext, requestModel, object : ResponseListener<ResponseModel> {
+    fun userProfileApi(mContext: Context,userId:String, requestModel: RequestModel) {
+        profileRepository!!.profileApiRequest(mContext,userId, requestModel, object : ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("successProfile",response.toString())
                 profileLoginData.value=response

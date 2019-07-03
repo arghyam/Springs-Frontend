@@ -49,11 +49,6 @@ import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.fragment_home.progressBar
 import kotlinx.android.synthetic.main.toolbar.*
 
-
-
-
-
-
 /**
  * A simple [Fragment] subclass.
  *

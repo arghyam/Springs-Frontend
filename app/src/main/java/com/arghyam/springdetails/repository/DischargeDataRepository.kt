@@ -18,10 +18,11 @@ class DischargeDataRepository @Inject constructor() {
 
     fun addDischargeDataApiRequest(
         context: Context,
+        springCode:String,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val loginCall = RestClient.getWebServiceData()?.uploadDischargeData(requestModel)
+        val loginCall = RestClient.getWebServiceData()?.uploadDischargeData(springCode ,requestModel)
         loginCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

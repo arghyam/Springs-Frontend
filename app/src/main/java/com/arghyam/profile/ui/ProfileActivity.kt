@@ -12,6 +12,7 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.PHONE_NUMBER
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE_ID
 import com.arghyam.commons.utils.Constants.USER_NAME
@@ -87,16 +88,27 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initSubmit() {
         submit.setOnClickListener {
-            if (fullName.text.trim().length >= 3) {
-                updateUserProfileOnClickListener()
-            } else {
-                ArghyamUtils().longToast(this@ProfileActivity, "Please enter atleast 3 characters")
+
+            if (fullName.text == null || fullName.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@ProfileActivity, "Please enter the full name")
+            } else if( fullName.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@ProfileActivity, "Full name should contain atleast 3 characters")
+
+            } else if( fullName.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@ProfileActivity, "Spring name should not start with space")
             }
+            else {
+                updateUserProfileOnClickListener()
+            }
+
 
         }
     }
 
     private fun updateUserProfileOnClickListener() {
+
+       var userId = SharedPreferenceFactory(this@ProfileActivity).getString(Constants.USER_ID)!!
+
         var userProfileObject = RequestModel(
             id = UPDATE_USER_PROFILE_ID,
             ver = BuildConfig.VER,
@@ -116,7 +128,7 @@ class ProfileActivity : AppCompatActivity() {
                 )
             )
         )
-        profileViewModel?.userProfileApi(this, userProfileObject)
+        profileViewModel?.userProfileApi(this, userId , userProfileObject)
         SharedPreferenceFactory(this).setString(USER_NAME,fullName.text.toString().trim())
     }
 
@@ -125,17 +137,21 @@ class ProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
 
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s?.trim()!!.length >= 3) {
-                    submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
-                } else {
+
+                if((s.toString().startsWith(" "))){
                     submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
                 }
+                else if (s.toString().length >= 3 ) {
+                    submit.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+                }  else {
+                    submit.setBackgroundColor(resources.getColor(R.color.cornflower_blue))
+                }
+
+
             }
         }
     }

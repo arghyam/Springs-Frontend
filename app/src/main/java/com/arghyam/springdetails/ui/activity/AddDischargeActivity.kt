@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Html
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,7 +51,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.activity_add_discharge.*
 import kotlinx.android.synthetic.main.content_add_discharge.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -82,6 +83,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private lateinit var containerString: String
     private var volOfContainer: Float? = null
     private var litresPerSec: ArrayList<Float> = ArrayList()
+    private var springName: String? = null
 
     @Inject
     lateinit var dischargeDataRepository: DischargeDataRepository
@@ -97,13 +99,14 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun getSpringId() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
-        Log.e("Anirudh", springCode)
+        springName = dataIntent.getStringExtra("springName")
+        Log.e("Anirudh", "" + springCode)
     }
 
     private fun init() {
         initApplicationComponent()
-        initRepository()
         getSpringId()
+        initRepository()
         initViewComponents()
         initListeners()
         initToolbar()
@@ -112,6 +115,12 @@ class AddDischargeActivity : AppCompatActivity() {
         initApiResponseCalls()
         initClicks()
         initvolumecontrol()
+        initSet()
+    }
+
+    private fun initSet() {
+        var dischargeSpring: String = "Add additional details for " + "<b> ${springName} </b>"
+        add_discharge_name.text = Html.fromHtml(dischargeSpring)
     }
 
     private fun initvolumecontrol() {
@@ -119,10 +128,23 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun validateData(): Boolean {
-        return ((!volumeOfContainer.text.toString().trim().equals("") &&
-                !volumeOfContainer.text.toString().trim().equals("0") &&
-                volumeOfContainer.text.toString().toFloat() > 0.1) &&
-                imageList.size != 0 && timerList.size != 0)
+        return (
+                imageList.size != 0 && timerList.size != 0 && volumeCheck())
+    }
+
+    private fun volumeCheck(): Boolean {
+
+        if (!volumeOfContainer.text.toString().trim().equals("")) {
+
+            if (!volumeOfContainer.text.toString().trim().equals(".") &&
+                    !volumeOfContainer.text.toString().trim().equals("0") &&
+                   volumeOfContainer.text.toString().toFloat() > 0.1)
+
+                return true
+
+        }
+
+        return false
     }
 
     private fun updateSubmitColor() {
@@ -168,13 +190,15 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        val toolbar = mtoolbar as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = "Add Discharge Data"
     }
 
     private fun initUploadImageApis() {
         uploadImageViewModel.getUploadImageResponse().observe(this@AddDischargeActivity, Observer {
-            Log.e("stefy", it?.response!!.imageUrl)
+            //            Log.e("stefy", it?.response!!.imageUrl)
             imagesList.add(it.response.imageUrl)
         })
         uploadImageViewModel.getImageError().observe(this@AddDischargeActivity, Observer {
@@ -260,8 +284,6 @@ class AddDischargeActivity : AppCompatActivity() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
         Log.d("Anirudh", "" + springCode)
-
-
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -431,7 +453,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun showToast() {
         if (volumeOfContainer.text.toString().equals("")) {
-            ArghyamUtils().longToast(this, "Add The volume of the container")
+            ArghyamUtils().longToast(this, "Add the volume of the container")
             return
         }
         if (timerList.size == 0) {
@@ -442,6 +464,13 @@ class AddDischargeActivity : AppCompatActivity() {
             ArghyamUtils().longToast(this, "Add atleast one image of the discharge")
             return
         }
+        if (!validateData()) {
+            ArghyamUtils().longToast(this@AddDischargeActivity, "Volume of container is invalid")
+            return
+
+        }
+
+
     }
 
 
@@ -464,13 +493,13 @@ class AddDischargeActivity : AppCompatActivity() {
         )
 
         springCode = dischargeDataResponseObject.springCode
-        Log.d("springCode----", springCode)
         gotoSpringDetailsActivity(dischargeDataResponseObject)
     }
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
+        intent.putExtra("springName", springName)
         intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
@@ -479,14 +508,14 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
-        if (!containerString.equals(""))
+        if (!containerString.equals("") && !containerString.equals("."))
             volOfContainer = containerString.toFloat()
         if (timerList.size != 0) {
             dischargeTime.add(timerList[0].seconds.toString())
             dischargeTime.add(timerList[1].seconds.toString())
             dischargeTime.add(timerList[2].seconds.toString())
         }
-        if (!containerString.equals("") && timerList.size != 0) {
+        if (!containerString.equals("") && !containerString.equals(".")  && timerList.size != 0) {
             val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
             litresPerSec.add(lps)
             litresPerSec.add(lps)
@@ -522,6 +551,6 @@ class AddDischargeActivity : AppCompatActivity() {
                 )
             )
         )
-        addDischargeDataViewModel?.addDischargeApi(this, createSpringObject)
+        addDischargeDataViewModel?.addDischargeApi(this, springCode, createSpringObject)
     }
 }

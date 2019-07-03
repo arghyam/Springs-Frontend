@@ -7,14 +7,10 @@ import android.content.IntentSender
 import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.Toolbar
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
@@ -23,13 +19,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.marginTop
-import androidx.core.view.size
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ArghyamUtils {
@@ -129,6 +124,65 @@ class ArghyamUtils {
             (context as Activity).finish()
         }
         snack.show()
+    }
+
+    fun convertToNames(selectedMonth: ArrayList<String>):ArrayList<String> {
+        var selectedMonthNames:ArrayList<String> = ArrayList()
+        selectedMonth.sort()
+        for (month in selectedMonth) {
+            when (month) {
+                "1" -> {
+                    if (!selectedMonthNames.contains("Jan"))
+                        selectedMonthNames.add("Jan")
+                }
+                "2" -> {
+                    if (!selectedMonthNames.contains("Feb"))
+                        selectedMonthNames.add("Feb")
+                }
+                "3" -> {
+                    if (!selectedMonthNames.contains("Mar"))
+                        selectedMonthNames.add("Mar")
+                }
+                "4" -> {
+                    if (!selectedMonthNames.contains("Apr"))
+                        selectedMonthNames.add("Apr")
+                }
+                "5" -> {
+                    if (!selectedMonthNames.contains("May"))
+                        selectedMonthNames.add("May")
+                }
+                "6" -> {
+                    if (!selectedMonthNames.contains("Jun"))
+                        selectedMonthNames.add("Jun")
+                }
+                "7" -> {
+                    if (!selectedMonthNames.contains("Jul"))
+                        selectedMonthNames.add("Jul")
+                }
+                "8" -> {
+                    if (!selectedMonthNames.contains("Aug"))
+                        selectedMonthNames.add("Aug")
+                }
+                "9" -> {
+                    if (!selectedMonthNames.contains("Sep"))
+                        selectedMonthNames.add("Sep")
+                }
+                "10" -> {
+                    if (!selectedMonthNames.contains("Oct"))
+                        selectedMonthNames.add("Oct")
+                }
+                "11" -> {
+                    if (!selectedMonthNames.contains("Nov"))
+                        selectedMonthNames.add("Nov")
+                }
+                "12" -> {
+                    if (!selectedMonthNames.contains("Dec"))
+                        selectedMonthNames.add("Dec")
+                }
+
+            }
+        }
+        return selectedMonthNames
     }
 
     fun getDate(dateString: String): String {

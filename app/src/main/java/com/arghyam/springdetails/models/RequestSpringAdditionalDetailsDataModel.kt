@@ -1,0 +1,3 @@
+package com.arghyam.springdetails.models
+
+open class RequestSpringAdditionalDetailsDataModel(var additionalInfo: SpringDetailsModel)

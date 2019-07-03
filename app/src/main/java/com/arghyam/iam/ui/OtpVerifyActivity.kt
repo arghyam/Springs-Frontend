@@ -1,9 +1,11 @@
 package com.arghyam.iam.ui
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
@@ -39,6 +41,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_otp_verify.*
 import javax.inject.Inject
+import android.text.SpannableString
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
+
 
 class OtpVerifyActivity : AppCompatActivity() {
 
@@ -197,7 +203,12 @@ class OtpVerifyActivity : AppCompatActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                resendCode.text = "${getString(R.string.resend)} (00:${ArghyamUtils().checkDigit(maxTime)})"
+                val codeResend = SpannableString("${getString(R.string.resend)}")
+                codeResend.setSpan( ForegroundColorSpan(resources.getColor(R.color.colorPrimary)), 0, codeResend.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                resendCode.text= codeResend
+                val timeRemaining = SpannableString(" (00:${ArghyamUtils().checkDigit(maxTime)})")
+                timeRemaining.setSpan( ForegroundColorSpan(Color.BLACK), 0, timeRemaining.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                resendCode.append(timeRemaining)
                 maxTime--
             }
         }.start()

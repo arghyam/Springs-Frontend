@@ -16,9 +16,9 @@ import javax.inject.Inject
 
 class UpdateUserProfileRepository  @Inject constructor() {
 
-    fun updateUserProfileApiRequest(context: Context,requestModel: RequestModel,responseListener: ResponseListener<ResponseModel>
+    fun updateUserProfileApiRequest(context: Context,userId:String,requestModel: RequestModel,responseListener: ResponseListener<ResponseModel>
     ) {
-        val getUserProfileCall = RestClient.getWebServiceData()?.updateUserProfile(requestModel)
+        val getUserProfileCall = RestClient.getWebServiceData()?.updateUserProfile(userId,requestModel)
         getUserProfileCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

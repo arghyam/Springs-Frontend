@@ -13,7 +13,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
@@ -95,6 +99,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
     private var imagesList: ArrayList<String> = ArrayList()
+    private var springName: String? = null
 
     private var photoFile: File? = null
 
@@ -259,7 +264,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun gotoSpringDetailsActivty(createSpringResponseObject: CreateSpringResponseObject) {
         val intent = Intent(this@NewSpringActivity, SpringDetailsActivity::class.java)
+
+        springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
+        intent.putExtra("springName",springName)
+        Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
     }
@@ -270,12 +279,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
-            if (spring_name.text == null || spring_name.text.toString().equals("")) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the sping name")
-            } else if (radioGroup.checkedRadioButtonId == -1) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the Ownership type")
+            if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
+            } else if( spring_name.text.toString().trim().length < 3){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should contain atleast 3 characters")
+
+            } else if( spring_name.text.toString().startsWith(" ")){
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring name should not start with space")
+            }
+            else if (radioGroup.checkedRadioButtonId == -1) {
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please select the ownership type")
             } else if (imageList.size <= 0) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the Spring image")
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
@@ -321,7 +336,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             request = RequestSpringDataModel(
                 springs = SpringModel(
 
-                    springName = spring_name.text.toString(),
+                    springName = spring_name.text.toString().trim(),
                     tenantId = "",
                     orgId = "",
                     latitude = mLocation!!.latitude,
@@ -484,7 +499,16 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                         img_GPS.setBackgroundResource(0)
 
                     } else {
-                        tv_reposition.text = "Click on to reposition your gps"
+
+                      var text:String = "Click on $ to reposition your gps"
+                        var index :Int =text.indexOf("$")
+                        var span: Spannable = Spannable.Factory.getInstance().newSpannable(text);
+                        span.setSpan( ImageSpan(getBaseContext(), R.drawable.ic_reposition),
+                        index, index + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_reposition.text= span
+
+//                        tv_reposition.text = "Click on to reposition your gps"
                         img_GPS.setImageResource(R.drawable.ic_location)
                         ArghyamUtils().longToast(applicationContext, "Preferred device accuracy is less than 25mts")
 
@@ -615,8 +639,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         MyAsyncTask().execute()
     }
 
-    var index = 0
-
     inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
 
 
@@ -630,7 +652,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 Thread.sleep(10)
                 for (i in 0 until imageRecyclerView.size)
                 imageRecyclerView[imageuploadcount].progress.progress = a
-                a += 10
+                a += 1
             }
             return null
         }
