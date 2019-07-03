@@ -26,7 +26,7 @@ interface ApiInterface {
     @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel): Call<ResponseModel>
 
-    @POST("api/v1/createSpring")
+    @POST("api/v1/spring")
     fun createSpring(@Body createSpringRequestModel: RequestModel): Call<ResponseModel>
 
     @PUT("api/v1/user/profilePicture")
@@ -39,10 +39,10 @@ interface ApiInterface {
     @POST("/api/v1/createDischargeData")
     fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/getAllSprings")
+    @POST("/api/v1/getSprings")
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/springs")
+    @POST("/api/v1/springById")
     fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/getAdditionalDetailsForSpring")
