@@ -19,8 +19,8 @@ class UpdateUserProfileViewModel : ViewModel(){
         this.updateUserProfileRepository = getUserProfileRepository
     }
 
-    fun getUserProfileApi(mContext: Context, requestModel: RequestModel) {
-        updateUserProfileRepository?.updateUserProfileApiRequest(mContext, requestModel, object :
+    fun getUserProfileApi(mContext: Context,userId:String, requestModel: RequestModel) {
+        updateUserProfileRepository?.updateUserProfileApiRequest(mContext,userId, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())
