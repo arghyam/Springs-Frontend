@@ -19,9 +19,10 @@ class AddAdditionalDetailsViewModel : ViewModel() {
         this.additionalDataRepository = additionalDataRepository
     }
 
-    fun addAdditionalDetailsApi(mContext: Context, requestModel: RequestModel) {
+    fun addAdditionalDetailsApi(mContext: Context,springCode:String, requestModel: RequestModel) {
         additionalDataRepository!!.addAdditionalDataApiRequest(
             mContext,
+            springCode,
             requestModel,
             object : ResponseListener<ResponseModel> {
                 override fun onSuccess(response: ResponseModel) {
