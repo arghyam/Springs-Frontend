@@ -20,35 +20,35 @@ interface ApiInterface {
     @POST("api/v1/user/verifyOtp")
     fun verifyOtp(@Body verifyOtpRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/user/updateUserProfile")
-    fun updateUserProfile(@Body updateProfileRequestModel: RequestModel): Call<ResponseModel>
+    @PUT("/api/v1//users/profile/{userId}")
+    fun updateUserProfile(@Path("userId") userId: String,@Body updateProfileRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel): Call<ResponseModel>
 
-    @POST("api/v1/createSpring")
+    @POST("api/v1/spring")
     fun createSpring(@Body createSpringRequestModel: RequestModel): Call<ResponseModel>
 
     @PUT("api/v1/user/profilePicture")
     @Multipart
     fun uploadImage(@Part file: MultipartBody.Part): Call<UploadImageResponseModel>
 
-    @POST(" api/v1/createAdditionalInfo")
-    fun uploadAdditionalData(@Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
+    @POST(" api/v1/springs/{springCode}/additionalInfo")
+    fun uploadAdditionalData(@Path("springCode") springCode: String, @Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/createDischargeData")
-    fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/springs/{springCode}/discharge")
+    fun uploadDischargeData(@Path("springCode") springCode: String, @Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/getAllSprings")
+    @POST("/api/v1/getSprings")
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/springs")
+    @POST("/api/v1/springById")
     fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/getAdditionalDetailsForSpring")
     fun getAdditionalDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
-    @GET(" /api/v1/getRegisteredUsers")
+    @GET(" /api/v1/users")
     fun getRegisteredUsers(): Call<ResponseModel>
 
     @POST("/api/v1/user/getUserProfile")

@@ -1,7 +1,6 @@
-package com.arghyam.profile.repository
+package com.arghyam.search.repository
 
 import android.content.Context
-import android.util.Log
 import com.arghyam.commons.di.ResponseListener
 import com.arghyam.commons.network.RestClient
 import com.arghyam.commons.utils.Constants
@@ -14,20 +13,22 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class ProfileRepository @Inject constructor(){
+class SearchRepository @Inject constructor()  {
 
-    fun profileApiRequest(context: Context, userId: String, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val profileCall = RestClient.getWebServiceData()?.updateUserProfile(userId,requestModel)
-        profileCall?.enqueue(object : Callback<ResponseModel> {
+    fun searchDataApiRequest(
+        context: Context,
+        springCode:String,
+        requestModel: RequestModel,
+        responseListener: ResponseListener<ResponseModel>
+    ) {
+        val makeSearchCall = RestClient.getWebServiceData()?.uploadAdditionalData(springCode,requestModel)
+        makeSearchCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
                 if (null != response.body()) {
                     if (200 == response.code()) {
-                        Log.d("success--","response code")
                         responseListener.onSuccess(response.body()!!)
                     } else {
-                        Log.d("error---",response.code().toString())
-
                         responseListener.onError(response.code().toString() + "")
                     }
                 }
@@ -36,14 +37,12 @@ class ProfileRepository @Inject constructor(){
             override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                 when (t) {
                     is SocketTimeoutException -> {
-                        Log.d("failure","failure")
                         responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
                     }
                     is UnknownHostException -> responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
                     else -> responseListener.onFailure(t.message)
                 }
             }
-
 
 
         })

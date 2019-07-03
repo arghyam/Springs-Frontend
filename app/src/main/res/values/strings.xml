@@ -97,6 +97,10 @@
     <string name="time">1:35 PM</string>
     <string name="date_notification">April 21,2019</string>
     <string name="user_search_hint">Search by name or mobile number</string>
+    <string name="no_recent_searches">No Recent Searches</string>
+    <string name="search_results">Search Results</string>
+    <string name="recent_search">Recent search</string>
+    <string name="search_by_geography">Search by geography</string>
     <string name="discharge_image">Discharge image</string>
     <string name="version_number">Version 1.2.0</string>
     <string name="year_arghyam">\u00a9 2019 Arghyam Org</string>

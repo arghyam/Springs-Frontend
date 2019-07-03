@@ -11,6 +11,7 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
 import com.arghyam.profile.ui.ProfileActivity
+import com.arghyam.search.ui.SearchFragment
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.ui.fragments.DetailsFragment
@@ -50,5 +51,7 @@ interface AppComponent {
     fun inject(adminPanelActivity: AdminPanelActivity)
 
     fun inject(myActivityFragment: MyActivityFragment)
+
+    fun inject (searchFragment: SearchFragment)
 
 }

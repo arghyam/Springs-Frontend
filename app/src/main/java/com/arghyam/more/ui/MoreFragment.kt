@@ -169,6 +169,9 @@ class MoreFragment : Fragment() {
     }
 
     private fun updateUserProfileRequest() {
+
+       var userId = SharedPreferenceFactory(context!!).getString(Constants.USER_ID)!!
+
         var updateUserProfileObject = RequestModel(
             id = UPDATE_USER_PROFILE,
             ver = BuildConfig.VER,
@@ -185,7 +188,7 @@ class MoreFragment : Fragment() {
                 )
             )
         )
-        updateUserProfileViewModel?.getUserProfileApi(context!!, updateUserProfileObject)
+        updateUserProfileViewModel?.getUserProfileApi(context!!, userId , updateUserProfileObject)
     }
 
     private fun initUpdateUserProfile() {
