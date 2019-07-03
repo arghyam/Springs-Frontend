@@ -36,8 +36,8 @@ interface ApiInterface {
     @POST(" api/v1/springs/{springCode}/additionalInfo")
     fun uploadAdditionalData(@Path("springCode") springCode: String, @Body addAdditionalDetailsRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/createDischargeData")
-    fun uploadDischargeData(@Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/springs/{springCode}/discharge")
+    fun uploadDischargeData(@Path("springCode") springCode: String, @Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/getSprings")
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>

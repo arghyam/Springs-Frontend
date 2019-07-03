@@ -18,9 +18,10 @@ class AddDischargeDataViewModel : ViewModel() {
         this.dischargeDataRepository = dischargeDataRepository
     }
 
-    fun addDischargeApi(mContext: Context, requestModel: RequestModel) {
+    fun addDischargeApi(mContext: Context,springCode:String, requestModel: RequestModel) {
         dischargeDataRepository!!.addDischargeDataApiRequest(
             mContext,
+            springCode,
             requestModel,
             object : ResponseListener<ResponseModel> {
                 override fun onSuccess(response: ResponseModel) {
