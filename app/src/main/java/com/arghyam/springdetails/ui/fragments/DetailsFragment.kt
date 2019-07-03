@@ -123,7 +123,7 @@ class DetailsFragment : Fragment() {
             if (additionalDetailsResponse.springCode != null) {
                 Log.e("Anirudh", additionalDetailsResponse.numberOfHousehold.toString())
                 seasonality = additionalDetailsResponse.seasonality
-                selectedMonthNames = additionalDetailsResponse.months
+                selectedMonthNames = ArghyamUtils().convertToNames(additionalDetailsResponse.months)
                 waterUse = additionalDetailsResponse.usage
                 houseHoldNumber = additionalDetailsResponse.numberOfHousehold
                 showAdditionalData()
