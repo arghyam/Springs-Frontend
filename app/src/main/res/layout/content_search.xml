@@ -6,7 +6,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="?attr/actionBarSize"
-                android:layout_below="@+id/app_bar">
+                android:layout_below="@+id/app_bar"
+                android:background="#F5F5F5">
 
     <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -36,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:textColor="#0D65D9"
-                        android:text="Search by geography"/>
+                        android:text="@string/search_by_geography"/>
 
                 <ImageView
                         android:id="@+id/search_geo"
@@ -61,24 +62,56 @@
                     android:id="@+id/recent_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Recent search"
-                    android:textSize="12sp"
-                    android:padding="16dp"/>
+                    android:text="@string/recent_search"
+                    android:textSize="14sp"
+                    android:padding="16dp"
+                    android:visibility="visible"/>
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recentSearchRecyclerView"
                     android:layout_width="match_parent"
                     android:background="#fff"
                     android:layout_below="@+id/spring_near"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
+
+            <TextView
+                    android:id="@+id/search_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search Results"
+                    android:textSize="12sp"
+                    android:padding="16dp"
+                    android:visibility="gone"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/searchRsultRecyclerView"
+                    android:id="@+id/searchResultRecyclerView"
                     android:layout_width="match_parent"
                     android:background="#fff"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:layout_below="@+id/spring_near"
                     android:layout_height="wrap_content"/>
+
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_gravity="center_horizontal"
+                          android:layout_marginTop="150dp"
+                          android:visibility="gone">
+
+                <ImageView android:layout_width="83.38dp"
+                           android:layout_height="83.32dp"
+                           android:src="@drawable/ic_search_empty"
+                           android:layout_gravity="center_horizontal"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="28.35dp"
+                          android:text="@string/no_recent_searches"
+                          android:gravity="center_horizontal|top"
+                          android:textColor="@color/bokara_grey"
+                          android:textSize="18sp"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -90,7 +123,8 @@
             android:layout_height="wrap_content"
             android:background="#fff"
             android:layout_alignParentBottom="true"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:visibility="gone">
 
         <Button
                 android:id="@+id/search_spring"
