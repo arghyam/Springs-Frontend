@@ -345,7 +345,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun showDialogbox() {
         val dialogBuilder = AlertDialog.Builder(this)
-        dialogBuilder.setMessage("Already a spring exists in this location")
+        dialogBuilder.setMessage("A spring already exists in close proximity. Are you sure it is not the same spring?")
 
             .setPositiveButton("YES") { dialog, which ->
                 dialog.cancel()
