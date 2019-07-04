@@ -2,6 +2,7 @@ package com.arghyam.commons.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
 import android.graphics.Color
@@ -11,6 +12,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.gms.common.api.GoogleApiClient
@@ -19,8 +21,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat.startActivity
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
+import com.arghyam.iam.ui.LoginActivity
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -120,10 +124,44 @@ class ArghyamUtils {
         val textView: TextView = v.findViewById(R.id.snackbar_text)
         textView.setTextColor(Color.WHITE)
         snack.setAction(action) {
-            context?.startActivity(Intent(context, activityname))
+            context.startActivity(Intent(context, activityname))
             (context as Activity).finish()
         }
         snack.show()
+    }
+
+    fun makeAlertDialog(context: Context,title: String,option1:String,option2:String,activityname: Class<*>){
+        val dialogBuilder = AlertDialog.Builder(context!!)
+        dialogBuilder.setMessage("")
+
+            .setPositiveButton(option1) { dialog, which ->
+
+                context.startActivity(Intent(context, activityname))
+                (context as Activity).finish()
+                dialog.cancel()
+            }
+            .setNegativeButton(option2) { dialog, which ->
+                dialog.cancel()
+            }
+        val alert = dialogBuilder.create()
+        alert.setTitle(title)
+        alert.show()
+    }
+
+    fun AlertBox(context: Context?,activity: Activity, title: String, message: String,activityname: Class<*>) {
+        val alertbox = AlertDialog.Builder(activity)
+        alertbox.setTitle(title)
+        alertbox.setCancelable(false)
+        alertbox.setMessage(message)
+        alertbox.setPositiveButton("OK") { dialog, which ->
+            context?.startActivity(Intent(context, activityname))
+            (context as Activity).finish()
+            dialog.cancel()
+        }
+        alertbox.setNegativeButton("Cancel") { dialog, which ->
+                dialog.cancel()
+            }
+        alertbox.show()
     }
 
     fun convertToNames(selectedMonth: ArrayList<String>):ArrayList<String> {
