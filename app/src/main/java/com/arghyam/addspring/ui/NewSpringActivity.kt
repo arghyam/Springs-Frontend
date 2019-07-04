@@ -350,8 +350,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
 
-
-
             if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
             } else if (spring_name.text.toString().trim().length < 3) {
@@ -381,40 +379,38 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun checkDistance(): Boolean {
 
-        var value = false
-        if (mLocation != null) {
+        if (mLocation != null && longitude_values !=null && latitude_values!=null ) {
 
-            Log.e("Anirudh", "lat"+mLocation?.latitude.toString())
-            Log.e("Anirudh", "long"+ mLocation?.longitude.toString())
+            for (i in 0 until  latitude_values.size) {
 
+                var currentLat = mLocation!!.latitude
+                var currentLon = mLocation!!.longitude
 
-            var currentLat = mLocation!!.latitude
-            var currentLon = mLocation!!.longitude
+                var loc1 = Location("")
+                loc1.latitude = currentLat
+                loc1.longitude = currentLon
 
-            var loc1 = Location("")
-            loc1.latitude = currentLat
-            loc1.longitude = currentLon
+                var existingLat = latitude_values
+                var existingLon = longitude_values
 
-            var existingLat = mLocation!!.latitude
-            var existingLon = mLocation!!.longitude
+                val loc2 = Location("")
+                loc2.latitude = existingLat[i]
+                loc2.longitude = existingLon[i]
 
-            val loc2 =  Location("")
-            loc2.latitude = existingLat
-            loc2.longitude = existingLon
-
-            val distanceInMeters = loc1.distanceTo(loc2)
-            Log.e("Anirudh", "distance$distanceInMeters")
+                val distanceInMeters = loc1.distanceTo(loc2)
+                Log.e("Anirudh", "distance$distanceInMeters")
 
 
-            if(distanceInMeters<=50){
-                Log.e("Anirudh","less than 50" )
-                value = true
+                if (distanceInMeters <= 50) {
+
+                    Log.e("Anirudh", distanceInMeters.toString() + "    "+loc1.latitude +"   "+loc1.longitude +  "    "+loc2.latitude+"    "+loc2.longitude)
+                    Log.e("Anirudh", "less than 50")
+                    return true
+                } else
+                    Log.e("Anirudh", distanceInMeters.toString())
             }
-            else
-                Log.e("Anirudh",distanceInMeters.toString())
         }
-        Log.e("Anirudh", value.toString())
-        return value
+        return false
     }
 
     private fun showDialogbox() {
@@ -791,7 +787,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         override fun doInBackground(vararg params: Void?): Void? {
             var a = 0
             uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
-            Thread.sleep(1000)
+            Thread.sleep(100)
             while (a < 100) {
                 Thread.sleep(10)
                 updateProgressbar(++a)
