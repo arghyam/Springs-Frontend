@@ -66,7 +66,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
-import kotlinx.android.synthetic.main.list_image_uploader.*
 import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -275,6 +274,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
+
+            checkDistance()
+
+
+
+
             if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
             } else if (spring_name.text.toString().trim().length < 3) {
@@ -291,11 +296,48 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
             } else {
-                createSpringOnClick()
+//                createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
             }
         }
+    }
+
+    private fun checkDistance() {
+
+        if (mLocation != null) {
+
+            Log.d("mLatitude---", mLocation?.latitude.toString())
+            Log.d("mLatitude--longitude", mLocation?.longitude.toString())
+
+
+            var currentLat = mLocation!!.latitude
+            var currentLon = mLocation!!.longitude
+
+            var loc1: Location = Location("")
+            loc1.latitude = currentLat
+            loc1.longitude = currentLon
+
+            var existingLat = mLocation!!.latitude
+            var existingLon = mLocation!!.longitude
+
+            val loc2: Location=  Location("")
+            loc2.setLatitude(existingLat)
+            loc2.setLongitude(existingLon)
+
+             val distanceInMeters = loc1.distanceTo(loc2)
+            Log.e("mLatitude--disInMeters",distanceInMeters.toString())
+
+
+            if(distanceInMeters<=50f){
+                Log.d("mLatitude-less50","" )
+                ArghyamUtils().longToast(this@NewSpringActivity, "Spring is already existing")
+
+            }
+            else
+                Log.e("mLatitude--DIstance",distanceInMeters.toString())
+        }
+
     }
 
     private fun validateListener(): Boolean {
@@ -319,6 +361,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun createSpringOnClick() {
+
+
         var createSpringObject = RequestModel(
             id = CREATE_SPRING_ID,
             ver = BuildConfig.VER,
@@ -644,7 +688,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 imageList[imageuploadcount].uploadPercentage = progress
                 imageUploaderAdapter.notifyDataSetChanged()
             }
-        });
+        })
     }
 
     inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
@@ -667,7 +711,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             //set result in textView
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
-            imageRecyclerView[imageuploadcount].upload_status.text = ""
+            imageRecyclerView[imageuploadcount].upload_status.text = "Uploaded"
 //            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
 
         }
