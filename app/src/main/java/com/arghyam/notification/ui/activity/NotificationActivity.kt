@@ -11,6 +11,7 @@ import com.arghyam.R
 import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.model.NotificationDataModel
 import kotlinx.android.synthetic.main.activity_notification.*
+import kotlinx.android.synthetic.main.notification_listview.*
 
 class NotificationActivity : AppCompatActivity() {
 
@@ -66,17 +67,15 @@ class NotificationActivity : AppCompatActivity() {
             )
         )
 
-        Log.e("Anirudh", dataModels.toString())
         adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
         listView.adapter = adapter
+        Log.e("Anirudh", listView.adapter.toString())
 
-        listView.onItemClickListener =
-
-            AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
+        listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
                 val (notification, time, date) = dataModels!![position]
                 Log.e("Anirudh", "Clicked$notification $time $date")
                 this.startActivity(Intent(this, DisplayDischargeDataActivity::class.java))
-            }
+        }
     }
 
 

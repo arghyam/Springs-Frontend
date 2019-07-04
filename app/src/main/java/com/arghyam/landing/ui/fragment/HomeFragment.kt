@@ -44,9 +44,13 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
+import androidx.appcompat.app.AppCompatActivity
 import com.arghyam.commons.utils.Constants.NOTIFICATION_COUNT
+import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.fragment_home.progressBar
 import kotlinx.android.synthetic.main.custom_toolbar.*
+import kotlinx.android.synthetic.main.custom_toolbar.view.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 
 
 /**
@@ -83,13 +87,13 @@ class HomeFragment : Fragment() {
             badge.visibility = VISIBLE
             notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
-
         }
         notification_bell.setOnClickListener {
             Log.e("Fragment","bell clicked")
+            activity?.startActivity(Intent(activity, NotificationActivity::class.java))
+
         }
     }
-
     private fun initNotifications() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
             bell.visibility = GONE
@@ -193,6 +197,8 @@ class HomeFragment : Fragment() {
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+
+
         if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
             SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
         }

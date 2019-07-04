@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
@@ -18,12 +18,6 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 
 import com.arghyam.R
-import com.arghyam.additionalDetails.model.AdditionalDetailsModel
-import com.arghyam.additionalDetails.model.RequestAdditionalDetailsDataModel
-import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
-import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
-import com.arghyam.admin.model.AllUsersDataModel
-import com.arghyam.admin.ui.User
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
@@ -43,11 +37,10 @@ import com.arghyam.myactivity.viewmodel.MyActivitiesViewModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_favourites.*
+import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.fragment_my_activity.notauser
 import kotlinx.android.synthetic.main.fragment_my_activity.toolbar
-import kotlinx.android.synthetic.main.custom_toolbar.*
 import javax.inject.Inject
 
 
@@ -72,30 +65,30 @@ class MyActivityFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     private fun initbell(notificationCount: Int) {
         if (notificationCount > 0) {
-//            badge.visibility = VISIBLE
-//            notification_count.visibility = VISIBLE
-//
-//            notification_count.text = notificationCount.toString()
-//        }
-//        bell.setOnClickListener {
-//            Log.e("Anirudh", "bell clicked")
-//            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+            badge.visibility = View.VISIBLE
+            notification_count.visibility = View.VISIBLE
+            notification_count.text = notificationCount.toString()
+        }
+        bell.setOnClickListener {
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
         }
     }
 
     private fun initNotifications() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == "") {
-            notauser.visibility = VISIBLE
+            notauser.visibility = View.VISIBLE
             myActivityRecyclerView.visibility = GONE
-//            bell.visibility = GONE
+            bell.visibility = GONE
             initsigninbutton()
         } else {
             notauser.visibility = GONE
-//            bell.visibility = VISIBLE
+            bell.visibility = View.VISIBLE
         }
     }
 
@@ -130,7 +123,7 @@ class MyActivityFragment : Fragment() {
 
     private fun initRecyclerView(responseData: AllActivitiesModel) {
         if (responseData.activities.size == 0) {
-            no_activities.visibility = VISIBLE
+            no_activities.visibility = View.VISIBLE
         } else {
             myActivityRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
             val adapter = activity?.let { MyActivityAdapter(myActivityList, it) }
