@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
+import android.view.View.*
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.fragment_favourites.*
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.fragment_my_activity.notauser
 import kotlinx.android.synthetic.main.fragment_my_activity.toolbar
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.custom_toolbar.*
 import javax.inject.Inject
 
 
@@ -72,29 +72,30 @@ class MyActivityFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     private fun initbell(notificationCount: Int) {
         if (notificationCount > 0) {
-            badge.visibility = View.VISIBLE
-            notification_count.text = notificationCount.toString()
-        }
-        bell.setOnClickListener {
-            Log.e("Anirudh", "bell clicked")
-            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+//            badge.visibility = VISIBLE
+//            notification_count.visibility = VISIBLE
+//
+//            notification_count.text = notificationCount.toString()
+//        }
+//        bell.setOnClickListener {
+//            Log.e("Anirudh", "bell clicked")
+//            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
         }
     }
 
     private fun initNotifications() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == "") {
-            notauser.visibility = View.VISIBLE
+            notauser.visibility = VISIBLE
             myActivityRecyclerView.visibility = GONE
-            bell.visibility = GONE
+//            bell.visibility = GONE
             initsigninbutton()
         } else {
             notauser.visibility = GONE
-            bell.visibility = View.VISIBLE
+//            bell.visibility = VISIBLE
         }
     }
 
@@ -129,7 +130,7 @@ class MyActivityFragment : Fragment() {
 
     private fun initRecyclerView(responseData: AllActivitiesModel) {
         if (responseData.activities.size == 0) {
-            no_activities.visibility = View.VISIBLE
+            no_activities.visibility = VISIBLE
         } else {
             myActivityRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
             val adapter = activity?.let { MyActivityAdapter(myActivityList, it) }
@@ -151,6 +152,9 @@ class MyActivityFragment : Fragment() {
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
+            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
+        }
     }
 
     private fun initRepository() {

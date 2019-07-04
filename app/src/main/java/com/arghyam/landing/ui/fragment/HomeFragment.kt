@@ -44,10 +44,10 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
-import androidx.appcompat.widget.Toolbar
-import com.arghyam.notification.ui.activity.NotificationActivity
+import com.arghyam.commons.utils.Constants.NOTIFICATION_COUNT
 import kotlinx.android.synthetic.main.fragment_home.progressBar
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.custom_toolbar.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -65,8 +65,6 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
     private var firstCallMade: Boolean = false
-
-
     /**
      * Initialize newInstance for passing paameters
      */
@@ -80,15 +78,15 @@ class HomeFragment : Fragment() {
 
     }
 
-
     private fun initbell(notificationCount:Int) {
         if(notificationCount>0){
-            badge.visibility = View.VISIBLE
+            badge.visibility = VISIBLE
+            notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
+
         }
-        bell.setOnClickListener{
-            Log.e("Anirudh", "bell clicked")
-            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+        notification_bell.setOnClickListener {
+            Log.e("Fragment","bell clicked")
         }
     }
 
@@ -193,10 +191,12 @@ class HomeFragment : Fragment() {
     }
 
 
-
-
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
+        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
+            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
+        }
+
     }
 
     private fun initApiCall() {

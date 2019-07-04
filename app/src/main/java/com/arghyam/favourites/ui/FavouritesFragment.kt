@@ -39,7 +39,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import kotlinx.android.synthetic.main.fragment_favourites.toolbar
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.custom_toolbar.*
 import javax.inject.Inject
 
 
@@ -90,14 +90,16 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initbell(notificationCount:Int) {
-        if(notificationCount>0){
-            badge.visibility = View.VISIBLE
-            notification_count.text = notificationCount.toString()
-        }
-        bell.setOnClickListener{
-            Log.e("Anirudh", "bell clicked")
-            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
-        }
+//        if(notificationCount>0){
+//            badge.visibility = VISIBLE
+//            notification_count.visibility = VISIBLE
+//
+//            notification_count.text = notificationCount.toString()
+//        }
+//        bell.setOnClickListener{
+//            Log.e("Anirudh", "bell clicked")
+//            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
+//        }
     }
 
     private fun init() {
@@ -122,12 +124,12 @@ class FavouritesFragment : Fragment() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
             notauser.visibility = VISIBLE
             scrollView.visibility = GONE
-            bell.visibility = GONE
+//            bell.visibility = GONE
             initsigninbutton()
         }
         else{
             notauser.visibility = GONE
-            bell.visibility = VISIBLE
+//            bell.visibility = VISIBLE
         }
     }
 
@@ -177,7 +179,7 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initApiCall() {
-        progressBar.visibility = View.VISIBLE
+        progressBar.visibility = VISIBLE
         getAllSpringRequest()
         initGetAllSpring()
     }
@@ -186,6 +188,9 @@ class FavouritesFragment : Fragment() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
         val toolbar = toolbar as Toolbar
         toolbar.title = "Favourites"
+        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
+            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
+        }
     }
 
     private fun getAllSpringRequest() {
@@ -219,7 +224,7 @@ class FavouritesFragment : Fragment() {
                     if (maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
-                        progressBar.visibility = View.VISIBLE
+                        progressBar.visibility = VISIBLE
                         getAllSpringRequest()
 //                        initApiCall()
                     }

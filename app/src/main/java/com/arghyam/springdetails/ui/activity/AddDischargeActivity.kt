@@ -31,6 +31,7 @@ import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.CREATE_DISCHARGE_DATA
+import com.arghyam.commons.utils.Constants.NOTIFICATION_COUNT
 import com.arghyam.commons.utils.Constants.STOP_WATCH_TIMER_RESULT_CODE
 import com.arghyam.commons.utils.DecimalDigitsInputFilter
 import com.arghyam.commons.utils.SharedPreferenceFactory
@@ -294,7 +295,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun initClicks() {
         initStopWatchButton()
         initViewAttempts()
-        initCreateSpringSubmit()
+        initAddDischargeDataSubmit()
         initUploadImageClick()
 
     }
@@ -442,7 +443,7 @@ class AddDischargeActivity : AppCompatActivity() {
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
     }
 
-    private fun initCreateSpringSubmit() {
+    private fun initAddDischargeDataSubmit() {
 
         submit_discharge_data.setOnClickListener {
             assignDischargeData()
@@ -501,6 +502,12 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
+        SharedPreferenceFactory(this).getInt(NOTIFICATION_COUNT)?.let {
+            SharedPreferenceFactory(this@AddDischargeActivity).setInt(NOTIFICATION_COUNT,
+                it+1
+            )
+        }
+
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
         intent.putExtra("springName", springName)

@@ -6,7 +6,7 @@
              tools:context=".more.ui.MoreFragment">
 
     <include android:id="@+id/toolbar"
-             layout="@layout/toolbar"/>
+             layout="@layout/custom_toolbar"/>
 
     <!-- TODO: Update blank fragment layout -->
 
