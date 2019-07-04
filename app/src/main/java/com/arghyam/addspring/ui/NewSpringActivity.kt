@@ -37,8 +37,10 @@ import com.arghyam.addspring.model.CreateSpringResponseObject
 import com.arghyam.addspring.model.RequestSpringDataModel
 import com.arghyam.addspring.model.SpringModel
 import com.arghyam.addspring.repository.CreateSpringRepository
+import com.arghyam.addspring.repository.GetSpringOptionalRepository
 import com.arghyam.addspring.repository.UploadImageRepository
 import com.arghyam.addspring.viewmodel.CreateSpringViewModel
+import com.arghyam.addspring.viewmodel.GetSpringOptionalViewModel
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
@@ -52,6 +54,10 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.model.AllSpringDataModel
+import com.arghyam.landing.model.AllSpringDetailsModel
+import com.arghyam.landing.model.AllSpringModel
+import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -66,7 +72,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
-import kotlinx.android.synthetic.main.list_image_uploader.*
 import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -87,8 +92,14 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     @Inject
     lateinit var createSpringRepository: CreateSpringRepository
 
+    private var getSpringOptionalViewModel: GetSpringOptionalViewModel? = null
+
+
     @Inject
     lateinit var uploadImageRepository: UploadImageRepository
+
+    @Inject
+    lateinit var getSpringOptionalRepository: GetSpringOptionalRepository
 
     private var createSpringViewModel: CreateSpringViewModel? = null
 
@@ -98,6 +109,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var springName: String? = null
 
     private var photoFile: File? = null
+
+    private var coordinateList = ArrayList<AllSpringDataModel>()
 
     val REQUEST_CODE = 4
     private val TAG = "MainActivity"
@@ -156,6 +169,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocation()
         initLocationClick()
         initRepository()
+        getSpringOptionalRequest()
+        initGetAllSpring()
         initUploadImageClick()
         initApiResponseCalls()
         initUploadImageApis()
@@ -166,6 +181,55 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun initListener() {
         isTextWritten()
         initClick()
+    }
+
+    private fun initGetAllSpring() {
+        getSpringOptionalViewModel?.getSpringOptionalResponse()?.observe(this, Observer {
+
+            saveGetSpringsOptionalData(it)
+//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
+//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
+//            }
+        })
+        getSpringOptionalViewModel?.getSpringOptionalError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (getSpringOptionalViewModel?.getSpringOptionalError()?.hasObservers()!!) {
+                getSpringOptionalViewModel?.getSpringOptionalError()?.removeObservers(this)
+            }
+        })
+    }
+
+    private fun saveGetSpringsOptionalData(responseModel: ResponseModel) {
+
+        if (responseModel.response.responseCode == "200") {
+
+            Log.d("success_i", "yes")
+
+
+            var responseSpringData: AllSpringDetailsModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<AllSpringDetailsModel>() {}.type
+            )
+
+            Log.d("saveOptionalData--", responseSpringData.toString())
+
+            getListOfCordinates(responseSpringData)
+
+        }
+
+    }
+
+    private fun getListOfCordinates(responseSpringData: AllSpringDetailsModel) {
+
+        coordinateList.addAll(responseSpringData.springs)
+
+        for (cordinates in coordinateList) {
+
+            Log.d("response--latitude", cordinates.latitude.toString())
+            Log.d("response--longitude", cordinates.longitude.toString())
+
+        }
+
     }
 
     private fun initDefaultLocation() {
@@ -297,6 +361,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             }
         }
     }
+
 
     private fun validateListener(): Boolean {
         return springNameListener() && imageUploadListener() && ownershipTypeListener() && locationListener()
@@ -644,7 +709,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 imageList[imageuploadcount].uploadPercentage = progress
                 imageUploaderAdapter.notifyDataSetChanged()
             }
-        });
+        })
     }
 
     inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
@@ -706,11 +771,34 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     }
 
+    private fun getSpringOptionalRequest() {
+        var getAllSpringObject = RequestModel(
+            id = Constants.GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = GetAllSpringsModel(
+                springs = AllSpringModel(
+                    type = "springs"
+                )
+            )
+        )
+        getSpringOptionalViewModel?.springOptionalApi(this, getAllSpringObject)
+
+    }
+
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
         createSpringViewModel?.setCreateSpringRepository(createSpringRepository)
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
+
+        getSpringOptionalViewModel = ViewModelProviders.of(this).get(GetSpringOptionalViewModel::class.java)
+        getSpringOptionalViewModel?.setSpringOptionalRepository(getSpringOptionalRepository)
     }
 
     private fun hideSoftKeyboard() {
