@@ -3,6 +3,7 @@ package com.arghyam.addspring.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -112,6 +113,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private var coordinateList = ArrayList<AllSpringDataModel>()
 
+
     val REQUEST_CODE = 4
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -218,19 +220,27 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
 
     }
+    val latitude_values = ArrayList<Double>()
+    val longitude_values = ArrayList<Double>()
 
     private fun getListOfCordinates(responseSpringData: AllSpringDetailsModel) {
 
         coordinateList.addAll(responseSpringData.springs)
+        Log.d("coordinateLis--t",coordinateList.toString())
 
         for (cordinates in coordinateList) {
-
-            Log.d("response--latitude", cordinates.latitude.toString())
-            Log.d("response--longitude", cordinates.longitude.toString())
-
+            if(!latitude_values.contains(ArghyamUtils().round(cordinates.latitude,3))){
+                latitude_values.add(ArghyamUtils().round(cordinates.latitude,3))
+            }
+            if(!longitude_values.contains(ArghyamUtils().round(cordinates.longitude,3))){
+                longitude_values.add(ArghyamUtils().round(cordinates.longitude,3))
+            }
         }
+        Log.d("response--latitude", latitude_values.toString())
+        Log.d("response--longitude", longitude_values.toString())
 
     }
+
 
     private fun initDefaultLocation() {
         tv_reposition.text = "Click on to reposition your gps"
@@ -339,6 +349,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun initCreateSpringSubmit() {
         add_spring_submit.setOnClickListener {
+
+
+
             if (spring_name.text == null || spring_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please enter the spring name")
             } else if (spring_name.text.toString().trim().length < 3) {
@@ -354,7 +367,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
-            } else {
+            }
+            else if (checkDistance()){
+                showDialogbox()
+            }
+            else {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
@@ -362,6 +379,61 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
+    private fun checkDistance(): Boolean {
+
+        var value = false
+        if (mLocation != null) {
+
+            Log.e("Anirudh", "lat"+mLocation?.latitude.toString())
+            Log.e("Anirudh", "long"+ mLocation?.longitude.toString())
+
+
+            var currentLat = mLocation!!.latitude
+            var currentLon = mLocation!!.longitude
+
+            var loc1 = Location("")
+            loc1.latitude = currentLat
+            loc1.longitude = currentLon
+
+            var existingLat = mLocation!!.latitude
+            var existingLon = mLocation!!.longitude
+
+            val loc2 =  Location("")
+            loc2.latitude = existingLat
+            loc2.longitude = existingLon
+
+            val distanceInMeters = loc1.distanceTo(loc2)
+            Log.e("Anirudh", "distance$distanceInMeters")
+
+
+            if(distanceInMeters<=50){
+                Log.e("Anirudh","less than 50" )
+                value = true
+            }
+            else
+                Log.e("Anirudh",distanceInMeters.toString())
+        }
+        Log.e("Anirudh", value.toString())
+        return value
+    }
+
+    private fun showDialogbox() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("A spring already exists in close proximity. Are you sure it is not the same spring?")
+
+            .setPositiveButton("YES") { dialog, which ->
+                dialog.cancel()
+                createSpringOnClick()
+                ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
+            }
+            .setNegativeButton("CANCEL") { dialog, which ->
+                this.finish()
+                dialog.cancel()
+            }
+        val alert = dialogBuilder.create()
+        alert.setTitle("Are you sure ?")
+        alert.show()
+    }
 
     private fun validateListener(): Boolean {
         return springNameListener() && imageUploadListener() && ownershipTypeListener() && locationListener()
@@ -384,6 +456,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun createSpringOnClick() {
+
+
         var createSpringObject = RequestModel(
             id = CREATE_SPRING_ID,
             ver = BuildConfig.VER,
@@ -732,7 +806,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             //set result in textView
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
-            imageRecyclerView[imageuploadcount].upload_status.text = ""
+            imageRecyclerView[imageuploadcount].upload_status.text = "Uploaded"
 //            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
 
         }

@@ -11,6 +11,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -135,10 +136,11 @@ class MoreFragment : Fragment() {
 
     private fun showDialog(it: View?) {
 
+//        ArghyamUtils().AlertBox(activity!!.applicationContext,activity as AppCompatActivity,"Are you sure ?","Do you want to Sign Out?",LoginActivity::class.java)
         val dialogBuilder = AlertDialog.Builder(context!!)
-        dialogBuilder.setMessage("")
+        dialogBuilder.setMessage("Do you want to sign out")
 
-            .setPositiveButton("YES", DialogInterface.OnClickListener { dialog, which ->
+            .setPositiveButton("YES") { dialog, which ->
 
                 if (SharedPreferenceFactory(activity!!.applicationContext).getString(ACCESS_TOKEN) != "") {
                     SharedPreferenceFactory(activity!!.applicationContext).setString(ACCESS_TOKEN, "")
@@ -146,12 +148,12 @@ class MoreFragment : Fragment() {
                 startActivity(Intent(activity!!, LoginActivity::class.java))
                 activity!!.finish()
                 dialog.cancel()
-            })
-            .setNegativeButton("CANCEL", DialogInterface.OnClickListener { dialog, which ->
+            }
+            .setNegativeButton("CANCEL") { dialog, which ->
                 dialog.cancel()
-            })
+            }
         val alert = dialogBuilder.create()
-        alert.setTitle("Are you sure do you want to sign out?")
+        alert.setTitle("Are you sure ?")
         alert.show()
 
 
