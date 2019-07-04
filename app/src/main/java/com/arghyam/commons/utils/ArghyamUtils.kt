@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat.startActivity
 import com.androidadvance.topsnackbar.TSnackbar
 import com.arghyam.R
 import com.arghyam.iam.ui.LoginActivity
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,6 +60,14 @@ class ArghyamUtils {
         intent.data = uri
         context.startActivityForResult(intent, Constants.PERMISSION_LOCATION_RESULT_CODE)
     }
+
+   fun round(value: Double, places:Int) : Double{
+    if (places < 0) throw IllegalArgumentException();
+
+    var bd = BigDecimal(value);
+    bd = bd.setScale(places, RoundingMode.HALF_UP);
+    return bd.toDouble();
+}
 
     fun turnOnLocation(activity: Activity) {
         if (googleApiClient == null) {
