@@ -380,8 +380,14 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun checkDistance(): Boolean {
 
         if (mLocation != null && longitude_values !=null && latitude_values!=null ) {
+            Log.e("NewSpringActivity", latitude_values.size.toString())
 
-            for (i in 0 until  latitude_values.size) {
+            var compareLength: Int = if(longitude_values.size>latitude_values.size)
+                latitude_values.size
+            else
+                longitude_values.size
+
+            for (i in 0 until  compareLength) {
 
                 var currentLat = mLocation!!.latitude
                 var currentLon = mLocation!!.longitude
@@ -390,12 +396,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 loc1.latitude = currentLat
                 loc1.longitude = currentLon
 
-                var existingLat = latitude_values
-                var existingLon = longitude_values
-
                 val loc2 = Location("")
-                loc2.latitude = existingLat[i]
-                loc2.longitude = existingLon[i]
+                Log.e("NewSpringActivity",i.toString()+" "+loc2)
+                loc2.latitude = latitude_values[i]
+                loc2.longitude = longitude_values[i]
 
                 val distanceInMeters = loc1.distanceTo(loc2)
 
