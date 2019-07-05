@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
@@ -17,6 +18,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +54,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import kotlinx.android.synthetic.main.content_new_spring.*
+import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -71,6 +75,7 @@ class AddDischargeActivity : AppCompatActivity() {
     lateinit var imageUploaderAdapter: ImageUploaderAdapter
     var count: Int = 1
     private var goBack: Boolean = false
+    var imageuploadcount: Int = -1
 
     private lateinit var uploadImageViewModel: UploadImageViewModel
 
@@ -227,6 +232,8 @@ class AddDischargeActivity : AppCompatActivity() {
 
         override fun onRemove(position: Int) {
             onImageRemove(position)
+            imageuploadcount--
+
         }
     }
 
@@ -236,8 +243,29 @@ class AddDischargeActivity : AppCompatActivity() {
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
         updateSubmitColor()
         imageCount--
+        onremoved(position)
+    }
+
+    private fun onremoved(position: Int) {
+        imageDischargeRecyclerView[position].progress.visibility = VISIBLE
+        imageDischargeRecyclerView[position].image_loader.visibility = GONE
+        imageDischargeRecyclerView[position].upload_status.text = "uploading"
+        if (position == 0 && imageList.size > 0) {
+            imageDischargeRecyclerView[position].progress.visibility = GONE
+            imageDischargeRecyclerView[position].image_loader.visibility = VISIBLE
+            imageDischargeRecyclerView[position].upload_status.text = ""
+
+            imageDischargeRecyclerView[position + 1].progress.visibility = VISIBLE
+            imageDischargeRecyclerView[position + 1].image_loader.visibility = GONE
+            imageDischargeRecyclerView[position + 1].upload_status.text = "uploading"
+
+            imageUploaderAdapter.notifyDataSetChanged()
+        }
+        imageUploaderAdapter.notifyItemRemoved(position)
+
 
     }
+
 
     //    override fun onSupportNavigateUp(): Boolean {
 //
@@ -410,17 +438,55 @@ class AddDischargeActivity : AppCompatActivity() {
         return body
     }
 
+    var body: MultipartBody.Part? = null
     private fun makeUploadApiCall(bitmap: Bitmap?) {
-        var body: MultipartBody.Part? = getMultipartBodyFromBitmap(bitmap)
-        if (null != body) {
-            uploadImageViewModel.uploadImageApi(this@AddDischargeActivity, body)
+        body = getMultipartBodyFromBitmap(bitmap)
+        MyAsyncTask().execute()
+
+    }
+
+    private fun updateProgressbar(progress: Int) {
+        runOnUiThread(object : Runnable {
+            override fun run() {
+                imageList[imageuploadcount].uploadPercentage = progress
+                imageUploaderAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            var a = 0
+            uploadImageViewModel.uploadImageApi(this@AddDischargeActivity, body!!)
+            Thread.sleep(100)
+            while (a < 100) {
+                Thread.sleep(10)
+                updateProgressbar(++a)
+            }
+
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            updateProgressbar(100)
+            //set result in textView
+            imageDischargeRecyclerView[imageuploadcount].progress.visibility = GONE
+            imageDischargeRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
+            imageDischargeRecyclerView[imageuploadcount].upload_status.text = ""
+//            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
+
         }
     }
+
 
     private fun addBitmapToList(bitmap: Bitmap?) {
         imageList.add(ImageEntity(count, bitmap!!, "Image" + String.format("%04d", count) + ".jpg", 0))
         imageUploaderAdapter.notifyDataSetChanged()
         count++
+        imageuploadcount++
+
     }
 
     private fun initTimerData() {
