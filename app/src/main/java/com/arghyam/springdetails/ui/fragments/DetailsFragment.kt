@@ -121,7 +121,7 @@ class DetailsFragment : Fragment() {
                 object : TypeToken<AdditionalDetailsResponse>() {}.type
             )
             if (additionalDetailsResponse.springCode != null) {
-                Log.e("Anirudh", additionalDetailsResponse.numberOfHousehold.toString())
+                Log.e("DetailsFragment", additionalDetailsResponse.numberOfHousehold.toString())
                 seasonality = additionalDetailsResponse.seasonality
                 selectedMonthNames = ArghyamUtils().convertToNames(additionalDetailsResponse.months)
                 waterUse = additionalDetailsResponse.usage
@@ -341,7 +341,7 @@ class DetailsFragment : Fragment() {
     private fun setupAutoPager() {
         val handler = Handler()
 
-        Log.e("Anirudh", currentPage.toString() + " " + imagelist.size)
+        Log.e("DetailsFragment", currentPage.toString() + " " + imagelist.size)
         val update = Runnable {
             if (currentPage == Integer.MAX_VALUE) {
                 currentPage = 0
@@ -354,14 +354,14 @@ class DetailsFragment : Fragment() {
         left_scroll.setOnClickListener {
             if (currentPage >= 1)
                 --currentPage
-            Log.e("Anirudh", currentPage.toString())
+            Log.e("DetailsFragment", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
 
         }
         right_scroll.setOnClickListener {
             if (currentPage < imagelist.size - 1)
                 ++currentPage
-            Log.e("Anirudh", currentPage.toString())
+            Log.e("DetailsFragment", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
         }
 
@@ -382,7 +382,7 @@ class DetailsFragment : Fragment() {
         while (i >= 0) {
             for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size) {
                 if (MAX_IMAGES > 0) {
-                    Log.e("Anirudh", "images added" + MAX_IMAGES + "   j" + j + "  i" + i)
+                    Log.e("DetailsFragment", "images added" + MAX_IMAGES + "   j" + j + "  i" + i)
                     imagelist.add(springProfileResponse.extraInformation.dischargeData[i].images[j])
                     MAX_IMAGES--
                 }
@@ -392,7 +392,7 @@ class DetailsFragment : Fragment() {
         if (MAX_IMAGES > 0) {
             for (i in 0 until springProfileResponse.images.size) {
                 imagelist.add(springProfileResponse.images[i])
-                Log.e("Anirudh", "images added response " + i)
+                Log.e("DetailsFragment", "images added response " + i)
                 MAX_IMAGES--
             }
         }

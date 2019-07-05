@@ -398,16 +398,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 loc2.longitude = existingLon[i]
 
                 val distanceInMeters = loc1.distanceTo(loc2)
-                Log.e("Anirudh", "distance$distanceInMeters")
-
 
                 if (distanceInMeters <= 50) {
-
-                    Log.e("Anirudh", distanceInMeters.toString() + "    "+loc1.latitude +"   "+loc1.longitude +  "    "+loc2.latitude+"    "+loc2.longitude)
-                    Log.e("Anirudh", "less than 50")
                     return true
-                } else
-                    Log.e("Anirudh", distanceInMeters.toString())
+                }
             }
         }
         return false
@@ -452,7 +446,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun createSpringOnClick() {
-
+        Log.e("NewSpringActivity","  imagelist size "+ imageList.size)
 
         var createSpringObject = RequestModel(
             id = CREATE_SPRING_ID,
@@ -477,9 +471,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList,
                     userId = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
+
                 )
             )
         )
+        Log.e("NewSpringActivity","  imagelist size "+ imageList.size)
+
         createSpringViewModel?.createSpringApi(this, createSpringObject)
 
     }
@@ -680,7 +677,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun onImageRemove(position: Int) {
+        Log.e("NewSpringActivity",position.toString() + "   "+ imageList.size)
         imageList.removeAt(position)
+        imagesList.removeAt(position)
+        Log.e("NewSpringActivity",position.toString() + "   "+ imageList.size)
+
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
         isvalid()
@@ -806,8 +807,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             //set result in textView
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
-            imageRecyclerView[imageuploadcount].upload_status.text = "Uploaded"
-//            Log.e("Anirudh imgupload size f", imageRecyclerView.size.toString())
+            imageRecyclerView[imageuploadcount].upload_status.text = ""
+//            Log.e("NewSpringActivity imgupload size f", imageRecyclerView.size.toString())
 
         }
     }
