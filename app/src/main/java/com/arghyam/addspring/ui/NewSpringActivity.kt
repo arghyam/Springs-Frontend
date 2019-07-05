@@ -689,6 +689,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageRecyclerView[position].progress.visibility = VISIBLE
         imageRecyclerView[position].image_loader.visibility = GONE
         imageRecyclerView[position].upload_status.text = "uploading"
+
+        imageUploaderAdapter.notifyItemRemoved(position)
+        imageUploaderAdapter.notifyItemRangeChanged(position,imageList.size)
+
         if (position == 0 && imageList.size > 0) {
             imageRecyclerView[position].progress.visibility = GONE
             imageRecyclerView[position].image_loader.visibility = VISIBLE
@@ -700,7 +704,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             imageUploaderAdapter.notifyDataSetChanged()
         }
-        imageUploaderAdapter.notifyItemRemoved(position)
+
 
 
     }
