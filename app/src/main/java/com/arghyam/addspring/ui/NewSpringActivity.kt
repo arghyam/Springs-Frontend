@@ -677,11 +677,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun onImageRemove(position: Int) {
-        Log.e("NewSpringActivity",position.toString() + "   "+ imageList.size)
         imageList.removeAt(position)
         imagesList.removeAt(position)
-        Log.e("NewSpringActivity",position.toString() + "   "+ imageList.size)
-
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
         isvalid()
