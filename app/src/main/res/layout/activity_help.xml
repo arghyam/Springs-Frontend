@@ -8,7 +8,7 @@
         tools:context=".help.ui.HelpActivity">
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/custom_toolbar"/>
 
     <include layout="@layout/content_help"/>
 

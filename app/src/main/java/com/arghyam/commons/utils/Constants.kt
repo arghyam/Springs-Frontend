@@ -3,6 +3,7 @@ package com.arghyam.commons.utils
 object Constants {
     val USER_ID: String = "userId"
     val USER_PHONE: String = "userPhone"
+    val NOTIFICATION_COUNT : Int = 0
     var USER_NAME:String = ""
     val IS_USER_CREATED: String ="newUserCreated"
     var POOR_INTERNET_CONNECTION : String = "22"

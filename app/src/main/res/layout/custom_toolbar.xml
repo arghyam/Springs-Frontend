@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/custom_toolbar"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/app_name">
+
+    <RelativeLayout
+            android:id="@+id/notification_bell"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_gravity="right">
+        <ImageView
+                android:id="@+id/bell"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_ui_bell"/>
+        <ImageView
+                android:id="@+id/badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/bell"
+                app:srcCompat="@drawable/ic_badge"
+                android:visibility="gone"
+        />
+        <TextView
+                android:id="@+id/notification_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/badge"
+                android:layout_alignTop="@id/badge"
+                android:layout_alignEnd="@id/badge"
+                android:layout_alignBottom="@id/badge"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="1"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+        />
+    </RelativeLayout>
+</androidx.appcompat.widget.Toolbar>

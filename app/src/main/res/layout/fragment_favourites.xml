@@ -10,9 +10,13 @@
         android:orientation="vertical"
         tools:context=".landing.ui.fragment.HomeFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <include android:id="@+id/toolbar"
+                 layout="@layout/custom_toolbar"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <include android:id="@+id/toolbar"
-             layout="@layout/toolbar"/>
 
     <LinearLayout
             android:layout_width="match_parent"
