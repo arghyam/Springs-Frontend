@@ -242,6 +242,7 @@
                         android:focusable="true"
                 />
                 <Button
+                        android:id="@+id/accept_button"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
                         android:layout_height="45dp"

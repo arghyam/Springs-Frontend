@@ -21,19 +21,25 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.notification.model.ReviewerDataModel
 import com.arghyam.notification.model.ReviewerModel
 import com.arghyam.notification.repository.ReviewerDataRepository
 import com.arghyam.notification.viewmodel.ReviewerDataViewModel
-import com.arghyam.springdetails.models.*
+import com.arghyam.springdetails.models.DischargeData
+import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
+import com.arghyam.springdetails.models.SpringDetailsModel
+import com.arghyam.springdetails.models.SpringProfileResponse
 import com.arghyam.springdetails.repository.SpringDetailsRepository
-import com.arghyam.springdetails.ui.fragments.DetailsFragment
 import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_display_discharge_data.*
 import javax.inject.Inject
+import android.R.attr.fragment
+import androidx.fragment.app.Fragment
+import com.arghyam.landing.ui.activity.LandingActivity
 
 
 class DisplayDischargeDataActivity : AppCompatActivity() {
@@ -45,6 +51,8 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
     private var springDetailsViewModel: SpringDetailsViewModel? = null
 
     private var reviewerDataViewModel: ReviewerDataViewModel? = null
+
+    private var status: String = ""
 
 
     @Inject
@@ -77,7 +85,17 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private fun initClick() {
         reject_button.setOnClickListener {
-            reviewerApi()
+
+            val status = "Rejected"
+            reviewerApi(status)
+            reviewerResponse()
+
+        }
+
+        accept_button.setOnClickListener {
+
+            val status = "Accepted"
+            reviewerApi(status)
             reviewerResponse()
 
         }
@@ -96,11 +114,42 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
     }
 
     private fun reviewDataResponse(responseModel: ResponseModel) {
-         Log.d("response---data",responseModel.response.responseCode)
-        Log.d("response---data",responseModel.response.responseStatus)
+        Log.d("response---data", responseModel.response.responseCode)
+        Log.d("response---data", responseModel.response.responseStatus)
+
+        if(responseModel.response.responseCode == "451"){
+            ArghyamUtils().longToast(this, getString(R.string.reviewer_rejected))
+            gotoLandngActivity(responseModel)
+
+        }
+
+
+        if(responseModel.response.responseCode == "200"){
+            ArghyamUtils().longToast(this, getString(R.string.reviewer_accepted))
+            gotoLandngActivity(responseModel)
+
+        }
 
 //        showNotification(responseModel)
 
+    }
+
+    private fun gotoLandngActivity(responseModel: ResponseModel) {
+
+//        val fragment = HomeFragment.newInstance()
+////        addFragment(fragment)
+
+        var intent = Intent(this@DisplayDischargeDataActivity, LandingActivity::class.java)
+        startActivity(intent)
+
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
+            .addToBackStack(fragment.javaClass.simpleName)
+            .commit()
     }
 
     private fun showNotification(responseModel: ResponseModel) {
@@ -108,7 +157,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
         Log.d("notification", "notification rejected")
 
-        if(responseModel.response.responseCode == "451") {
+        if (responseModel.response.responseCode == "451") {
 
             var builder: NotificationCompat.Builder =
                 NotificationCompat.Builder(this)
@@ -140,7 +189,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     }
 
-    private fun reviewerApi() {
+    private fun reviewerApi(status: String) {
 
         var reviewerDataObject = RequestModel(
             id = REVIEWER_DATA_ID,
@@ -156,13 +205,13 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
                     osid = "1-94a05215-9b31-4309-ae4d-73b64188bd15",
                     userId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
-                    status = "Rejected"
+                    status = status
 
 
                 )
             )
         )
-
+        Log.d("status-----", status)
         reviewerDataViewModel?.reviewerApi(this, reviewerDataObject)
 
     }
