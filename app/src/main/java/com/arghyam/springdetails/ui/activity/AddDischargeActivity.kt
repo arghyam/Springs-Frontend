@@ -670,7 +670,7 @@ class AddDischargeActivity : AppCompatActivity() {
                     dischargeTime = dischargeTime,
                     volumeOfContainer = volOfContainer,
                     litresPerSecond = litresPerSec,
-                    status = "created",
+                    status = "Created",
                     seasonality = "Sessional",
                     months = months,
                     images = imagesList,

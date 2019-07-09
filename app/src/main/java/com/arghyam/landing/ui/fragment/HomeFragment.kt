@@ -364,4 +364,11 @@ class HomeFragment : Fragment() {
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
+            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
+        }
+    }
 }

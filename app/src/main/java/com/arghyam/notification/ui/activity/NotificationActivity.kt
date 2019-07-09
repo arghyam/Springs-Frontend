@@ -15,14 +15,12 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.notification.adapter.NotificationAdapter
-import com.arghyam.notification.model.NotificationDataModel
-import com.arghyam.notification.model.NotificationModel
-import com.arghyam.notification.model.NotificationResponseModel
-import com.arghyam.notification.model.notificationSpringModel
+import com.arghyam.notification.model.*
 import com.arghyam.notification.repository.NotificationRepository
 import com.arghyam.notification.viewmodel.NotificationViewModel
 import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
@@ -38,13 +36,14 @@ import javax.inject.Inject
 
 class NotificationActivity : AppCompatActivity() {
 
-    var springCode: String? = null
-    private var springName: String? = null
+    var springCode: String? = ""
+    private var springName: String? = ""
 
 
     private var adapter: NotificationAdapter? = null
     var dataModels: ArrayList<NotificationDataModel>? = ArrayList()
     private lateinit var listView: ListView
+    private var notificationList = ArrayList<AllNotificationModel>()
 
     private var springDetailsViewModel: SpringDetailsViewModel? = null
 
@@ -62,70 +61,17 @@ class NotificationActivity : AppCompatActivity() {
         initToolBar()
 
         init()
-
-//        assert(supportActionBar != null)   //null check
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-//        title = "Notifications"
-
-
-        listView = notification_list
-        Log.e("Anirudh", "activityloaded")
-        dataModels?.add(
-            NotificationDataModel(
-                "Spring discharge data was submitted by Ramesh Agarwal ",
-                "10:45 AM",
-                "Apr 21, 2019"
-            )
-        )
-        dataModels?.add(
-            NotificationDataModel(
-                "Spring discharge data was approved by Ramesh Agarwal ",
-                "11:45 AM",
-                "Apr 21, 2019"
-            )
-        )
-        dataModels?.add(
-            NotificationDataModel(
-                "Spring discharge data was rejected by Ramesh Agarwal ",
-                "1:04 PM",
-                "Apr 22, 2019"
-            )
-        )
-        dataModels?.add(
-            NotificationDataModel(
-                "Anand gave you admin access",
-                "1:44 PM",
-                "Jun 17, 2019"
-            )
-        )
-        dataModels?.add(
-            NotificationDataModel(
-                "Anand removed your reviewer access",
-                "3:44 PM",
-                "Jun 17, 2019"
-            )
-        )
-
-        adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
-        listView.adapter = adapter
-        Log.e("Anirudh", listView.adapter.toString())
-
-        listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
-                val (notification, time, date) = dataModels!![position]
-                Log.e("Anirudh", "Clicked$notification $time $date")
-                this.startActivity(Intent(this, DisplayDischargeDataActivity::class.java))
-        }
     }
 
     private fun init() {
         initComponent()
-        getSpringId()
+//        getSpringId()
         initRepository()
 
         initNotificationApi()
         initNotificationResponse()
 
-        initSpringDetails()
+//        initSpringDetails()
         initSpringDetailsResponse()
 
     }
@@ -134,9 +80,6 @@ class NotificationActivity : AppCompatActivity() {
         notificationViewModel?.getNotificationResponse()?.observe(this, Observer {
 
             saveNotificationlData(it)
-//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-//            }
         })
         notificationViewModel?.getNotifyError()?.observe(this, Observer {
             Log.e("error---", it)
@@ -150,16 +93,55 @@ class NotificationActivity : AppCompatActivity() {
         if (responseModel.response.responseCode == "200") {
             Log.d("success_i", "yes")
 
-
-            var NotificationResponseModel: NotificationResponseModel = Gson().fromJson(
+            var notificationResponseModel: NotificationResponseModel = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<NotificationResponseModel>() {}.type
             )
-
-            Log.d("NotificationeModel--", NotificationResponseModel.notifications[0].springCode)
+            for (i in 0 until notificationResponseModel.notifications.size){
+                springCode = notificationResponseModel.notifications[i].springCode
+                initSpringDetails()
+            }
+            loadNotification(notificationResponseModel)
 
         }
 
+    }
+
+    private fun loadNotification(notificationResponseModel: NotificationResponseModel) {
+        listView = notification_list
+        Log.e("Anirudh", "activityloaded")
+        if (notificationResponseModel.notifications.isNotEmpty()) {
+            Log.e("Anirudh",notificationResponseModel.notifications.size.toString())
+            for (i in 0 until notificationResponseModel.notifications.size) {
+                Log.e("Anirudh spring",notificationResponseModel.notifications[i].springCode)
+                if (notificationResponseModel.notifications[i].status == "Created" &&
+                    SharedPreferenceFactory(this@NotificationActivity)
+                        .getString(Constants.USER_ID) == "87b141ff-930e-45a0-9633-d311e11e6a8f") {
+                    springCode = notificationResponseModel.notifications[i].springCode
+                    dataModels?.add(
+                        NotificationDataModel(springName +
+                                " discharge data was submitted by " + notificationResponseModel.notifications[i].userName,
+                            "11:45 AM",
+                            "Apr 21, 2019"
+                        )
+                    )
+                    adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
+                    listView.adapter = adapter
+                    Log.e("Anirudh", listView.adapter.toString())
+
+                }
+            }
+            listView.onItemClickListener =
+                AdapterView.OnItemClickListener {adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
+                    val (notification, time, date) = dataModels!![position]
+                    Log.e("Anirudh", notificationResponseModel.notifications[position].dischargeDataOsid + "  "+ notificationResponseModel.notifications[position].springCode)
+                    val intent = Intent(this, DisplayDischargeDataActivity::class.java)
+                    intent.putExtra("DischargeOSID",notificationResponseModel.notifications[position].dischargeDataOsid)
+                    intent.putExtra("SpringCode", notificationResponseModel.notifications[position].springCode)
+                    startActivity(intent)
+                }
+
+        }
     }
 
     private fun initNotificationApi() {
@@ -199,9 +181,6 @@ class NotificationActivity : AppCompatActivity() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
             //            initDischargeAdapter(it)
             saveSpringDetailsData(it)
-            if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
-                springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
-            }
         })
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
             Log.e("stefy error", it)
@@ -220,7 +199,9 @@ class NotificationActivity : AppCompatActivity() {
             object : TypeToken<SpringProfileResponse>() {}.type
         )
 
-        Log.d("springResponse-4", ""+ springProfileResponse.springName)
+        Log.e("springResponse", ""+ springProfileResponse.springName)
+        springName = springProfileResponse.springName
+        adapter?.notifyDataSetChanged()
 //        initDischargeData(springProfileResponse)
 //        dischargeSample(springProfileResponse)
     }
@@ -228,7 +209,7 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun initSpringDetails() {
 
-//        Log.e("SpringCode", "Spring " + springCode)
+        Log.e("SpringCode", "Spring " + springCode)
         var springDetailObject = RequestModel(
             id = Constants.GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -240,7 +221,7 @@ class NotificationActivity : AppCompatActivity() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = "0hf8GI"
+                    springCode = springCode
                 )
             )
         )

@@ -6,6 +6,7 @@ class AllNotificationModel(
     var userId: String,
     var springCode: String,
     var status: String,
+    var dischargeDataOsid : String,
     var springName: String,
     var userName: String,
     var createdAt: String
