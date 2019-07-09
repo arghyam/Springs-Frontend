@@ -528,40 +528,40 @@ class AddDischargeActivity : AppCompatActivity() {
         }
     }
 
-    private fun showNotification(dischargeDataResponseObject: AddDischargeResponseModel) {
-
-        Log.d("notification added", "notification")
-
-        var builder: NotificationCompat.Builder =
-            NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_ui_bell) //set icon for notification
-                .setContentTitle("Notification") //set title of notification
-                .setContentText("Added discharge data")//this is notification message
-                .setAutoCancel(true) // makes auto cancel of notification
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
-
-        var notificationIntent = Intent(this@AddDischargeActivity, DisplayDischargeDataActivity::class.java)
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        //notification message will get at NotificationView
-        notificationIntent.putExtra("message", "Added discharge data")
-        notificationIntent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
-
-        notificationIntent.putExtra("userId", dischargeDataResponseObject.userId)
-
-
-        var pendingIntent: PendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        builder.setContentIntent(pendingIntent)
-
-
-        // Add as notification
-        var manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(0, builder.build())
-
-
-    }
+//    private fun showNotification(dischargeDataResponseObject: AddDischargeResponseModel) {
+//
+//        Log.d("notification added", "notification")
+//
+//        var builder: NotificationCompat.Builder =
+//            NotificationCompat.Builder(this)
+//                .setSmallIcon(R.drawable.ic_ui_bell) //set icon for notification
+//                .setContentTitle("Notification") //set title of notification
+//                .setContentText("Added discharge data")//this is notification message
+//                .setAutoCancel(true) // makes auto cancel of notification
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
+//
+//        var notificationIntent = Intent(this@AddDischargeActivity, DisplayDischargeDataActivity::class.java)
+//        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//        //notification message will get at NotificationView
+//        notificationIntent.putExtra("message", "Added discharge data")
+//        notificationIntent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
+//
+//        notificationIntent.putExtra("userId", dischargeDataResponseObject.userId)
+//
+//
+//        var pendingIntent: PendingIntent = PendingIntent.getActivity(
+//            this, 0, notificationIntent,
+//            PendingIntent.FLAG_UPDATE_CURRENT
+//        )
+//        builder.setContentIntent(pendingIntent)
+//
+//
+//        // Add as notification
+//        var manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        manager.notify(0, builder.build())
+//
+//
+//    }
 
     private fun showToast() {
         if (volumeOfContainer.text.toString().equals("")) {
@@ -612,8 +612,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
 
 
-
-        showNotification(dischargeDataResponseObject)
+//        showNotification(dischargeDataResponseObject)
 
 
         SharedPreferenceFactory(this).getInt(NOTIFICATION_COUNT)?.let {

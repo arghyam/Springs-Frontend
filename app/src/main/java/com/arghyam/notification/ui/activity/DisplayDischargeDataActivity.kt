@@ -64,10 +64,10 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private fun init() {
         initComponent()
-        getSpringId()
+//        getSpringId()
         initRepository()
 
-        initSpringDetails()
+//        initSpringDetails()
 
         initSpringDetailsResponse()
         initClick()
@@ -99,7 +99,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
          Log.d("response---data",responseModel.response.responseCode)
         Log.d("response---data",responseModel.response.responseStatus)
 
-        showNotification(responseModel)
+//        showNotification(responseModel)
 
     }
 
