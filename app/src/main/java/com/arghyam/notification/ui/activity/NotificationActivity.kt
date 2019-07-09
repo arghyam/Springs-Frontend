@@ -14,11 +14,17 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.model.NotificationDataModel
+import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.NotificationResponseModel
+import com.arghyam.notification.model.notificationSpringModel
+import com.arghyam.notification.repository.NotificationRepository
+import com.arghyam.notification.viewmodel.NotificationViewModel
 import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
 import com.arghyam.springdetails.models.SpringDetailsModel
 import com.arghyam.springdetails.models.SpringProfileResponse
@@ -42,7 +48,11 @@ class NotificationActivity : AppCompatActivity() {
 
     private var springDetailsViewModel: SpringDetailsViewModel? = null
 
+    private var notificationViewModel: NotificationViewModel? = null
 
+
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
     @Inject
     lateinit var springDetailsRepository: SpringDetailsRepository
 
@@ -111,8 +121,67 @@ class NotificationActivity : AppCompatActivity() {
         initComponent()
         getSpringId()
         initRepository()
+
+        initNotificationApi()
+        initNotificationResponse()
+
         initSpringDetails()
         initSpringDetailsResponse()
+
+    }
+
+    private fun initNotificationResponse() {
+        notificationViewModel?.getNotificationResponse()?.observe(this, Observer {
+
+            saveNotificationlData(it)
+//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
+//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
+//            }
+        })
+        notificationViewModel?.getNotifyError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (notificationViewModel?.getNotifyError()?.hasObservers()!!) {
+                notificationViewModel?.getNotifyError()?.removeObservers(this)
+            }
+        })
+    }
+
+    private fun saveNotificationlData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            Log.d("success_i", "yes")
+
+
+            var NotificationResponseModel: NotificationResponseModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<NotificationResponseModel>() {}.type
+            )
+
+            Log.d("NotificationeModel--", NotificationResponseModel.notifications[0].springCode)
+
+        }
+
+    }
+
+    private fun initNotificationApi() {
+        var notificationObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = notificationSpringModel(
+                notifications = NotificationModel(
+                    type =  "notifications"
+                )
+            )
+        )
+
+
+        notificationViewModel?.notificationApi(this, notificationObject)
+
 
     }
 
@@ -182,6 +251,12 @@ class NotificationActivity : AppCompatActivity() {
     private fun initRepository() {
         springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
         springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
+
+
+        notificationViewModel = ViewModelProviders.of(this).get(NotificationViewModel::class.java)
+        notificationViewModel?.setNotificationRepository(notificationRepository)
+
+
     }
 
         private fun initToolBar() {
