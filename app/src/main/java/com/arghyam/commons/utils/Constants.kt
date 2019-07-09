@@ -39,4 +39,5 @@ object Constants {
     var GPS_DISABLED = 0
     var REQUEST_IMAGE_CAPTURE : Int = 1706
     var ADDITIONAL_DATA_ID ="open-saber.registry.createAdditionalInfo"
+    var REVIEWER_DATA_ID = "open-saber.registry.reviewerData"
 }

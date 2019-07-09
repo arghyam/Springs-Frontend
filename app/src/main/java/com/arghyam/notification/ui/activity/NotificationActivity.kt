@@ -7,13 +7,24 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
+import com.arghyam.commons.utils.Constants
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
 import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.model.NotificationDataModel
+import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
+import com.arghyam.springdetails.models.SpringDetailsModel
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.notification_listview.*
 
 class NotificationActivity : AppCompatActivity() {
+
+    var springCode: String? = null
+    private var springName: String? = null
+
 
     private var adapter: NotificationAdapter? = null
     var dataModels: ArrayList<NotificationDataModel>? = ArrayList()
@@ -23,6 +34,8 @@ class NotificationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
         initToolBar()
+
+        init()
 
 //        assert(supportActionBar != null)   //null check
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -77,6 +90,49 @@ class NotificationActivity : AppCompatActivity() {
                 this.startActivity(Intent(this, DisplayDischargeDataActivity::class.java))
         }
     }
+
+    private fun init() {
+        initComponent()
+        getSpringId()
+
+
+//        initSpringDetails()
+
+    }
+
+    private fun initComponent() {
+
+
+        (application as ArghyamApplication).getmAppComponent()?.inject(this)
+    }
+
+    private fun getSpringId() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        Log.e("code", "" + springCode)
+    }
+
+//    private fun initSpringDetails() {
+//
+//        Log.e("SpringCode", "Spring " + springCode)
+//        var springDetailObject = RequestModel(
+//            id = Constants.GET_ALL_SPRINGS_ID,
+//            ver = BuildConfig.VER,
+//            ets = BuildConfig.ETS,
+//            params = Params(
+//                did = "",
+//                key = "",
+//                msgid = ""
+//            ),
+//            request = RequestSpringDetailsDataModel(
+//                springs = SpringDetailsModel(
+//                    springCode = springCode
+//                )
+//            )
+//        )
+//        springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
+//
+//    }
 
 
         private fun initToolBar() {

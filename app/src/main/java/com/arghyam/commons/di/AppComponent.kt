@@ -10,6 +10,8 @@ import com.arghyam.iam.ui.OtpVerifyActivity
 import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
+import com.arghyam.notification.ui.activity.DisplayDischargeDataActivity
+import com.arghyam.notification.ui.activity.NotificationActivity
 import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.search.ui.SearchFragment
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
@@ -53,5 +55,11 @@ interface AppComponent {
     fun inject(myActivityFragment: MyActivityFragment)
 
     fun inject (searchFragment: SearchFragment)
+
+    fun inject(notificationActivity: NotificationActivity)
+
+    fun inject(displayDischargeDataActivity: DisplayDischargeDataActivity)
+
+
 
 }

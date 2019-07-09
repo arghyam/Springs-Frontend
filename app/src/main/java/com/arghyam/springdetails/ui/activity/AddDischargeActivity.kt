@@ -2,6 +2,9 @@ package com.arghyam.springdetails.ui.activity
 
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.AsyncTask
@@ -18,6 +21,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -40,6 +44,7 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.notification.ui.activity.DisplayDischargeDataActivity
 import com.arghyam.springdetails.models.AddDischargeResponseModel
 import com.arghyam.springdetails.models.DischargeDataModel
 import com.arghyam.springdetails.models.DischargeModel
@@ -55,7 +60,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_add_discharge.*
-import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -143,8 +147,9 @@ class AddDischargeActivity : AppCompatActivity() {
         if (!volumeOfContainer.text.toString().trim().equals("")) {
 
             if (!volumeOfContainer.text.toString().trim().equals(".") &&
-                    !volumeOfContainer.text.toString().trim().equals("0") &&
-                   volumeOfContainer.text.toString().toFloat() > 0.1)
+                !volumeOfContainer.text.toString().trim().equals("0") &&
+                volumeOfContainer.text.toString().toFloat() > 0.1
+            )
 
                 return true
 
@@ -516,10 +521,46 @@ class AddDischargeActivity : AppCompatActivity() {
             if (volOfContainer != null && validateData()) {
                 addDischargeDataOnClick()
                 ArghyamUtils().longToast(this@AddDischargeActivity, "success")
+
             } else
                 showToast()
 
         }
+    }
+
+    private fun showNotification(dischargeDataResponseObject: AddDischargeResponseModel) {
+
+        Log.d("notification added", "notification")
+
+        var builder: NotificationCompat.Builder =
+            NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_ui_bell) //set icon for notification
+                .setContentTitle("Notification") //set title of notification
+                .setContentText("Added discharge data")//this is notification message
+                .setAutoCancel(true) // makes auto cancel of notification
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
+
+        var notificationIntent = Intent(this@AddDischargeActivity, DisplayDischargeDataActivity::class.java)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        //notification message will get at NotificationView
+        notificationIntent.putExtra("message", "Added discharge data")
+        notificationIntent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
+
+        notificationIntent.putExtra("userId", dischargeDataResponseObject.userId)
+
+
+        var pendingIntent: PendingIntent = PendingIntent.getActivity(
+            this, 0, notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        builder.setContentIntent(pendingIntent)
+
+
+        // Add as notification
+        var manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(0, builder.build())
+
+
     }
 
     private fun showToast() {
@@ -565,12 +606,20 @@ class AddDischargeActivity : AppCompatActivity() {
 
         springCode = dischargeDataResponseObject.springCode
         gotoSpringDetailsActivity(dischargeDataResponseObject)
+
     }
 
     private fun gotoSpringDetailsActivity(dischargeDataResponseObject: AddDischargeResponseModel) {
+
+
+
+        showNotification(dischargeDataResponseObject)
+
+
         SharedPreferenceFactory(this).getInt(NOTIFICATION_COUNT)?.let {
-            SharedPreferenceFactory(this@AddDischargeActivity).setInt(NOTIFICATION_COUNT,
-                it+1
+            SharedPreferenceFactory(this@AddDischargeActivity).setInt(
+                NOTIFICATION_COUNT,
+                it + 1
             )
         }
 
@@ -583,6 +632,8 @@ class AddDischargeActivity : AppCompatActivity() {
         finish()
     }
 
+
+
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
         if (!containerString.equals("") && !containerString.equals("."))
@@ -592,7 +643,7 @@ class AddDischargeActivity : AppCompatActivity() {
             dischargeTime.add(timerList[1].seconds.toString())
             dischargeTime.add(timerList[2].seconds.toString())
         }
-        if (!containerString.equals("") && !containerString.equals(".")  && timerList.size != 0) {
+        if (!containerString.equals("") && !containerString.equals(".") && timerList.size != 0) {
             val lps: Float = volOfContainer!! / timerList.map { item -> item.seconds }.average().toInt()
             litresPerSec.add(lps)
             litresPerSec.add(lps)
