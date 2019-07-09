@@ -780,12 +780,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun updateProgressbar(progress: Int) {
-        runOnUiThread(object : Runnable {
-            override fun run() {
-                imageList[imageuploadcount].uploadPercentage = progress
-                imageUploaderAdapter.notifyDataSetChanged()
-            }
-        })
+        runOnUiThread {
+            imageList[imageuploadcount].uploadPercentage = progress
+            imageUploaderAdapter.notifyDataSetChanged()
+        }
     }
 
     inner class MyAsyncTask : AsyncTask<Void, Int, Void>() {

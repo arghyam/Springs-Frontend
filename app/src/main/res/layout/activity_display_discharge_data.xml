@@ -55,7 +55,7 @@
                 <TextView
                         android:id="@+id/volumeOfContainer"
                         android:layout_width="wrap_content"
-                        android:text="5 Litres"
+                        android:text=""
                         android:textSize="@dimen/text_size_18"
                         android:textColor="@color/bokara_grey"
                         android:paddingTop="15dp"
@@ -99,7 +99,7 @@
                                     android:padding="@dimen/padding_20"/>
                             <TextView
                                     android:id="@+id/tv_attempt1"
-                                    android:text="01:12"
+                                    android:text=""
                                     android:gravity="right"
                                     android:textColor="@color/ship_grey"
                                     android:textSize="@dimen/test_size_16"
@@ -115,7 +115,7 @@
                                     android:padding="@dimen/padding_20"/>
                             <TextView
                                     android:id="@+id/tv_attempt2"
-                                    android:text="01:32"
+                                    android:text=""
                                     android:gravity="right"
                                     android:textColor="@color/ship_grey"
                                     android:textSize="@dimen/test_size_16"
@@ -131,7 +131,7 @@
                                     android:padding="@dimen/padding_20"/>
                             <TextView
                                     android:id="@+id/tv_attempt3"
-                                    android:text="01:10"
+                                    android:text=""
                                     android:gravity="right"
                                     android:textColor="@color/ship_grey"
                                     android:textSize="@dimen/test_size_16"
@@ -161,7 +161,7 @@
                                     android:padding="@dimen/padding_20" android:textStyle="bold"/>
                             <TextView
                                     android:id="@+id/average_time"
-                                    android:text="01:10"
+                                    android:text=""
                                     android:gravity="right"
                                     android:textColor="@color/bokara_grey"
                                     android:textSize="@dimen/test_size_16"

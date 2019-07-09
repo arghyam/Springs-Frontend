@@ -200,6 +200,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         if (isAccepted) {
             showHome()
         }
+
     }
 
 }

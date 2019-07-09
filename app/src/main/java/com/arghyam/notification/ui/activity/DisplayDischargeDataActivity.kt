@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
@@ -34,15 +36,19 @@ import com.arghyam.springdetails.repository.SpringDetailsRepository
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_display_discharge_data.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private lateinit var springCode: String
+    private lateinit var dischargeDataOsid: String
+
 
     private lateinit var userId: String
 
@@ -72,13 +78,20 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         initComponent()
 //        getSpringId()
         initRepository()
-
+        initIntent()
         initSpringDetails()
 
         initSpringDetailsResponse()
         initClick()
 
 
+    }
+
+    private fun initIntent() {
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        dischargeDataOsid = dataIntent.getStringExtra("DischargeOSID")
+        Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid)
     }
 
     private fun initClick() {
@@ -206,7 +219,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
             request = ReviewerDataModel(
                 Reviewer = ReviewerModel(
 
-                    osid = "1-94a05215-9b31-4309-ae4d-73b64188bd15",
+                    osid = dischargeDataOsid,
                     userId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
                     status = status
 
@@ -257,12 +270,48 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-//        initDischargeData(springProfileResponse)
+        initDischargeData(springProfileResponse)
         dischargeSample(springProfileResponse)
     }
 
-    private fun dischargeSample(springProfileResponse: SpringProfileResponse): ArrayList<DischargeData> {
+    private fun initDischargeData(springProfileResponse: SpringProfileResponse) {
+        for (i in 0 until springProfileResponse.extraInformation.dischargeData.size) {
+            if (springProfileResponse.extraInformation.dischargeData[i].osid == dischargeDataOsid) {
+                Log.e("DischargeData", springProfileResponse.extraInformation.dischargeData[i].osid)
+                volumeOfContainer.text =
+                    springProfileResponse.extraInformation.dischargeData[i].volumeOfContainer.toString()
+                var size = springProfileResponse.extraInformation.dischargeData[i].dischargeTime.size
+                if (size == 3) {
+                    tv_attempt1.text = ArghyamUtils().secondsToMinutes(
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toInt())
+                    tv_attempt2.text = ArghyamUtils().secondsToMinutes(
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toInt())
+                    tv_attempt3.text = ArghyamUtils().secondsToMinutes(
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toInt())
+                    average_time.text =
+                        ArghyamUtils().secondsToMinutes(
+                            (springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toInt() +
+                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toInt() +
+                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toInt())/3
+                        )
+                }
 
+                if (springProfileResponse.extraInformation.dischargeData[i].images.size == 2) {
+                    Glide.with(this).load(springProfileResponse.extraInformation.dischargeData[i].images[0])
+                        .into(discharge_image1)
+                    Glide.with(this).load(springProfileResponse.extraInformation.dischargeData[i].images[1])
+                        .into(discharge_image2)
+                }
+                else {
+                    Glide.with(this).load(springProfileResponse.extraInformation.dischargeData[i].images[0])
+                        .into(discharge_image1)
+                    discharge_image2.visibility = GONE
+                }
+            }
+        }
+    }
+
+    private fun dischargeSample(springProfileResponse: SpringProfileResponse): ArrayList<DischargeData> {
         Log.d("dischargeData--", springProfileResponse.extraInformation.dischargeData.toString())
         return springProfileResponse.extraInformation.dischargeData
     }
@@ -282,7 +331,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = "0hf8GI"
+                    springCode = springCode
                 )
             )
         )
