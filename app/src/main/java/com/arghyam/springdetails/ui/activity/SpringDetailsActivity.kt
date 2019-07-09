@@ -42,15 +42,21 @@ class SpringDetailsActivity : AppCompatActivity() {
         init()
     }
 
-    private fun getSpringId() {
+    private fun checkForUpcoming(): Boolean {
         var dataIntent: Intent = intent
-        springCode = dataIntent.getStringExtra("SpringCode")
-        springName = dataIntent.getStringExtra("springName")
-        Log.e("Code", springCode)
+        return intent.getBooleanExtra("flag", false)
+    }
+
+    private fun getSpringId() {
+            var dataIntent: Intent = intent
+            springCode = dataIntent.getStringExtra("SpringCode")
+            springName = dataIntent.getStringExtra("springName")
+            Log.e("Code", springCode)
     }
 
     private fun init() {
         initComponent()
+
         getSpringId()
         initRepository()
         initSpringDetails()

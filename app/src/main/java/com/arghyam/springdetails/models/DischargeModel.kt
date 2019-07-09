@@ -10,4 +10,4 @@ data class DischargeModel(
 
 
 
-data class DischargeDataModal (val date: String, val discharge: String, val submitted: String, val isVerified: Boolean)
+data class DischargeDataModal (val date: String, val discharge: String, val submitted: String, val status: String)

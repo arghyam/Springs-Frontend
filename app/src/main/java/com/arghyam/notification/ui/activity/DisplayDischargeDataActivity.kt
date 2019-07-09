@@ -21,7 +21,7 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
-import com.arghyam.landing.ui.fragment.HomeFragment
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.notification.model.ReviewerDataModel
 import com.arghyam.notification.model.ReviewerModel
 import com.arghyam.notification.repository.ReviewerDataRepository
@@ -31,15 +31,13 @@ import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
 import com.arghyam.springdetails.models.SpringDetailsModel
 import com.arghyam.springdetails.models.SpringProfileResponse
 import com.arghyam.springdetails.repository.SpringDetailsRepository
+import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_display_discharge_data.*
 import javax.inject.Inject
-import android.R.attr.fragment
-import androidx.fragment.app.Fragment
-import com.arghyam.landing.ui.activity.LandingActivity
 
 
 class DisplayDischargeDataActivity : AppCompatActivity() {
@@ -117,16 +115,18 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         Log.d("response---data", responseModel.response.responseCode)
         Log.d("response---data", responseModel.response.responseStatus)
 
-        if(responseModel.response.responseCode == "451"){
+        if (responseModel.response.responseCode == "451") {
             ArghyamUtils().longToast(this, getString(R.string.reviewer_rejected))
             gotoLandngActivity(responseModel)
 
         }
 
 
-        if(responseModel.response.responseCode == "200"){
+        if (responseModel.response.responseCode == "200") {
             ArghyamUtils().longToast(this, getString(R.string.reviewer_accepted))
+//            gotoDischargeData(responseModel)
             gotoLandngActivity(responseModel)
+
 
         }
 
@@ -134,22 +134,25 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     }
 
-    private fun gotoLandngActivity(responseModel: ResponseModel) {
+    private fun gotoDischargeData(responseModel: ResponseModel) {
 
-//        val fragment = HomeFragment.newInstance()
-////        addFragment(fragment)
+        val fragment = DischargeDataFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.notification_content, fragment).commit()
+
+//        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
+//        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java)
+//        intent.putExtra("SpringCode", "")
+//        intent.putExtra("springName", "")
+//        startActivity(intent)
+//        finish()
+    }
+
+    private fun gotoLandngActivity(responseModel: ResponseModel) {
 
         var intent = Intent(this@DisplayDischargeDataActivity, LandingActivity::class.java)
         startActivity(intent)
 
-    }
-
-    private fun addFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, fragment, fragment.javaClass.simpleName)
-            .addToBackStack(fragment.javaClass.simpleName)
-            .commit()
     }
 
     private fun showNotification(responseModel: ResponseModel) {

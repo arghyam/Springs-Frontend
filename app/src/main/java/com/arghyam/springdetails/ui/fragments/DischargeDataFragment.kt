@@ -196,7 +196,7 @@ class DischargeDataFragment : Fragment() {
                         ArghyamUtils().getDate(dischargeCount.createdTimeStamp),
                         dischargeCount.litresPerSecond[0].toString(),
                         dischargeCount.userId,
-                        false
+                        dischargeCount.status
                     )
                 )
             discharge_data_recyclerView.adapter?.notifyDataSetChanged()
