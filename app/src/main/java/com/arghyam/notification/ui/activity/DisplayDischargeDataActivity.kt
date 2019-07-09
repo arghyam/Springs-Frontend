@@ -67,7 +67,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 //        getSpringId()
         initRepository()
 
-//        initSpringDetails()
+        initSpringDetails()
 
         initSpringDetailsResponse()
         initClick()
@@ -205,9 +205,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
         )
-
 //        initDischargeData(springProfileResponse)
-
         dischargeSample(springProfileResponse)
     }
 
@@ -220,7 +218,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private fun initSpringDetails() {
 
-        Log.e("SpringCode", "Spring " + springCode)
+//        Log.e("SpringCode", "Spring " + springCode)
         var springDetailObject = RequestModel(
             id = Constants.GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -232,7 +230,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
             ),
             request = RequestSpringDetailsDataModel(
                 springs = SpringDetailsModel(
-                    springCode = springCode
+                    springCode = "0hf8GI"
                 )
             )
         )

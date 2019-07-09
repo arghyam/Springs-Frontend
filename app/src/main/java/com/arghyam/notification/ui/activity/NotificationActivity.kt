@@ -7,18 +7,28 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
+import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
 import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.model.NotificationDataModel
 import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
 import com.arghyam.springdetails.models.SpringDetailsModel
+import com.arghyam.springdetails.models.SpringProfileResponse
+import com.arghyam.springdetails.repository.SpringDetailsRepository
+import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.notification_listview.*
+import javax.inject.Inject
 
 class NotificationActivity : AppCompatActivity() {
 
@@ -29,6 +39,12 @@ class NotificationActivity : AppCompatActivity() {
     private var adapter: NotificationAdapter? = null
     var dataModels: ArrayList<NotificationDataModel>? = ArrayList()
     private lateinit var listView: ListView
+
+    private var springDetailsViewModel: SpringDetailsViewModel? = null
+
+
+    @Inject
+    lateinit var springDetailsRepository: SpringDetailsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,15 +110,13 @@ class NotificationActivity : AppCompatActivity() {
     private fun init() {
         initComponent()
         getSpringId()
-
-
-//        initSpringDetails()
+        initRepository()
+        initSpringDetails()
+        initSpringDetailsResponse()
 
     }
 
     private fun initComponent() {
-
-
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
@@ -112,28 +126,63 @@ class NotificationActivity : AppCompatActivity() {
         Log.e("code", "" + springCode)
     }
 
-//    private fun initSpringDetails() {
-//
-//        Log.e("SpringCode", "Spring " + springCode)
-//        var springDetailObject = RequestModel(
-//            id = Constants.GET_ALL_SPRINGS_ID,
-//            ver = BuildConfig.VER,
-//            ets = BuildConfig.ETS,
-//            params = Params(
-//                did = "",
-//                key = "",
-//                msgid = ""
-//            ),
-//            request = RequestSpringDetailsDataModel(
-//                springs = SpringDetailsModel(
-//                    springCode = springCode
-//                )
-//            )
-//        )
-//        springDetailsViewModel?.springDetailsApi(context!!, springDetailObject)
-//
-//    }
+    private fun initSpringDetailsResponse() {
+        springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
+            //            initDischargeAdapter(it)
+            saveSpringDetailsData(it)
+            if (springDetailsViewModel?.getSpringDetailsResponse()?.hasObservers()!!) {
+                springDetailsViewModel?.getSpringDetailsResponse()?.removeObservers(this)
+            }
+        })
+        springDetailsViewModel?.getSpringError()?.observe(this, Observer {
+            Log.e("stefy error", it)
+        })
 
+        springDetailsViewModel?.getSpringFailure()?.observe(this, Observer {
+            Log.e("stefy===", it)
+        })
+    }
+
+
+    private fun saveSpringDetailsData(responseModel: ResponseModel) {
+
+        var springProfileResponse: SpringProfileResponse = Gson().fromJson(
+            ArghyamUtils().convertToString(responseModel.response.responseObject),
+            object : TypeToken<SpringProfileResponse>() {}.type
+        )
+
+        Log.d("springResponse-4", ""+ springProfileResponse.springName)
+//        initDischargeData(springProfileResponse)
+//        dischargeSample(springProfileResponse)
+    }
+
+
+    private fun initSpringDetails() {
+
+//        Log.e("SpringCode", "Spring " + springCode)
+        var springDetailObject = RequestModel(
+            id = Constants.GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = RequestSpringDetailsDataModel(
+                springs = SpringDetailsModel(
+                    springCode = "0hf8GI"
+                )
+            )
+        )
+        springDetailsViewModel?.springDetailsApi(this, springDetailObject)
+
+    }
+
+    private fun initRepository() {
+        springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
+        springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
+    }
 
         private fun initToolBar() {
             setSupportActionBar(notification_toolbar)
