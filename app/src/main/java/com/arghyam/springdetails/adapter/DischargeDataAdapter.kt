@@ -27,7 +27,7 @@ class DischargeDataAdapter(private val items: ArrayList<DischargeDataModal>, val
         holder.submittedBy.text = item.submitted
 
         Log.d("status--item", "" + item.status)
-        if (item.status.equals("Accepted")) {
+        if (item.status == "Accepted") {
             holder.tick.visibility = VISIBLE
         } else if (item.status == "Rejected") {
 //            holder.date.setTextColor(context.resources.getColor(R.color.jumbo))
