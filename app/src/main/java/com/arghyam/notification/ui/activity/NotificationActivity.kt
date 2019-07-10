@@ -119,10 +119,9 @@ class NotificationActivity : AppCompatActivity() {
                         .getString(Constants.USER_ID) == "87b141ff-930e-45a0-9633-d311e11e6a8f") {
                     springCode = notificationResponseModel.notifications[i].springCode
                     dataModels?.add(
-                        NotificationDataModel(springName +
-                                " discharge data was submitted by " + notificationResponseModel.notifications[i].userName,
-                            "11:45 AM",
-                            "Apr 21, 2019"
+                        NotificationDataModel("Spring discharge data was submitted by " + notificationResponseModel.notifications[i].firstName,
+                            ArghyamUtils().getTime(notificationResponseModel.notifications[i].createdAt),
+                            ArghyamUtils().getDate(notificationResponseModel.notifications[i].createdAt)
                         )
                     )
                     adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
@@ -179,7 +178,6 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
-            //            initDischargeAdapter(it)
             saveSpringDetailsData(it)
         })
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
@@ -201,9 +199,6 @@ class NotificationActivity : AppCompatActivity() {
 
         Log.e("springResponse", ""+ springProfileResponse.springName)
         springName = springProfileResponse.springName
-        adapter?.notifyDataSetChanged()
-//        initDischargeData(springProfileResponse)
-//        dischargeSample(springProfileResponse)
     }
 
 
