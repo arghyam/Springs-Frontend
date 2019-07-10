@@ -48,6 +48,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private lateinit var springCode: String
     private lateinit var dischargeDataOsid: String
+    private  var springName: String= "stefy"
 
 
     private lateinit var userId: String
@@ -140,25 +141,26 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 //            gotoDischargeData(responseModel)
             gotoLandngActivity(responseModel)
 
-
         }
-
 //        showNotification(responseModel)
 
     }
-
     private fun gotoDischargeData(responseModel: ResponseModel) {
-
-        val fragment = DischargeDataFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.notification_content, fragment).commit()
-
+//        val fragment = DischargeDataFragment()
+//        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.replace(R.id.notification_content, fragment).commit()
 //        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
 //        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java)
-//        intent.putExtra("SpringCode", "")
-//        intent.putExtra("springName", "")
+//        intent.putExtra("SpringCode", springCode)
+//        intent.putExtra("springName", springName)
+//        intent.putExtra("caller",1)
+//
 //        startActivity(intent)
 //        finish()
+//        val fragment = DischargeDataFragment()
+//        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.replace(R.id.notification_content, fragment).commit()
+
     }
 
     private fun gotoLandngActivity(responseModel: ResponseModel) {

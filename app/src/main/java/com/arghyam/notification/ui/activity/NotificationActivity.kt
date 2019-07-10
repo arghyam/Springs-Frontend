@@ -116,7 +116,7 @@ class NotificationActivity : AppCompatActivity() {
                 Log.e("Anirudh spring",notificationResponseModel.notifications[i].springCode)
                 if (notificationResponseModel.notifications[i].status == "Created" &&
                     SharedPreferenceFactory(this@NotificationActivity)
-                        .getString(Constants.USER_ID) == "87b141ff-930e-45a0-9633-d311e11e6a8f") {
+                        .getString(Constants.USER_ID) == "f4e5dd50-606b-4726-95c3-aa92bd0bc94e") {
                     springCode = notificationResponseModel.notifications[i].springCode
                     dataModels?.add(
                         NotificationDataModel(springName +

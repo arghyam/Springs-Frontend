@@ -700,7 +700,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         if (position == 0 && imageList.size > 0) {
             imageRecyclerView[position].progress.visibility = GONE
             imageRecyclerView[position].image_loader.visibility = VISIBLE
-            imageRecyclerView[position].upload_status.text = ""
+            imageRecyclerView[position].upload_status.text = "Uploaded"
 
             imageRecyclerView[position + 1].progress.visibility = VISIBLE
             imageRecyclerView[position + 1].image_loader.visibility = GONE
@@ -806,7 +806,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             //set result in textView
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
-            imageRecyclerView[imageuploadcount].upload_status.text = ""
+            imageRecyclerView[imageuploadcount].upload_status.text = "Uploaded"
 //            Log.e("NewSpringActivity imgupload size f", imageRecyclerView.size.toString())
 
         }

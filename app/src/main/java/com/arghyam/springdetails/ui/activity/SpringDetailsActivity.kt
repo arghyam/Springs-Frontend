@@ -24,6 +24,10 @@ import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.content_spring_details.*
 import javax.inject.Inject
+import com.google.android.material.tabs.TabLayout
+
+
+
 
 
 class SpringDetailsActivity : AppCompatActivity() {
