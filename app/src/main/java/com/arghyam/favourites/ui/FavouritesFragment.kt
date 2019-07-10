@@ -91,8 +91,8 @@ class FavouritesFragment : Fragment() {
 
     private fun initbell(notificationCount:Int) {
         if(notificationCount>0){
-            badge.visibility = View.VISIBLE
-            notification_count.visibility = VISIBLE
+            badge.visibility = GONE
+            notification_count.visibility = GONE
             notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener{
@@ -117,6 +117,7 @@ class FavouritesFragment : Fragment() {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
             }
         }
+        initbell(1)
     }
 
     private fun initNotifications() {

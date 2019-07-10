@@ -70,8 +70,8 @@ class MyActivityFragment : Fragment() {
 
     private fun initbell(notificationCount: Int) {
         if (notificationCount > 0) {
-            badge.visibility = View.VISIBLE
-            notification_count.visibility = View.VISIBLE
+            badge.visibility = View.GONE
+            notification_count.visibility = View.GONE
             notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener {
@@ -118,7 +118,7 @@ class MyActivityFragment : Fragment() {
         val toolbar = toolbar as Toolbar
         toolbar.title = "My Activity"
         initNotifications()
-
+        initbell(1)
     }
 
     private fun initRecyclerView(responseData: AllActivitiesModel) {

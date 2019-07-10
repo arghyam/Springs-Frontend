@@ -84,8 +84,8 @@ class HomeFragment : Fragment() {
 
     private fun initbell(notificationCount:Int) {
         if(notificationCount>0){
-            badge.visibility = VISIBLE
-            notification_count.visibility = VISIBLE
+            badge.visibility = GONE
+            notification_count.visibility = GONE
             notification_count.text = notificationCount.toString()
         }
         notification_bell.setOnClickListener {
@@ -191,7 +191,7 @@ class HomeFragment : Fragment() {
         initFab()
         reload()
         registerReceiver()
-
+        initbell(1)
     }
 
 
@@ -199,9 +199,9 @@ class HomeFragment : Fragment() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
 
 
-        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
-            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
-        }
+//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
+//            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
+//        }
 
     }
 
@@ -367,8 +367,8 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
-            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
-        }
+//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
+//            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
+//        }
     }
 }

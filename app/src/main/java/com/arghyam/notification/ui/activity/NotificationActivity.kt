@@ -31,7 +31,6 @@ import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_notification.*
-import kotlinx.android.synthetic.main.notification_listview.*
 import javax.inject.Inject
 
 class NotificationActivity : AppCompatActivity() {
@@ -49,7 +48,16 @@ class NotificationActivity : AppCompatActivity() {
 
     private var notificationViewModel: NotificationViewModel? = null
 
-
+    private var reviewerUserList: ArrayList<String> = arrayListOf(
+        "61ec64ff-2835-4ae5-897a-3d34660a39f1",
+        "4e2b8d03-187c-4e48-a0a1-a9b9fdfae7d9",
+        "f4e5dd50-606b-4726-95c3-aa92bd0bc94e",
+        "6ff4d86f-41cb-4ea7-b97b-c089f5da9554",
+        "09dab8c9-19d7-44b5-aa3f-c3170ab43c28",
+        "7de8c2f9-528a-4dc6-8185-086f8329b7a4",
+        "71671c22-9eb2-4981-9412-76ddc06ef935",
+        "e5e350d9-66e2-4639-bc43-d806ce0386ee"
+    )
     @Inject
     lateinit var notificationRepository: NotificationRepository
     @Inject
@@ -97,7 +105,7 @@ class NotificationActivity : AppCompatActivity() {
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<NotificationResponseModel>() {}.type
             )
-            for (i in 0 until notificationResponseModel.notifications.size){
+            for (i in 0 until notificationResponseModel.notifications.size) {
                 springCode = notificationResponseModel.notifications[i].springCode
                 initSpringDetails()
             }
@@ -111,32 +119,41 @@ class NotificationActivity : AppCompatActivity() {
         listView = notification_list
         Log.e("Anirudh", "activityloaded")
         if (notificationResponseModel.notifications.isNotEmpty()) {
-            Log.e("Anirudh",notificationResponseModel.notifications.size.toString())
+            Log.e("Anirudh", notificationResponseModel.notifications.size.toString())
             for (i in 0 until notificationResponseModel.notifications.size) {
-                Log.e("Anirudh spring",notificationResponseModel.notifications[i].springCode)
-                if (notificationResponseModel.notifications[i].status == "Created" &&
-                    SharedPreferenceFactory(this@NotificationActivity)
-                        .getString(Constants.USER_ID) == "f4e5dd50-606b-4726-95c3-aa92bd0bc94e") {
-                    springCode = notificationResponseModel.notifications[i].springCode
-                    dataModels?.add(
-                        NotificationDataModel(springName +
-                                " discharge data was submitted by " + notificationResponseModel.notifications[i].userName,
-                            "11:45 AM",
-                            "Apr 21, 2019"
+                Log.e("Anirudh spring", notificationResponseModel.notifications[i].springCode)
+                for (k in 0 until reviewerUserList.size) {
+                    if (notificationResponseModel.notifications[i].status == "Created" &&
+                        SharedPreferenceFactory(this@NotificationActivity)
+                            .getString(Constants.USER_ID) == reviewerUserList[k]
+                    ) {
+                        springCode = notificationResponseModel.notifications[i].springCode
+                        dataModels?.add(
+                            NotificationDataModel(
+                                "Spring discharge data was submitted by " + notificationResponseModel.notifications[i].firstName,
+                                ArghyamUtils().getTime(notificationResponseModel.notifications[i].createdAt),
+                                ArghyamUtils().getDate(notificationResponseModel.notifications[i].createdAt)
+                            )
                         )
-                    )
-                    adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
-                    listView.adapter = adapter
-                    Log.e("Anirudh", listView.adapter.toString())
+                        adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
+                        listView.adapter = adapter
+                        Log.e("Anirudh", listView.adapter.toString())
 
+                    }
                 }
             }
             listView.onItemClickListener =
-                AdapterView.OnItemClickListener {adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
+                AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
                     val (notification, time, date) = dataModels!![position]
-                    Log.e("Anirudh", notificationResponseModel.notifications[position].dischargeDataOsid + "  "+ notificationResponseModel.notifications[position].springCode)
+                    Log.e(
+                        "Anirudh",
+                        notificationResponseModel.notifications[position].dischargeDataOsid + "  " + notificationResponseModel.notifications[position].springCode
+                    )
                     val intent = Intent(this, DisplayDischargeDataActivity::class.java)
-                    intent.putExtra("DischargeOSID",notificationResponseModel.notifications[position].dischargeDataOsid)
+                    intent.putExtra(
+                        "DischargeOSID",
+                        notificationResponseModel.notifications[position].dischargeDataOsid
+                    )
                     intent.putExtra("SpringCode", notificationResponseModel.notifications[position].springCode)
                     startActivity(intent)
                 }
@@ -156,7 +173,7 @@ class NotificationActivity : AppCompatActivity() {
             ),
             request = notificationSpringModel(
                 notifications = NotificationModel(
-                    type =  "notifications"
+                    type = "notifications"
                 )
             )
         )
@@ -179,7 +196,6 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
-            //            initDischargeAdapter(it)
             saveSpringDetailsData(it)
         })
         springDetailsViewModel?.getSpringError()?.observe(this, Observer {
@@ -199,11 +215,8 @@ class NotificationActivity : AppCompatActivity() {
             object : TypeToken<SpringProfileResponse>() {}.type
         )
 
-        Log.e("springResponse", ""+ springProfileResponse.springName)
+        Log.e("springResponse", "" + springProfileResponse.springName)
         springName = springProfileResponse.springName
-        adapter?.notifyDataSetChanged()
-//        initDischargeData(springProfileResponse)
-//        dischargeSample(springProfileResponse)
     }
 
 
@@ -240,16 +253,15 @@ class NotificationActivity : AppCompatActivity() {
 
     }
 
-        private fun initToolBar() {
-            setSupportActionBar(notification_toolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
+    private fun initToolBar() {
+        setSupportActionBar(notification_toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        override fun onSupportNavigateUp(): Boolean {
-            onBackPressed()
-            return true
-        }
-
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
 
 }
