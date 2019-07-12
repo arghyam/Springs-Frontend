@@ -37,9 +37,9 @@ import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import kotlinx.android.synthetic.main.fragment_favourites.toolbar
-import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 
@@ -92,6 +92,7 @@ class FavouritesFragment : Fragment() {
     private fun initbell(notificationCount:Int) {
         if(notificationCount>0){
             badge.visibility = View.VISIBLE
+            notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener{
@@ -186,6 +187,9 @@ class FavouritesFragment : Fragment() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
         val toolbar = toolbar as Toolbar
         toolbar.title = "Favourites"
+        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
+            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
+        }
     }
 
     private fun getAllSpringRequest() {

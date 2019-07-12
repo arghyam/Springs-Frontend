@@ -1,7 +1,6 @@
 package com.arghyam.commons.utils
 
 import android.content.Context
-import android.R.id.edit
 import android.content.SharedPreferences
 
 
@@ -20,13 +19,13 @@ class SharedPreferenceFactory(var context: Context) {
         return pref.getString(key,"")
     }
 
-    fun setInt(key:String,value: Int)= run {
-        editor.putInt(key,value)
+    fun setInt(key: Int, value: Int)= run {
+        editor.putInt(key.toString(),value)
         editor.commit()
     }
 
-    fun getInt(key:String): Int? {
-        return pref.getInt(key,0)
+    fun getInt(key: Int): Int? {
+        return pref.getInt(key.toString(),0)
     }
 
     fun setBoolean(key:String,value: Boolean)= run {
