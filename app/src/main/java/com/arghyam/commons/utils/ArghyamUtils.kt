@@ -128,7 +128,7 @@ class ArghyamUtils {
 
     fun convertToNames(selectedMonth: ArrayList<String>):ArrayList<String> {
         var selectedMonthNames:ArrayList<String> = ArrayList()
-        selectedMonth.sort()
+//        selectedMonth.sort()
         for (month in selectedMonth) {
             when (month) {
                 "1" -> {
