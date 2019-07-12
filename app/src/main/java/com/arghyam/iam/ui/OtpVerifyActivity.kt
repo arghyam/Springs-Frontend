@@ -44,6 +44,7 @@ import javax.inject.Inject
 import android.text.SpannableString
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
+import com.arghyam.commons.utils.AppSignatureHelper
 
 
 class OtpVerifyActivity : AppCompatActivity() {
@@ -313,8 +314,8 @@ class OtpVerifyActivity : AppCompatActivity() {
          * Print it for app signature and put it in the message receiving it from the server
          **/
 
-//        var appSignature = AppSignatureHelper(this)
-//        Log.e("ste", appSignature.appSignatures.toString())
+        var appSignature = AppSignatureHelper(this)
+        Log.e("ste", appSignature.appSignatures.toString())
     }
 
     private fun listenOtp() {

@@ -6,6 +6,7 @@
         android:layout_height="wrap_content">
 
     <LinearLayout
+            android:id="@+id/discharge_data_layout"
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:weightSum="10"
@@ -38,7 +39,7 @@
                     android:textSize="@dimen/text_size_14"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="@string/date"
+                    android:text=""
                     android:textColor="@color/bokara_grey"
                     android:layout_height="fill_parent"/>
 

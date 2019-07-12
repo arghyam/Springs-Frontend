@@ -42,6 +42,9 @@ interface ApiInterface {
     @POST("/api/v1/getSprings")
     fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>
 
+    @POST("/api/v1/getSprings")
+    fun getAllSpringsOptional(@Body springOptionalRequestModel: RequestModel): Call<ResponseModel>
+
     @POST("/api/v1/springById")
     fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
@@ -56,5 +59,11 @@ interface ApiInterface {
 
     @POST("/api/v1/user/myActivities")
     fun getMyActivities(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/reviewerData")
+    fun reviewerData(@Body reviewerRequetModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/notifications")
+    fun notification(@Body notificationRequetModel: RequestModel): Call<ResponseModel>
 
 }
