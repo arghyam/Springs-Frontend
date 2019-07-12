@@ -173,6 +173,7 @@ class DetailsFragment : Fragment() {
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
+        tv_spring_submitted.text = ":  ${springProfileResponse.submittedBy}"
         if (!springProfileResponse.createdTimeStamp.equals(null)) {
             date.text = ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)
             time.text = ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)

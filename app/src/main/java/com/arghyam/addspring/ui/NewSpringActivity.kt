@@ -171,8 +171,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocation()
         initLocationClick()
         initRepository()
-        getSpringOptionalRequest()
-        initGetAllSpring()
+//        getSpringOptionalRequest()
+//        initGetAllSpring()
         initUploadImageClick()
         initApiResponseCalls()
         initUploadImageApis()
@@ -366,9 +366,9 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
             }
-            else if (checkDistance()){
-                showDialogbox()
-            }
+//            else if (checkDistance()){
+//                showDialogbox()
+//            }
             else {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
@@ -472,6 +472,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     elevation = mLocation!!.altitude,
                     accuracy = mLocation!!.accuracy,
                     village = "",
+                    submittedBy = "",
                     ownershipType = findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text.toString(),
                     images = imagesList,
                     userId = SharedPreferenceFactory(this@NewSpringActivity).getString(Constants.USER_ID)!!
@@ -871,8 +872,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
 
-        getSpringOptionalViewModel = ViewModelProviders.of(this).get(GetSpringOptionalViewModel::class.java)
-        getSpringOptionalViewModel?.setSpringOptionalRepository(getSpringOptionalRepository)
+//        getSpringOptionalViewModel = ViewModelProviders.of(this).get(GetSpringOptionalViewModel::class.java)
+//        getSpringOptionalViewModel?.setSpringOptionalRepository(getSpringOptionalRepository)
     }
 
     private fun hideSoftKeyboard() {

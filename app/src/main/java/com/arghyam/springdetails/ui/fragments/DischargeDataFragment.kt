@@ -1,7 +1,6 @@
 package com.arghyam.springdetails.ui.fragments
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +29,6 @@ import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_display_discharge_data.*
 import kotlinx.android.synthetic.main.discharge_data.*
 import kotlinx.android.synthetic.main.fragment_discharge_data.*
 import javax.inject.Inject
@@ -195,7 +193,7 @@ class DischargeDataFragment : Fragment() {
                     DischargeDataModal(
                         ArghyamUtils().getDate(dischargeCount.createdTimeStamp),
                         dischargeCount.litresPerSecond[0].toString(),
-                        dischargeCount.userId,
+                        dischargeCount.submittedby,
                         dischargeCount.status
                     )
                 )

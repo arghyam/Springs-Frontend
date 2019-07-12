@@ -22,7 +22,8 @@ class SpringProfileResponse(
     var images: ArrayList<String>,
     var extraInformation: ExtraInfoDischarge,
     var createdTimeStamp: String,
-    var updatedTimeStamp: String
+    var updatedTimeStamp: String,
+    var submittedBy: String
 )
 
 class ExtraInfoDischarge(var dischargeData: ArrayList<DischargeData>)
@@ -37,6 +38,7 @@ class DischargeData(
     var createdTimeStamp: String,
     var userId: String,
     var orgId: String,
+    var submittedby: String,
     var volumeOfContainer: Float,
     var litresPerSecond: ArrayList<Double>,
     var tenantId: String,

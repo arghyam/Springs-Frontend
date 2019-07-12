@@ -141,11 +141,10 @@
                         />
                         <TextView
                                 android:id="@+id/tv_spring_id"
-
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
-                        ></TextView>
+                        />
                     </TableRow>
                     <TableRow
                             android:layout_width="match_parent"
@@ -158,11 +157,11 @@
                                 android:textColor="@color/ship_grey"
                         />
                         <TextView
-                                android:id="@+id/tv_spring_submtted"
+                                android:id="@+id/tv_spring_submitted"
                                 android:layout_weight="4"
                                 android:textSize="@dimen/text_size_16"
                                 android:textColor="@color/bokara_grey"
-                        ></TextView>
+                        />
                     </TableRow>
                 </TableLayout>
             </LinearLayout>

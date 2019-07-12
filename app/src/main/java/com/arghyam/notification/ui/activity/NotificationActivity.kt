@@ -56,7 +56,8 @@ class NotificationActivity : AppCompatActivity() {
         "09dab8c9-19d7-44b5-aa3f-c3170ab43c28",
         "7de8c2f9-528a-4dc6-8185-086f8329b7a4",
         "71671c22-9eb2-4981-9412-76ddc06ef935",
-        "e5e350d9-66e2-4639-bc43-d806ce0386ee"
+        "e5e350d9-66e2-4639-bc43-d806ce0386ee",
+        "87b141ff-930e-45a0-9633-d311e11e6a8f"
     )
     @Inject
     lateinit var notificationRepository: NotificationRepository
@@ -80,7 +81,7 @@ class NotificationActivity : AppCompatActivity() {
         initNotificationResponse()
 
 //        initSpringDetails()
-        initSpringDetailsResponse()
+//        initSpringDetailsResponse()
 
     }
 
@@ -107,7 +108,6 @@ class NotificationActivity : AppCompatActivity() {
             )
             for (i in 0 until notificationResponseModel.notifications.size) {
                 springCode = notificationResponseModel.notifications[i].springCode
-                initSpringDetails()
             }
             loadNotification(notificationResponseModel)
 
@@ -122,11 +122,11 @@ class NotificationActivity : AppCompatActivity() {
             Log.e("Anirudh", notificationResponseModel.notifications.size.toString())
             for (i in 0 until notificationResponseModel.notifications.size) {
                 Log.e("Anirudh spring", notificationResponseModel.notifications[i].springCode)
-                for (k in 0 until reviewerUserList.size) {
-                    if (notificationResponseModel.notifications[i].status == "Created" &&
-                        SharedPreferenceFactory(this@NotificationActivity)
-                            .getString(Constants.USER_ID) == reviewerUserList[k]
-                    ) {
+//                for (k in 0 until reviewerUserList.size) {
+//                    if (notificationResponseModel.notifications[i].status == "Created" &&
+//                        SharedPreferenceFactory(this@NotificationActivity)
+//                            .getString(Constants.USER_ID) == reviewerUserList[k]
+//                    ) {
                         springCode = notificationResponseModel.notifications[i].springCode
                         dataModels?.add(
                             NotificationDataModel(
@@ -138,9 +138,8 @@ class NotificationActivity : AppCompatActivity() {
                         adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
                         listView.adapter = adapter
                         Log.e("Anirudh", listView.adapter.toString())
-
-                    }
-                }
+//                    }
+//                }
             }
             listView.onItemClickListener =
                 AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
@@ -243,8 +242,8 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun initRepository() {
-        springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
-        springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
+//        springDetailsViewModel = ViewModelProviders.of(this).get(SpringDetailsViewModel::class.java)
+//        springDetailsViewModel?.setSpringDetailsRepository(springDetailsRepository)
 
 
         notificationViewModel = ViewModelProviders.of(this).get(NotificationViewModel::class.java)
