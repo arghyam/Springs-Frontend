@@ -191,7 +191,7 @@ class DischargeDataFragment : Fragment() {
             if (springProfileResponse.extraInformation.dischargeData.size > 0)
                 dischargeModeList.add(
                     DischargeDataModal(
-                        ArghyamUtils().getDate(dischargeCount.createdTimeStamp),
+                        ArghyamUtils().epochToDate(dischargeCount.createdTimeStamp),
                         dischargeCount.litresPerSecond[0].toString(),
                         dischargeCount.submittedby,
                         dischargeCount.status

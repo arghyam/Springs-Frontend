@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
-import com.arghyam.myactivity.model.MyActivityModel
+import com.arghyam.myactivity.model.Activities
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import kotlinx.android.synthetic.main.list_my_activity.view.*
 
-class MyActivityAdapter(val myActivityList: ArrayList<MyActivityModel>, val context: Context):RecyclerView.Adapter<MyActivityAdapter.ViewHolder>() {
+class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: Context):RecyclerView.Adapter<MyActivityAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_my_activity,parent,false)
@@ -24,11 +24,11 @@ class MyActivityAdapter(val myActivityList: ArrayList<MyActivityModel>, val cont
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val myActivities: MyActivityModel = myActivityList[position]
-        holder.dischargeData.text = myActivities.dischargeData
-        holder.time.text = ArghyamUtils().getTime(myActivities.time) + "  |  "+ArghyamUtils().getDate(myActivities.time)
+        val myActivities: Activities = myActivityList.get(position)
+        holder.dischargeData.text = myActivities.action
+        holder.time.text = ArghyamUtils().epochToTime(myActivities.createdAt) + "  |  "+ArghyamUtils().epochToDateFormat(myActivities.createdAt)
         holder.springName.text = myActivities.springName
-        holder.villageName.text = myActivities.villageName
+        holder.villageName.text = "Location"
 
         holder.activity.setOnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)

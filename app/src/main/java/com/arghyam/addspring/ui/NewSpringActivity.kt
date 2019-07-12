@@ -109,15 +109,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var imagesList: ArrayList<String> = ArrayList()
     private var springName: String? = null
 
-    private var photoFile: File? = null
-
     private var coordinateList = ArrayList<AllSpringDataModel>()
 
 
     val REQUEST_CODE = 4
     private val TAG = "MainActivity"
     private var mGoogleApiClient: GoogleApiClient? = null
-    private var googleApiClient: GoogleApiClient? = null
     private var mLocationManager: LocationManager? = null
     private var isLocationTurnedOn: Boolean = false
     private var isLocationNotAccepted: Boolean = false
@@ -171,8 +168,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         initLocation()
         initLocationClick()
         initRepository()
-//        getSpringOptionalRequest()
-//        initGetAllSpring()
         initUploadImageClick()
         initApiResponseCalls()
         initUploadImageApis()
@@ -184,63 +179,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         isTextWritten()
         initClick()
     }
-
-    private fun initGetAllSpring() {
-        getSpringOptionalViewModel?.getSpringOptionalResponse()?.observe(this, Observer {
-
-            saveGetSpringsOptionalData(it)
-//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-//            }
-        })
-        getSpringOptionalViewModel?.getSpringOptionalError()?.observe(this, Observer {
-            Log.e("error---", it)
-            if (getSpringOptionalViewModel?.getSpringOptionalError()?.hasObservers()!!) {
-                getSpringOptionalViewModel?.getSpringOptionalError()?.removeObservers(this)
-            }
-        })
-    }
-
-    private fun saveGetSpringsOptionalData(responseModel: ResponseModel) {
-
-        if (responseModel.response.responseCode == "200") {
-
-            Log.d("success_i", "yes")
-
-
-            var responseSpringData: AllSpringDetailsModel = Gson().fromJson(
-                ArghyamUtils().convertToString(responseModel.response.responseObject),
-                object : TypeToken<AllSpringDetailsModel>() {}.type
-            )
-
-            Log.d("saveOptionalData--", responseSpringData.toString())
-
-            getListOfCordinates(responseSpringData)
-
-        }
-
-    }
-    val latitude_values = ArrayList<Double>()
-    val longitude_values = ArrayList<Double>()
-
-    private fun getListOfCordinates(responseSpringData: AllSpringDetailsModel) {
-
-        coordinateList.addAll(responseSpringData.springs)
-        Log.d("coordinateLis--t",coordinateList.toString())
-
-        for (cordinates in coordinateList) {
-            if(!latitude_values.contains(ArghyamUtils().round(cordinates.latitude,3))){
-                latitude_values.add(ArghyamUtils().round(cordinates.latitude,3))
-            }
-            if(!longitude_values.contains(ArghyamUtils().round(cordinates.longitude,3))){
-                longitude_values.add(ArghyamUtils().round(cordinates.longitude,3))
-            }
-        }
-        Log.d("response--latitude", latitude_values.toString())
-        Log.d("response--longitude", longitude_values.toString())
-
-    }
-
 
     private fun initDefaultLocation() {
         tv_reposition.text = "Click on to reposition your gps"
@@ -327,7 +265,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<CreateSpringResponseObject>() {}.type
         )
-//        gotoLandingActivity(createSpringResponseObject)
         gotoSpringDetailsActivty(createSpringResponseObject)
     }
 
@@ -366,9 +303,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
 
             }
-//            else if (checkDistance()){
-//                showDialogbox()
-//            }
             else {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
@@ -377,57 +311,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
-    private fun checkDistance(): Boolean {
-
-        if (mLocation != null && longitude_values !=null && latitude_values!=null ) {
-            Log.e("NewSpringActivity", latitude_values.size.toString())
-
-            var compareLength: Int = if(longitude_values.size>latitude_values.size)
-                latitude_values.size
-            else
-                longitude_values.size
-
-            for (i in 0 until  compareLength) {
-
-                var currentLat = mLocation!!.latitude
-                var currentLon = mLocation!!.longitude
-
-                var loc1 = Location("")
-                loc1.latitude = currentLat
-                loc1.longitude = currentLon
-
-                val loc2 = Location("")
-                Log.e("NewSpringActivity",i.toString()+" "+loc2)
-                loc2.latitude = latitude_values[i]
-                loc2.longitude = longitude_values[i]
-
-                val distanceInMeters = loc1.distanceTo(loc2)
-
-                if (distanceInMeters <= 50) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    private fun showDialogbox() {
-        val dialogBuilder = AlertDialog.Builder(this)
-        dialogBuilder.setMessage("A spring already exists in close proximity. Are you sure it is not the same spring?")
-
-            .setPositiveButton("YES") { dialog, which ->
-                dialog.cancel()
-                createSpringOnClick()
-                ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
-            }
-            .setNegativeButton("CANCEL") { dialog, which ->
-                this.finish()
-                dialog.cancel()
-            }
-        val alert = dialogBuilder.create()
-        alert.setTitle("Are you sure ?")
-        alert.show()
-    }
 
     private fun validateListener(): Boolean {
         return springNameListener() && imageUploadListener() && ownershipTypeListener() && locationListener()
@@ -808,8 +691,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             imageRecyclerView[imageuploadcount].progress.visibility = GONE
             imageRecyclerView[imageuploadcount].image_loader.visibility = VISIBLE
             imageRecyclerView[imageuploadcount].upload_status.text = "Uploaded"
-//            Log.e("NewSpringActivity imgupload size f", imageRecyclerView.size.toString())
-
         }
     }
 
@@ -829,7 +710,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             if (file.length() < FILE_SIZE_LIMIT) {
                 var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
-//                var reqFile = ProgressRequestBody(file, this)
                 body = MultipartBody.Part.createFormData("file", file.name, reqFile)
             }
         } catch (ex: Exception) {
@@ -846,25 +726,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     }
 
-    private fun getSpringOptionalRequest() {
-        var getAllSpringObject = RequestModel(
-            id = Constants.GET_ALL_SPRINGS_ID,
-            ver = BuildConfig.VER,
-            ets = BuildConfig.ETS,
-            params = Params(
-                did = "",
-                key = "",
-                msgid = ""
-            ),
-            request = GetAllSpringsModel(
-                springs = AllSpringModel(
-                    type = "springs"
-                )
-            )
-        )
-        getSpringOptionalViewModel?.springOptionalApi(this, getAllSpringObject)
-
-    }
 
     private fun initRepository() {
         createSpringViewModel = ViewModelProviders.of(this).get(CreateSpringViewModel::class.java)
@@ -872,8 +733,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         uploadImageViewModel = ViewModelProviders.of(this).get(UploadImageViewModel::class.java)
         uploadImageViewModel.setUploadImageRepository(uploadImageRepository)
 
-//        getSpringOptionalViewModel = ViewModelProviders.of(this).get(GetSpringOptionalViewModel::class.java)
-//        getSpringOptionalViewModel?.setSpringOptionalRepository(getSpringOptionalRepository)
     }
 
     private fun hideSoftKeyboard() {

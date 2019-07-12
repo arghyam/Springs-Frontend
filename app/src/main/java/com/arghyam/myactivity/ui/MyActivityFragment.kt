@@ -41,7 +41,9 @@ import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_my_activity.*
 import kotlinx.android.synthetic.main.fragment_my_activity.notauser
 import kotlinx.android.synthetic.main.fragment_my_activity.toolbar
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class MyActivityFragment : Fragment() {
@@ -122,11 +124,17 @@ class MyActivityFragment : Fragment() {
     }
 
     private fun initRecyclerView(responseData: AllActivitiesModel) {
+
         if (responseData.activities.size == 0) {
             no_activities.visibility = View.VISIBLE
         } else {
-            myActivityRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
-            val adapter = activity?.let { MyActivityAdapter(myActivityList, it) }
+            responseData.activities.sortWith(Comparator { o1, o2 ->
+                o1.createdAt.compareTo(o2.createdAt)
+            })
+            responseData.activities.reverse()
+
+            myActivityRecyclerView.layoutManager = LinearLayoutManager(activity)
+            val adapter = activity?.let { MyActivityAdapter(responseData.activities, it) }
             myActivityRecyclerView.adapter = adapter
             for (activity in responseData.activities) {
                 myActivityList.add(
@@ -139,6 +147,7 @@ class MyActivityFragment : Fragment() {
                     )
                 )
             }
+
 
         }
     }

@@ -35,7 +35,7 @@ class DischargeData(
     @SerializedName("@type")
     val type: String,
     var updatedTimeStamp: String,
-    var createdTimeStamp: String,
+    var createdTimeStamp: Long,
     var userId: String,
     var orgId: String,
     var submittedby: String,

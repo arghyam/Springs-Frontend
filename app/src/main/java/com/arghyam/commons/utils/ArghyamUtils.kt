@@ -233,6 +233,22 @@ class ArghyamUtils {
         return selectedMonthNames
     }
 
+
+    fun epochToDate(time: Long): String{
+        var format = SimpleDateFormat("dd/MM/yyyy")
+        return format.format(Date(time))
+    }
+
+    fun epochToTime(time: Long): String{
+        var format = SimpleDateFormat("hh:mm a")
+        return format.format(Date(time))
+    }
+
+    fun epochToDateFormat(time: Long): String{
+        var format = SimpleDateFormat("MMM dd ,yyyy")
+        return format.format(Date(time))
+    }
+
     fun getDate(dateString: String): String {
         val formatter = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
         formatter.timeZone = TimeZone.getTimeZone("UTC ")
