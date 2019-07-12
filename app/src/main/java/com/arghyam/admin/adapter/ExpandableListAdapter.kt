@@ -9,8 +9,8 @@ import android.widget.*
 import com.arghyam.R
 
 class ExpandableListAdapter : BaseExpandableListAdapter {
-    private lateinit var context: Context
-    private lateinit var user: List<User>
+    private var context: Context
+    private var user: ArrayList<User>
 
     constructor(
         context: Context,
@@ -130,6 +130,10 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
         return user.size
     }
 
+    fun filterList(filteredNames: ArrayList<User>) {
+        this.user = filteredNames
+        notifyDataSetChanged()
+    }
 
 }
 
