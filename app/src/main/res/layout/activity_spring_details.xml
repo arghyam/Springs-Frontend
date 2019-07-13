@@ -12,12 +12,8 @@
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/details_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <include android:id="@+id/custom_toolbar"
+                 layout="@layout/custom_toolbar"/>
 
 
         <com.google.android.material.tabs.TabLayout

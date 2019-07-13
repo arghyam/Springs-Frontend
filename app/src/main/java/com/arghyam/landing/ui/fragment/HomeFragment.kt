@@ -44,13 +44,9 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
-import androidx.appcompat.app.AppCompatActivity
-import com.arghyam.commons.utils.Constants.NOTIFICATION_COUNT
 import com.arghyam.notification.ui.activity.NotificationActivity
-import kotlinx.android.synthetic.main.fragment_home.progressBar
 import kotlinx.android.synthetic.main.custom_toolbar.*
-import kotlinx.android.synthetic.main.custom_toolbar.view.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.fragment_home.progressBar
 
 
 /**

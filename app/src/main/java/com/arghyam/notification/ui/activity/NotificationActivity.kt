@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
@@ -183,8 +184,9 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun initToolBar() {
-        setSupportActionBar(notification_toolbar)
+        setSupportActionBar(custom_toolbar as Toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Notifications"
     }
 
     override fun onSupportNavigateUp(): Boolean {
