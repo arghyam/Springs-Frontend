@@ -121,7 +121,7 @@ class NotificationActivity : AppCompatActivity() {
 //                        ArghyamUtils().getTime(notificationResponseModel.notifications[i].createdAt),
 //                        ArghyamUtils().getDate(notificationResponseModel.notifications[i].createdAt)
                         ArghyamUtils().epochToTime(notificationResponseModel.notifications[i].createdAt),
-                        ArghyamUtils().epochToDate(notificationResponseModel.notifications[i].createdAt)
+                        ArghyamUtils().epochToDateFormat(notificationResponseModel.notifications[i].createdAt)
                     )
                 )
                 adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
