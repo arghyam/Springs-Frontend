@@ -36,7 +36,18 @@ android {
         }
         debug {
             buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
-//            buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
+            buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
+            buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
+            buildConfigField "String", "GRANT_TYPE", '"password"'
+            buildConfigField "String", "ID", '"forWater.user.login"'
+            buildConfigField "String", "VER", '"1.0"'
+            buildConfigField "String", "ETS", '"11234"'
+            buildConfigField "String", "DID", '"did"'
+            buildConfigField "String", "KEY", '"key"'
+            buildConfigField "String", "MSGID", '"msgid"'
+        }
+        debug_local {
+            buildConfigField "String", "BASE_URL", '"http://192.168.1.242:9090/"'
             buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
             buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
             buildConfigField "String", "GRANT_TYPE", '"password"'
