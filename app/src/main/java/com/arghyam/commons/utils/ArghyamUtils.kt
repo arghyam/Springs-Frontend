@@ -245,7 +245,7 @@ class ArghyamUtils {
     }
 
     fun epochToDateFormat(time: Long): String{
-        var format = SimpleDateFormat("MMM dd ,yyyy")
+        var format = SimpleDateFormat("MMM dd, yyyy")
         return format.format(Date(time))
     }
 
