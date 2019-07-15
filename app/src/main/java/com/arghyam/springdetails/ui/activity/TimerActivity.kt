@@ -17,6 +17,12 @@ import com.arghyam.springdetails.interfaces.TimerInterface
 import com.arghyam.springdetails.models.TimerModel
 import kotlinx.android.synthetic.main.activity_timer.*
 import kotlinx.android.synthetic.main.content_timer.*
+import android.text.method.Touch.scrollTo
+import androidx.core.os.HandlerCompat.postDelayed
+import android.widget.ScrollView
+
+
+
 
 class TimerActivity : AppCompatActivity() {
 
@@ -38,6 +44,7 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        initScroll()
         initTimeFetch()
         initItems()
         initToolbar()
@@ -45,6 +52,10 @@ class TimerActivity : AppCompatActivity() {
         initRecyclerView()
         initTimerDone()
         validateListener()
+    }
+
+    private fun initScroll() {
+        timer_scroll.postDelayed({ timer_scroll.scrollTo(0, timer_layout.getY().toInt()) }, 100)
     }
 
     private fun validateListener() {

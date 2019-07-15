@@ -239,6 +239,10 @@ class ArghyamUtils {
         return format.format(Date(time))
     }
 
+    fun epochToDateMonth(time: Long): String{
+        var format = SimpleDateFormat("dd/MMMM/yyyy")
+        return format.format(Date(time))
+    }
     fun epochToTime(time: Long): String{
         var format = SimpleDateFormat("hh:mm a")
         return format.format(Date(time))

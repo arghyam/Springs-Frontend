@@ -175,8 +175,8 @@ class DetailsFragment : Fragment() {
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         tv_spring_submitted.text = ":  ${springProfileResponse.submittedBy}"
         if (!springProfileResponse.createdTimeStamp.equals(null)) {
-            date.text = ArghyamUtils().getDate(springProfileResponse.createdTimeStamp)
-            time.text = ArghyamUtils().getTime(springProfileResponse.createdTimeStamp)
+            date.text = ArghyamUtils().epochToDateMonth(springProfileResponse.createdTimeStamp)
+            time.text = ArghyamUtils().epochToTime(springProfileResponse.createdTimeStamp)
         }
 
         Log.e("Spring usage", springProfileResponse.usage.toString())
