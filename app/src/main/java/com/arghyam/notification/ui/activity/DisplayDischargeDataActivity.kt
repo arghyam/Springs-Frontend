@@ -138,8 +138,9 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
         if (responseModel.response.responseCode == "200") {
             ArghyamUtils().longToast(this, getString(R.string.reviewer_accepted))
-//            gotoDischargeData(responseModel)
-            gotoLandngActivity(responseModel)
+            gotoDischargeData(responseModel)
+//            this.finish()
+//            gotoLandngActivity(responseModel)
 
         }
 //        showNotification(responseModel)
@@ -149,17 +150,15 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 //        val fragment = DischargeDataFragment()
 //        val transaction = supportFragmentManager.beginTransaction()
 //        transaction.replace(R.id.notification_content, fragment).commit()
-//        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
+        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
 //        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java)
-//        intent.putExtra("SpringCode", springCode)
-//        intent.putExtra("springName", springName)
-//        intent.putExtra("caller",1)
+        intent.putExtra("SpringCode", springCode)
+        intent.putExtra("springName", springName)
+        intent.putExtra("caller",1)
 //
-//        startActivity(intent)
-//        finish()
-//        val fragment = DischargeDataFragment()
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.replace(R.id.notification_content, fragment).commit()
+        startActivity(intent)
+        finish()
+
 
     }
 

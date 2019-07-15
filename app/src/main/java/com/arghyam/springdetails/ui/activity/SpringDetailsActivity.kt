@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.ArghyamApplication
@@ -48,7 +49,6 @@ class SpringDetailsActivity : AppCompatActivity() {
     }
 
     private fun checkForUpcoming(): Boolean {
-        var dataIntent: Intent = intent
         return intent.getBooleanExtra("flag", false)
     }
 
@@ -67,6 +67,14 @@ class SpringDetailsActivity : AppCompatActivity() {
         initSpringDetails()
         initToolBar()
         initViewPager()
+        loadFragment()
+    }
+
+    private fun loadFragment() {
+        if (checkForUpcoming()){
+            Log.e("SpringDetails","coming inside")
+            details_view_pager.currentItem = 1
+        }
     }
 
     private fun initComponent() {

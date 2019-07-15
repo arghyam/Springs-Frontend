@@ -92,7 +92,7 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
         return convertView
     }
 
-    fun setHighLightedText(tv: TextView, textToHighlight: String) {
+    private fun setHighLightedText(tv: TextView, textToHighlight: String) {
         val tvt = tv.text.toString()
         var ofe = tvt.indexOf(textToHighlight, 0)
         val wordToSpan = SpannableString(tv.text)
@@ -102,6 +102,7 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
             if (ofe == -1)
                 break
             else {
+                // set color here
                 // set color here
                 wordToSpan.setSpan(
                     ForegroundColorSpan(rgb(35, 114, 217)),
