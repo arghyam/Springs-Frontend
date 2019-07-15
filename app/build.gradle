@@ -35,7 +35,7 @@ android {
 
         }
         debug {
-            buildConfigField "String", "BASE_URL", '"http://192.168.1.242:9090/"'
+            buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
 //            buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
             buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
             buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'

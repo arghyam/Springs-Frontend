@@ -140,6 +140,10 @@ class NotificationActivity : AppCompatActivity() {
                         "DischargeOSID",
                         notificationResponseModel.notifications[position].dischargeDataOsid
                     )
+                    intent.putExtra(
+                        "submittedBy",
+                        notificationResponseModel.notifications[position].firstName
+                    )
                     intent.putExtra("SpringCode", notificationResponseModel.notifications[position].springCode)
                     startActivity(intent)
                 }
