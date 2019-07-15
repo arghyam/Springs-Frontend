@@ -52,6 +52,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
     private lateinit var dischargeDataOsid: String
     private  var springName: String= "Spring"
     private var submittedBy: String? = null
+    private lateinit var osid: String
 
 
 
@@ -96,6 +97,8 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         springCode = dataIntent.getStringExtra("SpringCode")
         dischargeDataOsid = dataIntent.getStringExtra("DischargeOSID")
         submittedBy = dataIntent.getStringExtra("submittedBy")
+        osid = dataIntent.getStringExtra("osid")
+
 
         Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid + "  " + submittedBy)
     }
@@ -228,6 +231,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
                     osid = dischargeDataOsid,
                     userId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
+                    notificationOsid = osid,
                     status = status
 
 

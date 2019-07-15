@@ -141,6 +141,10 @@ class NotificationActivity : AppCompatActivity() {
                         notificationResponseModel.notifications[position].dischargeDataOsid
                     )
                     intent.putExtra(
+                        "osid",
+                        notificationResponseModel.notifications[position].osid
+                    )
+                    intent.putExtra(
                         "submittedBy",
                         notificationResponseModel.notifications[position].firstName
                     )

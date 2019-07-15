@@ -9,5 +9,7 @@ class AllNotificationModel(
     var dischargeDataOsid : String,
     var springName: String,
     var firstName: String,
-    var createdAt: Long
-)
+    var createdAt: Long,
+    var osid: String
+
+    )
