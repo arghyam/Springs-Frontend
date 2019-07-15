@@ -6,9 +6,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -48,7 +50,10 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private lateinit var springCode: String
     private lateinit var dischargeDataOsid: String
-    private  var springName: String= "stefy"
+    private  var springName: String= "Spring"
+    private var submittedBy: String? = null
+    private lateinit var osid: String
+
 
 
     private lateinit var userId: String
@@ -80,11 +85,10 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 //        getSpringId()
         initRepository()
         initIntent()
+        initSet()
         initSpringDetails()
-
         initSpringDetailsResponse()
         initClick()
-
 
     }
 
@@ -92,7 +96,16 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
         dischargeDataOsid = dataIntent.getStringExtra("DischargeOSID")
-        Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid)
+        submittedBy = dataIntent.getStringExtra("submittedBy")
+        osid = dataIntent.getStringExtra("osid")
+
+
+        Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid + "  " + submittedBy)
+    }
+
+    private fun initSet(){
+        var  additionalSpring : String = "Submitted by "+ "<b> ${submittedBy} </b>"
+        submitted_by.text = Html.fromHtml(additionalSpring)
     }
 
     private fun initClick() {
@@ -169,6 +182,18 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     }
 
+    private fun initToolBar() {
+        setSupportActionBar(custom_toolbar as Toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.discharge_data)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun showNotification(responseModel: ResponseModel) {
 
 
@@ -222,6 +247,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
                     osid = dischargeDataOsid,
                     userId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
+                    notificationOsid = osid,
                     status = status
 
 
@@ -320,7 +346,6 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     private fun initSpringDetails() {
 
-//        Log.e("SpringCode", "Spring " + springCode)
         var springDetailObject = RequestModel(
             id = Constants.GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -346,16 +371,6 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
         reviewerDataViewModel = ViewModelProviders.of(this).get(ReviewerDataViewModel::class.java)
         reviewerDataViewModel?.setReviewerDataRepository(reviewerDataRepository)
-    }
-
-    private fun initToolBar() {
-        setSupportActionBar(display_discharge_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
     }
 
 }

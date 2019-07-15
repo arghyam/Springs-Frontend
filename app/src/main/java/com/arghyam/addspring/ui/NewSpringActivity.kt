@@ -576,7 +576,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private fun onremoved(position: Int) {
         imageRecyclerView[position].progress.visibility = VISIBLE
         imageRecyclerView[position].image_loader.visibility = GONE
-        imageRecyclerView[position].upload_status.text = "uploading"
+        imageRecyclerView[position].upload_status.text = "Uploading"
 
         imageUploaderAdapter.notifyItemRemoved(position)
         imageUploaderAdapter.notifyItemRangeChanged(position,imageList.size)
@@ -588,7 +588,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             imageRecyclerView[position + 1].progress.visibility = VISIBLE
             imageRecyclerView[position + 1].image_loader.visibility = GONE
-            imageRecyclerView[position + 1].upload_status.text = "uploading"
+            imageRecyclerView[position + 1].upload_status.text = "Uploading"
 
             imageUploaderAdapter.notifyDataSetChanged()
         }
