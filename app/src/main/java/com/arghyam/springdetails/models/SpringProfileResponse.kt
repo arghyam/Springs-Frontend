@@ -21,7 +21,7 @@ class SpringProfileResponse(
     var usage: ArrayList<String>,
     var images: ArrayList<String>,
     var extraInformation: ExtraInfoDischarge,
-    var createdTimeStamp: String,
+    var createdTimeStamp: Long,
     var updatedTimeStamp: String,
     var submittedBy: String
 )
