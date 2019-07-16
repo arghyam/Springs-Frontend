@@ -323,6 +323,10 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun initClick() {
         radioGroup_character?.setOnCheckedChangeListener { group, checkedId ->
             if (R.id.radioButton_seasonal1 == checkedId) {
+
+                selectedMonth.clear()
+                (calenderRecyclerview.adapter as CalenderAdapter).clear()
+
                 calenderRecyclerview.visibility = VISIBLE
                 select_month_count.visibility = VISIBLE
                 select_month_count.text = "${selectedMonth.size} selected"
