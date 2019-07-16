@@ -379,8 +379,7 @@ class DetailsFragment : Fragment() {
     var imagelist: ArrayList<String> = ArrayList()
 
     private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
-        var i: Int = springProfileResponse.extraInformation.dischargeData.size - 1
-        while (i >= 0) {
+        for (i in 0 until springProfileResponse.extraInformation.dischargeData.size) {
             for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size) {
                 if (MAX_IMAGES > 0) {
                     Log.e("DetailsFragment", "images added" + MAX_IMAGES + "   j" + j + "  i" + i)
@@ -388,7 +387,6 @@ class DetailsFragment : Fragment() {
                     MAX_IMAGES--
                 }
             }
-            i--
         }
         if (MAX_IMAGES > 0) {
             for (i in 0 until springProfileResponse.images.size) {
