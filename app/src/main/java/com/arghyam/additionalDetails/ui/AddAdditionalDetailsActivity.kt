@@ -396,6 +396,9 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         if (houseHoldNumber.text == null || houseHoldNumber.text.toString().equals("")) {
             ArghyamUtils().longToast(this, getString(R.string.enter_household))
             return false
+        }else if(houseHoldNumber.text.length >= 9 ){
+            ArghyamUtils().longToast(this, getString(R.string.enter_proper))
+            return false
         } else
             return true
     }
