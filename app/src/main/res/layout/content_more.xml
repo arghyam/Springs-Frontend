@@ -182,6 +182,7 @@
                 android:gravity="center"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:visibility="gone"
                 android:focusable="true"
                 android:padding="16dp">
 

@@ -8,6 +8,7 @@ class AllNotificationModel(
     var status: String,
     var dischargeDataOsid : String,
     var springName: String,
+    var notificationTitle: String,
     var firstName: String,
     var createdAt: Long,
     var osid: String

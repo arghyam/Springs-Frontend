@@ -210,7 +210,7 @@ class MoreFragment : Fragment() {
         if (responseModel.response.responseCode == "200") {
             getUserProfileRequest()
             initGetUserProfile()
-//            tv_username.text = responseData.firstName
+//            tv_username.text = responseData.notificationTitle
 //            tv_user_phone.text = responseData.username
             Log.e(
                 "Anirudh User", ArghyamUtils().convertToString(responseData.firstName)
@@ -276,7 +276,7 @@ class MoreFragment : Fragment() {
 
     }
 
-
+    private var role : Boolean = false
     private fun saveUserProfileData(responseModel: ResponseModel) {
         if (responseModel.response.responseCode == "200") {
             responseData = Gson().fromJson(
@@ -284,7 +284,9 @@ class MoreFragment : Fragment() {
                 object : TypeToken<UserProfileDataDetailsModel>() {}.type
             )
             tv_username.text = responseData.firstName
-            tv_user_phone.text = responseData.username
+            tv_user_phone.text = responseData.userName
+            if (responseData.role.contains("arghyam-admin"))
+                admin_layout.visibility = VISIBLE
         }
     }
 

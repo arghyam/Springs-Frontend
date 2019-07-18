@@ -12,7 +12,6 @@ import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
@@ -42,7 +41,6 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_display_discharge_data.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -52,6 +50,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
     private lateinit var dischargeDataOsid: String
     private  var springName: String= "Spring"
     private var submittedBy: String? = null
+    private lateinit var submittedById: String
     private lateinit var osid: String
 
 
@@ -98,6 +97,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         dischargeDataOsid = dataIntent.getStringExtra("DischargeOSID")
         submittedBy = dataIntent.getStringExtra("submittedBy")
         osid = dataIntent.getStringExtra("osid")
+        submittedById = dataIntent.getStringExtra("submittedById")
 
 
         Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid + "  " + submittedBy)
@@ -246,8 +246,9 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
                 Reviewer = ReviewerModel(
 
                     osid = dischargeDataOsid,
-                    userId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
+                    reviewerId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
                     notificationOsid = osid,
+                    submittedBy = submittedById,
                     status = status
 
 

@@ -63,8 +63,8 @@ interface ApiInterface {
     @POST("/api/v1/reviewerData")
     fun reviewerData(@Body reviewerRequetModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/notifications")
-    fun notification(@Body notificationRequetModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/notifications/{userId}")
+    fun notification(@Path("userId") userId: String, @Body notificationRequetModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/notificationCount/{userId}")
     fun notificationCount(@Path("userId") userId: String, @Body notificationCountRequetModel: RequestModel): Call<ResponseModel>
