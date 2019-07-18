@@ -20,8 +20,8 @@ class NotificationViewModel : ViewModel()  {
         this.notificationRepository = notificationRepository
     }
 
-    fun notificationApi(mContext: Context, requestModel: RequestModel) {
-        notificationRepository!!.NotificationApiRequest(mContext, requestModel, object :
+    fun notificationApi(mContext: Context,userId:String, requestModel: RequestModel) {
+        notificationRepository!!.NotificationApiRequest(mContext,userId, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())

@@ -43,9 +43,7 @@ class ProfileRepository @Inject constructor(){
                     else -> responseListener.onFailure(t.message)
                 }
             }
-
-
-
+            
         })
     }
 }

@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(){
 
-    fun NotificationApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val notificationCall = RestClient.getWebServiceData()?.notification(requestModel)
+    fun NotificationApiRequest(context: Context,userId: String,  requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+        val notificationCall = RestClient.getWebServiceData()?.notification(userId, requestModel)
         notificationCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

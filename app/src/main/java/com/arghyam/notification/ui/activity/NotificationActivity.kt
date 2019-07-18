@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +16,9 @@ import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
@@ -31,7 +35,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_notification.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 class NotificationActivity : AppCompatActivity() {
@@ -102,14 +105,10 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun loadNotification(notificationResponseModel: NotificationResponseModel) {
         listView = notification_list
-        Log.e("Anirudh", "activityloaded")
         if (notificationResponseModel.notifications.isNotEmpty()) {
-//
-//            Collections.sort(notificationResponseModel.notifications) { o1, o2 ->
-//                o1.createdAt.compareTo(o2.createdAt)
-//            }
-//            Collections.reverse(notificationResponseModel.notifications)
 
+            noNotifications.visibility= GONE
+            notification_list.visibility = VISIBLE
 
             Log.e("Anirudh", notificationResponseModel.notifications.size.toString())
             for (i in 0 until notificationResponseModel.notifications.size) {
@@ -117,9 +116,7 @@ class NotificationActivity : AppCompatActivity() {
                 springCode = notificationResponseModel.notifications[i].springCode
                 dataModels?.add(
                     NotificationDataModel(
-                        "Spring discharge data was submitted by " + notificationResponseModel.notifications[i].firstName,
-//                        ArghyamUtils().getTime(notificationResponseModel.notifications[i].createdAt),
-//                        ArghyamUtils().getDate(notificationResponseModel.notifications[i].createdAt)
+                        " "+ notificationResponseModel.notifications[i].notificationTitle,
                         ArghyamUtils().epochToTime(notificationResponseModel.notifications[i].createdAt),
                         ArghyamUtils().epochToDateFormat(notificationResponseModel.notifications[i].createdAt)
                     )
@@ -149,13 +146,21 @@ class NotificationActivity : AppCompatActivity() {
                         notificationResponseModel.notifications[position].firstName
                     )
                     intent.putExtra("SpringCode", notificationResponseModel.notifications[position].springCode)
-                    startActivity(intent)
+                    intent.putExtra("submittedById",notificationResponseModel.notifications[position].userId)
+                    if(notificationResponseModel.notifications[position].status == "Created")
+                        startActivity(intent)
+                    else
+                        listView.isClickable = false
                 }
 
         }
     }
 
     private fun initNotificationApi() {
+
+        var userId = SharedPreferenceFactory(this@NotificationActivity).getString(Constants.USER_ID)!!
+
+
         var notificationObject = RequestModel(
             id = GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -173,7 +178,7 @@ class NotificationActivity : AppCompatActivity() {
         )
 
 
-        notificationViewModel?.notificationApi(this, notificationObject)
+        notificationViewModel?.notificationApi(this,userId, notificationObject)
 
 
     }
