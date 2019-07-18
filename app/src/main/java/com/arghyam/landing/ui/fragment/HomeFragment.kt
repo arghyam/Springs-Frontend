@@ -29,10 +29,6 @@ import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.adapters.LandingAdapter
-import com.arghyam.landing.model.AllSpringDataModel
-import com.arghyam.landing.model.AllSpringDetailsModel
-import com.arghyam.landing.model.AllSpringModel
-import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.LandingViewModel
@@ -44,6 +40,11 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
+import com.arghyam.landing.model.*
+import com.arghyam.landing.repository.NotificationCountRepository
+import com.arghyam.landing.viewmodel.NotificationCountViewModel
+import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_home.progressBar
@@ -65,6 +66,12 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
     private var firstCallMade: Boolean = false
+
+    @Inject
+    lateinit var notificationCountRepository: NotificationCountRepository
+
+    private var notificationCountViewModel: NotificationCountViewModel? = null
+
     /**
      * Initialize newInstance for passing paameters
      */
@@ -79,9 +86,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun initbell(notificationCount:Int) {
+        Log.d("notificationCountBell--","" + notificationCount)
+
         if(notificationCount>0){
-            badge.visibility = GONE
-            notification_count.visibility = GONE
+            badge.visibility = VISIBLE
+            notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
         }
         notification_bell.setOnClickListener {
@@ -173,6 +182,11 @@ class HomeFragment : Fragment() {
                 if (springsList.size == 0) {
 
                     initRepository()
+
+                    initNotificationCountApi()
+                    initNotificationCountResponse()
+
+
                     initApiCall()
                 }
             } else {
@@ -187,7 +201,64 @@ class HomeFragment : Fragment() {
         initFab()
         reload()
         registerReceiver()
-        initbell(1)
+
+
+//        initbell(1)
+    }
+
+    private fun initNotificationCountResponse() {
+        notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
+
+            saveNotificationCountData(it)
+        })
+        notificationCountViewModel?.notificationCountError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (notificationCountViewModel?.notificationCountError()?.hasObservers()!!) {
+                notificationCountViewModel?.notificationCountError()?.removeObservers(this)
+            }
+        })
+    }
+
+    private fun saveNotificationCountData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            Log.d("success_notication", "yes")
+
+            var notificationCountResponseModel: NotificationCountResponseModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<NotificationCountResponseModel>() {}.type
+            )
+
+            Log.d("notificationCount--Home", notificationCountResponseModel.notificationCount.toString())
+
+            var notificationCountBell = notificationCountResponseModel.notificationCount
+
+            initbell(notificationCountBell)
+
+
+        }
+    }
+
+    private fun initNotificationCountApi() {
+
+        var userId = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)!!
+
+        var notificationCountObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = notificationSpringModel(
+                notifications = NotificationModel(
+                    type = "notifications"
+                )
+            )
+        )
+
+        notificationCountViewModel?.notificationCountApi(context!!, userId, notificationCountObject)
     }
 
 
@@ -358,6 +429,11 @@ class HomeFragment : Fragment() {
     private fun initRepository() {
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
+
+
+        notificationCountViewModel = ViewModelProviders.of(this).get(NotificationCountViewModel::class.java)
+        notificationCountViewModel?.setNotificationCountRepository(notificationCountRepository)
+
     }
 
 

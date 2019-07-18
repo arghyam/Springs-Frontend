@@ -1,22 +1,20 @@
 package com.arghyam.myactivity.ui
 
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
-
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
@@ -27,6 +25,9 @@ import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.landing.model.NotificationCountResponseModel
+import com.arghyam.landing.repository.NotificationCountRepository
+import com.arghyam.landing.viewmodel.NotificationCountViewModel
 import com.arghyam.myactivity.adapter.MyActivityAdapter
 import com.arghyam.myactivity.model.AllActivitiesModel
 import com.arghyam.myactivity.model.MyActivitiesRequest
@@ -34,13 +35,13 @@ import com.arghyam.myactivity.model.MyActivityModel
 import com.arghyam.myactivity.model.RequestMyActivitiesModel
 import com.arghyam.myactivity.repository.MyActivitiesRepository
 import com.arghyam.myactivity.viewmodel.MyActivitiesViewModel
+import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_my_activity.*
-import kotlinx.android.synthetic.main.fragment_my_activity.notauser
-import kotlinx.android.synthetic.main.fragment_my_activity.toolbar
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -55,6 +56,13 @@ class MyActivityFragment : Fragment() {
     @Inject
     lateinit var mMyActivitiesRepository: MyActivitiesRepository
 
+
+    @Inject
+    lateinit var notificationCountRepository: NotificationCountRepository
+
+    private var notificationCountViewModel: NotificationCountViewModel? = null
+
+
     companion object {
         fun newInstance(): MyActivityFragment {
             var fragmentMyActivity = MyActivityFragment()
@@ -65,15 +73,10 @@ class MyActivityFragment : Fragment() {
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     private fun initbell(notificationCount: Int) {
         if (notificationCount > 0) {
-            badge.visibility = View.GONE
-            notification_count.visibility = View.GONE
+            badge.visibility = View.VISIBLE
+            notification_count.visibility = View.VISIBLE
             notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener {
@@ -103,7 +106,7 @@ class MyActivityFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_my_activity, container, false)
+        var rootView = inflater.inflate(R.layout.fragment_my_activity, container, false)
         return rootView
     }
 
@@ -116,12 +119,70 @@ class MyActivityFragment : Fragment() {
         initComponent()
         initRepository()
         observeData()
+        initNotificationCountApi()
+        initNotificationCountResponse()
         sendRequest()
         val toolbar = toolbar as Toolbar
         toolbar.title = "My Activity"
         initNotifications()
         initbell(1)
     }
+
+    private fun initNotificationCountResponse() {
+        Log.d("success", "inside")
+        notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
+
+            saveNotificationCountData(it)
+        })
+
+        notificationCountViewModel?.notificationCountError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (notificationCountViewModel?.notificationCountError()?.hasObservers()!!) {
+                notificationCountViewModel?.notificationCountError()?.removeObservers(this)
+            }
+        })
+    }
+
+
+    private fun saveNotificationCountData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            Log.d("success_notication", "yes")
+
+            var notificationCountResponseModel: NotificationCountResponseModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<NotificationCountResponseModel>() {}.type
+            )
+
+            Log.d("notificationCount--act", notificationCountResponseModel.notificationCount.toString())
+            var notificationCountBell = notificationCountResponseModel.notificationCount
+
+            initbell(notificationCountBell)
+        }
+    }
+
+    private fun initNotificationCountApi() {
+
+        var userId = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)!!
+
+        var notificationCountObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = notificationSpringModel(
+                notifications = NotificationModel(
+                    type = "notifications"
+                )
+            )
+        )
+        notificationCountViewModel?.notificationCountApi(context!!, userId, notificationCountObject)
+
+    }
+
 
     private fun initRecyclerView(responseData: AllActivitiesModel) {
 
@@ -154,14 +215,19 @@ class MyActivityFragment : Fragment() {
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
-        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
-            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
-        }
+//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0) {
+//            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)
+//                ?.let { initbell(it) }
+//        }
     }
 
     private fun initRepository() {
         mMyActivitiesViewModel = ViewModelProviders.of(this).get(MyActivitiesViewModel::class.java)
         mMyActivitiesViewModel.setMyActivitiesRepository(mMyActivitiesRepository)
+
+        notificationCountViewModel = ViewModelProviders.of(this).get(NotificationCountViewModel::class.java)
+        notificationCountViewModel?.setNotificationCountRepository(notificationCountRepository)
+
     }
 
     private fun observeData() {

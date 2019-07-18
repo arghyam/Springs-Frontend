@@ -32,8 +32,13 @@ import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.model.AllSpringModel
 import com.arghyam.landing.model.GetAllSpringsModel
+import com.arghyam.landing.model.NotificationCountResponseModel
 import com.arghyam.landing.repository.GetAllSpringRepository
+import com.arghyam.landing.repository.NotificationCountRepository
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
+import com.arghyam.landing.viewmodel.NotificationCountViewModel
+import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -56,6 +61,12 @@ class FavouritesFragment : Fragment() {
     private var maxItem: Int = 0
 
     private var notification: Boolean = true
+
+
+    @Inject
+    lateinit var notificationCountRepository: NotificationCountRepository
+
+    private var notificationCountViewModel: NotificationCountViewModel? = null
 
     companion object {
         fun newInstance(): FavouritesFragment {
@@ -91,8 +102,8 @@ class FavouritesFragment : Fragment() {
 
     private fun initbell(notificationCount:Int) {
         if(notificationCount>0){
-            badge.visibility = GONE
-            notification_count.visibility = GONE
+            badge.visibility = VISIBLE
+            notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
         }
         bell.setOnClickListener{
@@ -112,12 +123,67 @@ class FavouritesFragment : Fragment() {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                 initRepository()
+
+                initNotificationCountApi()
+                initNotificationCountResponse()
                 initApiCall()
             } else {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
             }
         }
-        initbell(1)
+    }
+
+    private fun initNotificationCountApi() {
+
+        var userId = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)!!
+
+        var notificationCountObject = RequestModel(
+            id = Constants.GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = notificationSpringModel(
+                notifications = NotificationModel(
+                    type = "notifications"
+                )
+            )
+        )
+
+        notificationCountViewModel?.notificationCountApi(context!!, userId, notificationCountObject)
+    }
+
+    private fun initNotificationCountResponse() {
+        notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
+
+            saveNotificationCountData(it)
+        })
+        notificationCountViewModel?.notificationCountError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (notificationCountViewModel?.notificationCountError()?.hasObservers()!!) {
+                notificationCountViewModel?.notificationCountError()?.removeObservers(this)
+            }
+        })
+    }
+
+    private fun saveNotificationCountData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            Log.d("success_notication", "yes")
+
+            var notificationCountResponseModel: NotificationCountResponseModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<NotificationCountResponseModel>() {}.type
+            )
+
+            Log.d("notificationCount--fav", notificationCountResponseModel.notificationCount.toString())
+            var notificationCountBell = notificationCountResponseModel.notificationCount
+
+            initbell(notificationCountBell)
+
+        }
     }
 
     private fun initNotifications() {
@@ -188,9 +254,9 @@ class FavouritesFragment : Fragment() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
         val toolbar = toolbar as Toolbar
         toolbar.title = "Favourites"
-        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
-            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
-        }
+//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
+//            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
+//        }
     }
 
     private fun getAllSpringRequest() {
@@ -236,6 +302,11 @@ class FavouritesFragment : Fragment() {
     private fun initRepository() {
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
+
+
+        notificationCountViewModel = ViewModelProviders.of(this).get(NotificationCountViewModel::class.java)
+        notificationCountViewModel?.setNotificationCountRepository(notificationCountRepository)
+
     }
 
 
