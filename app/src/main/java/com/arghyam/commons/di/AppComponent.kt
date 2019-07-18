@@ -14,6 +14,7 @@ import com.arghyam.notification.ui.activity.DisplayDischargeDataActivity
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.arghyam.profile.ui.ProfileActivity
 import com.arghyam.search.ui.SearchFragment
+import com.arghyam.splash.ui.SplashActivity
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.arghyam.springdetails.ui.fragments.DetailsFragment
@@ -60,6 +61,6 @@ interface AppComponent {
 
     fun inject(displayDischargeDataActivity: DisplayDischargeDataActivity)
 
-
+    fun inject(splashActivity: SplashActivity)
 
 }
