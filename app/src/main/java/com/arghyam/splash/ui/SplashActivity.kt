@@ -27,7 +27,6 @@ import com.arghyam.more.repository.GetUserProfileRepository
 import com.arghyam.profile.ui.ProfileActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.content_login.*
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {

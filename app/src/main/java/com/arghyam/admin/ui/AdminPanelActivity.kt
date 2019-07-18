@@ -74,13 +74,15 @@ class AdminPanelActivity : AppCompatActivity() {
             )
             var i = 0
             while (i < responseData.size) {
-                user.add(
-                    User(
-                        responseData[i].firstName,
-                        responseData[i].username,
-                        mutableListOf("Admin", "Reviewer")
+                if (responseData[i].firstName != null && responseData[i].username!=null){
+                    user.add(
+                        User(
+                            responseData[i].firstName,
+                            responseData[i].username,
+                            mutableListOf("Admin", "Reviewer")
+                        )
                     )
-                )
+                }
                 i++
             }
         }
@@ -135,6 +137,7 @@ class AdminPanelActivity : AppCompatActivity() {
     fun filter(text: String) {
         val filterName = java.util.ArrayList<User>()
         for (s in user) {
+            Log.e("AdminPanel",s.username+"   "+s.phoneNumber)
             if (s.username!!.toLowerCase().contains(text.toLowerCase())||s.phoneNumber!!.contains(text)) {
                 filterName.add(s)
             }
