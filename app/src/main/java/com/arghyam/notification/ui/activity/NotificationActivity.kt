@@ -34,7 +34,10 @@ import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_notification.*
+import kotlinx.android.synthetic.main.activity_notification.custom_toolbar
+import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_notification.progressBar as progressBar1
 
 
 class NotificationActivity : AppCompatActivity() {
@@ -66,6 +69,8 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun init() {
         initComponent()
+        progressBar.visibility = VISIBLE
+
         initRepository()
 
         initNotificationApi()
@@ -75,7 +80,7 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun initNotificationResponse() {
         notificationViewModel?.getNotificationResponse()?.observe(this, Observer {
-
+            progressBar.visibility = GONE
             saveNotificationlData(it)
         })
         notificationViewModel?.getNotifyError()?.observe(this, Observer {
@@ -153,6 +158,9 @@ class NotificationActivity : AppCompatActivity() {
                         listView.isClickable = false
                 }
 
+        } else{
+            noNotifications.visibility= VISIBLE
+            notification_list.visibility = GONE
         }
     }
 
