@@ -115,6 +115,9 @@ class FavouritesFragment : Fragment() {
     private fun init() {
         initComponent()
         initNotifications()
+        initRepository()
+        initNotificationCountApi()
+        initNotificationCountResponse()
         if (ArghyamUtils().permissionGranted(
                 context!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -122,10 +125,6 @@ class FavouritesFragment : Fragment() {
         ) {
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
-                initRepository()
-
-                initNotificationCountApi()
-                initNotificationCountResponse()
                 initApiCall()
             } else {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
