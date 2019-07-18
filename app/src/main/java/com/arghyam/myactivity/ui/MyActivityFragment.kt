@@ -125,7 +125,6 @@ class MyActivityFragment : Fragment() {
         val toolbar = toolbar as Toolbar
         toolbar.title = "My Activity"
         initNotifications()
-        initbell(1)
     }
 
     private fun initNotificationCountResponse() {
