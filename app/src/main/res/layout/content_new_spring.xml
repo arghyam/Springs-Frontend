@@ -29,6 +29,7 @@
                         android:id="@+id/spring_name"
                         android:layout_width="match_parent"
                         android:singleLine="true"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
                         android:layout_height="wrap_content"
                         android:hint="Spring name*"
                         android:textColorHint="#2372D9"
