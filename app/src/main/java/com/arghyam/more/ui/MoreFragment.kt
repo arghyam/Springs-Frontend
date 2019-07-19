@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
@@ -38,17 +39,21 @@ import com.arghyam.more.repository.GetUserProfileRepository
 import com.arghyam.more.repository.UpdateUserProfileRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_admin_panel.*
 import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
 import kotlinx.android.synthetic.main.fragment_more.*
 import kotlinx.android.synthetic.main.fragment_more.view.*
 import javax.inject.Inject
 
+
+
 /**
  * A simple [Fragment] subclass.
  *
  */
 class MoreFragment : Fragment() {
+
 
     @Inject
     lateinit var getUserProfileRepository: GetUserProfileRepository
@@ -91,7 +96,7 @@ class MoreFragment : Fragment() {
             rl_edit_name.visibility = GONE
             save_name.setText(responseData.firstName)
             edit_name_layout.visibility = VISIBLE
-
+            fragmentManager?.beginTransaction()?.addToBackStack(null)?.commit() //Add to backStack so that when user comes back it loads the same fragment.
         }
         save_name.setOnClickListener {
 
