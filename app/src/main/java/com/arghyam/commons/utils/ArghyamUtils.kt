@@ -11,6 +11,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
@@ -66,7 +67,7 @@ class ArghyamUtils {
 
     var bd = BigDecimal(value);
     bd = bd.setScale(places, RoundingMode.HALF_UP);
-    return bd.toDouble();
+    return bd.toDouble()
 }
 
     fun turnOnLocation(activity: Activity) {

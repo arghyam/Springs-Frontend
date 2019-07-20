@@ -1,6 +1,7 @@
 package com.arghyam.more.ui
 
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,6 +31,7 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.ACCESS_TOKEN
 import com.arghyam.commons.utils.Constants.GET_USER_PROFILE
 import com.arghyam.commons.utils.Constants.UPDATE_USER_PROFILE
+import com.arghyam.commons.utils.OnFocusLostListener
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.help.ui.HelpActivity
 import com.arghyam.iam.model.Params
@@ -92,14 +96,13 @@ class MoreFragment : Fragment() {
     }
 
     private fun initClick() {
+        fragmentManager?.beginTransaction()?.addToBackStack(null)?.commit() //Add to backStack so that when user comes back it loads the same fragment.
         edit_icon.setOnClickListener {
             rl_edit_name.visibility = GONE
             save_name.setText(responseData.firstName)
             edit_name_layout.visibility = VISIBLE
-            fragmentManager?.beginTransaction()?.addToBackStack(null)?.commit() //Add to backStack so that when user comes back it loads the same fragment.
         }
         save_name.setOnClickListener {
-
             if (save_name.text == null || save_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(context!!, "Please enter name")
             } else if (save_name.text.toString().trim().length < 3) {
@@ -112,6 +115,8 @@ class MoreFragment : Fragment() {
                 edit_name_layout.visibility = GONE
             }
         }
+
+        save_name.hideSoftKeyboardOnFocusLostEnabled(true)
 
         sign_in_button.setOnClickListener {
             startActivity(Intent(activity!!, LoginActivity::class.java))
@@ -135,8 +140,14 @@ class MoreFragment : Fragment() {
             startActivity(Intent(activity!!, HelpActivity::class.java))
 
         }
+    }
 
-
+    private fun EditText.hideSoftKeyboardOnFocusLostEnabled(enabled: Boolean) {
+        val listener = if (enabled)
+            OnFocusLostListener()
+        else
+            null
+        onFocusChangeListener = listener
     }
 
     private fun showDialog(it: View?) {
