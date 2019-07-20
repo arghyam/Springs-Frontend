@@ -170,7 +170,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         intent.putExtra("caller",1)
 //
         startActivity(intent)
-        finish()
+        this.finish()
 
 
     }
@@ -179,6 +179,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
         var intent = Intent(this@DisplayDischargeDataActivity, LandingActivity::class.java)
         startActivity(intent)
+        this.finish()
 
     }
 

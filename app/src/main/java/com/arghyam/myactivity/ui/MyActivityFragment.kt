@@ -79,10 +79,7 @@ class MyActivityFragment : Fragment() {
             notification_count.visibility = View.VISIBLE
             notification_count.text = notificationCount.toString()
         }
-        bell.setOnClickListener {
-            Log.e("Anirudh", "bell clicked")
-            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
-        }
+
     }
 
     private fun initNotifications() {
@@ -94,6 +91,10 @@ class MyActivityFragment : Fragment() {
         } else {
             notauser.visibility = GONE
             bell.visibility = View.VISIBLE
+        }
+        bell.setOnClickListener {
+            Log.e("Anirudh", "bell clicked")
+            this.startActivity(Intent(activity!!, NotificationActivity::class.java))
         }
     }
 
@@ -207,8 +208,6 @@ class MyActivityFragment : Fragment() {
                     )
                 )
             }
-
-
         }
     }
 

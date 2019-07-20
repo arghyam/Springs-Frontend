@@ -93,11 +93,6 @@ class HomeFragment : Fragment() {
             notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
         }
-        notification_bell.setOnClickListener {
-            Log.e("Fragment","bell clicked")
-            activity?.startActivity(Intent(activity, NotificationActivity::class.java))
-
-        }
     }
     private fun initNotifications() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
@@ -105,6 +100,10 @@ class HomeFragment : Fragment() {
         }
         else
             bell.visibility = VISIBLE
+        notification_bell.setOnClickListener {
+            Log.e("Fragment","bell clicked")
+            activity?.startActivity(Intent(activity, NotificationActivity::class.java))
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
