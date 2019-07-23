@@ -202,7 +202,7 @@
                         android:layout_marginTop="10dp">
 
                     <EditText
-                            android:id="@+id/mobile"
+                            android:id="@+id/numberOfHouseHold"
                             android:layout_width="match_parent"
                             android:singleLine="true"
                             android:layout_height="wrap_content"

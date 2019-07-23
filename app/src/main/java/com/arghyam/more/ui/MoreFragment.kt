@@ -237,7 +237,7 @@ class MoreFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var rootView = inflater.inflate(R.layout.fragment_more, container, false)
-        if (SharedPreferenceFactory(activity!!).getString(Constants.ACCESS_TOKEN) == "") {
+        if (SharedPreferenceFactory(activity!!).getString(ACCESS_TOKEN) == "") {
             rootView.user_details.visibility = GONE
             rootView.sign_out.visibility = GONE
             rootView.sign_in_for_guest.visibility = VISIBLE
@@ -260,7 +260,6 @@ class MoreFragment : Fragment() {
     }
 
     private fun getUserProfileRequest() {
-        Log.e("Anirudh", context?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) })
         var getUserProfileObject = RequestModel(
             id = GET_USER_PROFILE,
             ver = BuildConfig.VER,
@@ -301,7 +300,7 @@ class MoreFragment : Fragment() {
             )
             tv_username.text = responseData.firstName
             tv_user_phone.text = responseData.userName
-            if (responseData.role.contains("arghyam-admin"))
+            if (responseData.role.contains("arghyam-admin") && SharedPreferenceFactory(activity!!).getString(ACCESS_TOKEN) != "")
                 admin_layout.visibility = VISIBLE
         }
     }

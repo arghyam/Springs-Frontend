@@ -87,6 +87,7 @@ class MyActivityFragment : Fragment() {
             notauser.visibility = View.VISIBLE
             myActivityRecyclerView.visibility = GONE
             bell.visibility = GONE
+            notification_bell.visibility = GONE
             initsigninbutton()
         } else {
             notauser.visibility = GONE

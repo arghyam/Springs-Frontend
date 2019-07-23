@@ -68,7 +68,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun saveUserProfileData(responseModel: ResponseModel) {
         Log.d("saveUserProfileData", "saveUserProfileData")
-        if (responseModel.response.responseCode.equals("200")) {
+        if ("200" == responseModel.response.responseCode) {
             val intent = Intent(this@ProfileActivity, LandingActivity::class.java)
             startActivity(intent)
             finish()

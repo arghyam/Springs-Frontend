@@ -97,6 +97,7 @@ class HomeFragment : Fragment() {
     private fun initNotifications() {
         if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
             bell.visibility = GONE
+            notification_bell.visibility = GONE
         }
         else
             bell.visibility = VISIBLE

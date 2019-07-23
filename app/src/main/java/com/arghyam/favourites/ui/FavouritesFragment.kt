@@ -186,6 +186,7 @@ class FavouritesFragment : Fragment() {
             notauser.visibility = VISIBLE
             scrollView.visibility = GONE
             bell.visibility = GONE
+            notification_bell.visibility = GONE
             initsigninbutton()
         }
         else{

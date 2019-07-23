@@ -91,7 +91,7 @@
     <string name="select_months">Select seasonality months</string>
     <string name="select_season">Select the appropriate seasonality of the spring</string>
     <string name="select_spring">Select atleast one spring usage</string>
-    <string name="enter_household">Enter the household number the spring supports</string>
+    <string name="enter_household">Please enter household dependencies</string>
     <string name="back_confirmation">Are you sure you want to go back?</string>
     <string name="title_favourites">Favourites</string>
     <string name="time">1:35 PM</string>

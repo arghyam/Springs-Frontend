@@ -381,8 +381,8 @@ class DetailsFragment : Fragment() {
     private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
         for (i in 0 until springProfileResponse.extraInformation.dischargeData.size) {
             for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size) {
-                if (MAX_IMAGES > 0) {
-                    Log.e("DetailsFragment", "images added" + MAX_IMAGES + "   j" + j + "  i" + i)
+                if (MAX_IMAGES > 0 && !springProfileResponse.extraInformation.dischargeData[i].status.equals("Rejected",true) ) {
+                    Log.e("DetailsFragment", "images added$MAX_IMAGES   j$j  i$i")
                     imagelist.add(springProfileResponse.extraInformation.dischargeData[i].images[j])
                     MAX_IMAGES--
                 }

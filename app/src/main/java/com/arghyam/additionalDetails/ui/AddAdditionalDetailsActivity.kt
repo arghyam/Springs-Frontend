@@ -1,6 +1,7 @@
 package com.arghyam.additionalDetails.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,8 +9,11 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
@@ -17,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
@@ -27,9 +32,12 @@ import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
 import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.OnFocusLostListener
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import kotlinx.android.synthetic.main.content_add_additional_details.*
+import kotlinx.android.synthetic.main.content_help.*
+import kotlinx.android.synthetic.main.spring_details.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -252,7 +260,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         checkBoxOthers = findViewById<CheckBox>(R.id.others)
         perennialRadio = findViewById(R.id.radioButton_pernnial)
         seasonalRadio = findViewById(R.id.radioButton_seasonal1)
-        houseHoldNumber = findViewById(R.id.mobile)
+        houseHoldNumber = findViewById(R.id.numberOfHouseHold)
     }
 
     private fun initToolbar() {
@@ -353,6 +361,14 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         initSubmitClickListener()
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     private fun initSubmitClickListener() {
         submit.setOnClickListener {
             var validated: Boolean = validateData()
@@ -378,6 +394,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
                     return false
                 }
             }
+
             return true
         } else {
             ArghyamUtils().longToast(this, getString(R.string.select_season))
@@ -386,29 +403,28 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     }
 
     private fun checkUsages(): Boolean {
-        if (checkBoxOthers.isChecked || checkBoxLivestock.isChecked || checkBoxIndustrial.isChecked ||
+        return if (checkBoxOthers.isChecked || checkBoxLivestock.isChecked || checkBoxIndustrial.isChecked ||
             checkBoxIrrigation.isChecked || checkBoxDomestic.isChecked
         ) {
-            return true
+            true
         } else {
             ArghyamUtils().longToast(this, getString(R.string.select_spring))
-            return false
+            false
         }
     }
 
     private fun checkHouseHold(): Boolean {
-        if (houseHoldNumber.text == null || houseHoldNumber.text.toString().equals("")) {
+        return if (houseHoldNumber.text == null || houseHoldNumber.text.toString().equals("")) {
             ArghyamUtils().longToast(this, getString(R.string.enter_household))
-            return false
+            false
         }else if(houseHoldNumber.text.length >= 9 ){
             ArghyamUtils().longToast(this, getString(R.string.enter_proper))
-            return false
+            false
         } else
-            return true
+            true
     }
 
     private fun initRecyclerview() {
-
         val recyclerViewAdapter = CalenderAdapter(calender, this@AddAdditionalDetailsActivity, this)
         val linearLayoutManager = GridLayoutManager(this, 4)
         calenderRecyclerview.layoutManager = linearLayoutManager
@@ -416,6 +432,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         calenderRecyclerview.adapter = recyclerViewAdapter
 
     }
+
 
     private fun addCalender() {
         calender.add("Jan")

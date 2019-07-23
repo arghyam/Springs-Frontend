@@ -84,12 +84,22 @@
                     app:srcCompat="@drawable/ic_mobile"/>
 
             <TextView
-                    android:id="@+id/tv_user_phone"
+                    android:id="@+id/countryCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#fff"
                     android:paddingLeft="12dp"
                     android:layout_toRightOf="@+id/add_icon"
+                    android:textSize="18dp"
+                    android:text="+91 "
+
+            />
+            <TextView
+                    android:id="@+id/tv_user_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#fff"
+                    android:layout_toRightOf="@+id/countryCode"
                     android:textSize="18dp"
             />
 
