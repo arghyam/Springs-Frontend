@@ -100,11 +100,11 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         submittedById = dataIntent.getStringExtra("submittedById")
 
 
-        Log.e("DisplayDischargeData", "" + springCode + "   " + dischargeDataOsid + "  " + submittedBy)
+        Log.e("DisplayDischargeData", "$springCode   $dischargeDataOsid  $submittedBy")
     }
 
     private fun initSet(){
-        var  additionalSpring : String = "Submitted by "+ "<b> ${submittedBy} </b>"
+        var  additionalSpring = "Submitted by <b> $submittedBy </b>"
         submitted_by.text = Html.fromHtml(additionalSpring)
     }
 

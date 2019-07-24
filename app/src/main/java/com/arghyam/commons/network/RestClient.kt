@@ -35,7 +35,7 @@ class RestClient {
                         .build()
                     chain.proceed(request)
                 }
-            } catch (e: UnsupportedOperationException) {
+            } catch (e: Throwable) {
                 Log.e("exception", e.toString())
             }
 
@@ -61,7 +61,7 @@ class RestClient {
                     .build()
             }
 
-            service = retrofit.create<ApiInterface>(ApiInterface::class.java!!)
+            service = retrofit.create(ApiInterface::class.java!!)
             return service
         }
     }
