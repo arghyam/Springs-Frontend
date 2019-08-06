@@ -2,6 +2,7 @@ package com.arghyam.commons.network
 
 import com.arghyam.addspring.model.UploadImageResponseModel
 import com.arghyam.commons.entities.ExampleEntity
+import com.arghyam.geographySearch.model.AllStatesModel
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import okhttp3.MultipartBody
@@ -59,6 +60,21 @@ interface ApiInterface {
 
     @POST("/api/v1/user/myActivities")
     fun getMyActivities(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getStates")
+    fun getAllStates(@Body statesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getDistrictsByStateOSID")
+    fun getDistricts(@Body districtsModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getSubDistrictsByDistrictOSID")
+    fun getBlocks(@Body blocksModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getVillagesBySubDistrictOSID")
+    fun getVillages(@Body villagesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getCitiesBySubDistrictOSID")
+    fun getTown(@Body citiesModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/reviewerData")
     fun reviewerData(@Body reviewerRequetModel: RequestModel): Call<ResponseModel>

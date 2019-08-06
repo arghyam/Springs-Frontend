@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
@@ -16,11 +15,9 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.iam.ui.LoginActivity
-import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_favourites.view.*
 import kotlinx.android.synthetic.main.list_spring.view.*
 
 class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, val context: Context) :
@@ -74,13 +71,13 @@ class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, v
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val springNameText: TextView = view.spring_name
-        val villageNameText: TextView = view.village_name
+        val villageNameText: TextView = view.location
         val springImage: ImageView = view.img_spring
         val favourite: ImageView = view.fav_icon
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
         val springcode: TextView = view.springcode
-        val village: TextView = view.village_name
+        val village: TextView = view.location
     }
 }

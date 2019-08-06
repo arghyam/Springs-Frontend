@@ -1,3 +1,3 @@
 package com.arghyam.geographySearch.model
 
-data class BlockModel(val blockName: String)
+data class BlockModel(val blockName: String,var blockOsid:String)

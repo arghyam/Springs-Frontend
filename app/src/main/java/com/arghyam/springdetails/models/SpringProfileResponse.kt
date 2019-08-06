@@ -15,7 +15,7 @@ class SpringProfileResponse(
     var longitude: Double,
     var elevation: Double,
     var accuracy: Float,
-    var village: String,
+    var location: String,
     var numberOfHouseholds: Int,
     var ownershipType: String,
     var usage: ArrayList<String>,

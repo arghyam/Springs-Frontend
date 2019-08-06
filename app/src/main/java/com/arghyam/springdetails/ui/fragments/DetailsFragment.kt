@@ -171,6 +171,7 @@ class DetailsFragment : Fragment() {
         springName = "${springProfileResponse.springName}"
 
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
+        tv_spring_location.text = ":  ${springProfileResponse.location}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         tv_spring_submitted.text = ":  ${springProfileResponse.submittedBy}"

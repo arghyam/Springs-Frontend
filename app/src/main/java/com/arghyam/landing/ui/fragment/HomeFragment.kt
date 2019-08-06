@@ -309,15 +309,7 @@ class HomeFragment : Fragment() {
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<AllSpringDetailsModel>() {}.type
             )
-            Log.e(
-                "Total Springs", ArghyamUtils().convertToString(responseModel.response.responseObject)
-            )
-
-            Log.e("Total Springs", responseData.totalSprings.toString() + "springs")
-            Log.e("Springs", "added")
             springsList.addAll(responseData.springs)
-            for (spring in springsList)
-                Log.e("SpringList", spring.springCode)
             maxItem = responseData.totalSprings / 5
             if (responseData.totalSprings % 5 != 0) {
                 maxItem++

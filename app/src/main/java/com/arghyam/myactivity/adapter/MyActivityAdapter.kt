@@ -46,7 +46,7 @@ class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: 
         val dischargeData = view.dicharge_data
         val time = view.time_date
         val springName = view.name
-        val villageName = view.village_name
+        val villageName = view.location
         val activity = view.my_activity_relative_layout
 
     }

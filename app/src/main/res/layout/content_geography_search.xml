@@ -3,9 +3,13 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/geography_search">
+    <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar"/>
 
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar"
                 android:layout_above="@+id/search_layout">
 
         <LinearLayout android:layout_width="match_parent"
@@ -37,7 +41,7 @@
                         android:layout_centerVertical="true"
                         android:paddingRight="32dp"
                         android:textColor="#8C8C8B"
-                        android:text="Gujarat"/>
+                        android:text=""/>
 
                 <ImageView
                         android:layout_width="24dp"
@@ -80,7 +84,7 @@
                         android:layout_centerVertical="true"
                         android:paddingRight="32dp"
                         android:textColor="#8C8C8B"
-                        android:text="Amreli"/>
+                        android:text=""/>
 
                 <ImageView
 
@@ -124,7 +128,7 @@
                         android:layout_centerVertical="true"
                         android:paddingRight="32dp"
                         android:textColor="#8C8C8B"
-                        android:text="Block 1"/>
+                        android:text=""/>
 
                 <ImageView
                         android:layout_width="24dp"
@@ -157,7 +161,7 @@
                         android:padding="16dp">
 
                     <RadioButton
-                            android:id="@+id/radioPublic"
+                            android:id="@+id/radioUrban"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -176,9 +180,9 @@
                             android:gravity="right"
                             android:layout_centerVertical="true"
                             android:paddingRight="32dp"
-                            android:layout_toRightOf="@+id/radioPublic"
+                            android:layout_toRightOf="@+id/radioUrban"
                             android:textColor="#8C8C8B"
-                            android:text="Town"/>
+                            android:text=""/>
 
                     <ImageView
                             android:layout_width="24dp"
@@ -206,7 +210,7 @@
                         android:padding="16dp">
 
                     <RadioButton
-                            android:id="@+id/radioPrivate"
+                            android:id="@+id/radioRural"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="16dp"
@@ -224,9 +228,9 @@
                             android:gravity="right"
                             android:layout_centerVertical="true"
                             android:paddingRight="32dp"
-                            android:layout_toRightOf="@+id/radioPrivate"
+                            android:layout_toRightOf="@+id/radioRural"
                             android:textColor="#8C8C8B"
-                            android:text="Gram panchayat"/>
+                            android:text=""/>
 
                     <ImageView
                             android:layout_width="24dp"
@@ -265,9 +269,10 @@
 
 
         <Button
+                android:id="@+id/search_button"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="#0D65D9"
+                android:background="#6BA5F2"
                 android:text="SEARCH"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"

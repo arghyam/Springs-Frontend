@@ -5,6 +5,7 @@ import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.admin.ui.AdminPanelActivity
 import com.arghyam.example.ui.ExampleActivity
 import com.arghyam.favourites.ui.FavouritesFragment
+import com.arghyam.geographySearch.ui.fragment.*
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.iam.ui.OtpVerifyActivity
 import com.arghyam.landing.ui.fragment.HomeFragment
@@ -57,10 +58,19 @@ interface AppComponent {
 
     fun inject (searchFragment: SearchFragment)
 
+    fun inject (statesFragment: StateFragment)
+
     fun inject(notificationActivity: NotificationActivity)
 
     fun inject(displayDischargeDataActivity: DisplayDischargeDataActivity)
 
     fun inject(splashActivity: SplashActivity)
 
+    fun inject(districtFragment: DistrictFragment)
+
+    fun inject(blockFragment: BlockFragment)
+
+    fun inject(panchayatFragment: PanchayatFragment)
+
+    fun inject(townFragment: TownFragment)
 }

@@ -1,8 +1,5 @@
 package com.arghyam.search.ui
 
-import android.app.Activity
-import android.annotation.SuppressLint
-import android.provider.SyncStateContract
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -12,24 +9,18 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.view.View.*
 import androidx.lifecycle.ViewModelProviders
-import android.widget.EditText
-import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.solver.GoalRow
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
 
-import com.arghyam.additionalDetails.model.AdditionalDetailsModel
-import com.arghyam.additionalDetails.model.RequestAdditionalDetailsDataModel
-import com.arghyam.additionalDetails.repository.AdditionalDetailsRepository
-import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.commons.utils.Constants
 import com.arghyam.geographySearch.ui.activity.GeographySearchActivity
 
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
-import com.arghyam.landing.adapters.LandingAdapter
+import com.arghyam.landing.model.AllSpringDataModel
+import com.arghyam.landing.model.AllSpringModel
 import com.arghyam.landing.model.LandingModel
 
 import com.arghyam.search.model.RequestSearchResultDataModel
@@ -40,17 +31,14 @@ import com.arghyam.search.adapter.RecentSearchAdapter
 import com.arghyam.search.interfaces.RecentSearchInterface
 import com.arghyam.search.model.RecentSearchModel
 import com.arghyam.search.adapter.SearchResultsAdapter
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.content_search.*
-import androidx.core.view.MenuItemCompat.getActionView
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
 class SearchFragment : Fragment() {
 
    private var recentSearchList = ArrayList<RecentSearchModel>()
-    private var springsList = ArrayList<LandingModel>()
+    private var springsList = ArrayList<AllSpringDataModel>()
     private var displayedList = ArrayList<RecentSearchModel>()
     private lateinit var mSearchViewModel: SearchViewModel
     private lateinit var springCode: String
@@ -75,8 +63,7 @@ class SearchFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_search, container, false)
-        return rootView
+        return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -185,11 +172,7 @@ class SearchFragment : Fragment() {
             val adapter = activity?.let { SearchResultsAdapter(springsList, it) }
             searchResultRecyclerView.adapter = adapter
 
-            springsList.add(LandingModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 2", "Village 2", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 3", "Village 3", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 4", "Village 4", "https://picsum.photos/200/300"))
-            springsList.add(LandingModel("Recent Spring 5", "Village 5", "https://picsum.photos/200/300"))
+//            springsList.add(AllSpringDataModel("Recent Spring 1", "Village 1", "https://picsum.photos/200/300"))
             Log.d("searchspringsList", springsList.toString())
 
         }
@@ -203,7 +186,7 @@ class SearchFragment : Fragment() {
         }
 
         search_icon.setOnClickListener {
-            if(search_input.text.length > 0){
+            if(search_input.text.isNotEmpty()){
                 search_input.setText("")
                 recentSearchRecyclerView.visibility = VISIBLE
                 searchResultRecyclerView.visibility = GONE

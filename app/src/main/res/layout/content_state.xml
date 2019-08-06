@@ -4,11 +4,32 @@
               android:layout_width="match_parent"
               android:background="@color/white"
               android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+    <include android:id="@+id/state_toolbar"
+             layout="@layout/custom_toolbar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fontFamily="@font/roboto"
+              android:text="No springs available"
+              android:textStyle="bold"
+              android:textSize="30sp"
+              android:visibility="gone"
+              android:id="@+id/no_districts"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:textColor="#000000"
+    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stateRecyclerView"
             android:layout_width="match_parent"
-            android:layout_below="@+id/spring_near"
             android:layout_height="wrap_content"/>
 
 

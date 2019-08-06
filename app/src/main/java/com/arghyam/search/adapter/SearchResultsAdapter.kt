@@ -9,13 +9,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.R
-import com.arghyam.landing.model.LandingModel
-import com.arghyam.springdetails.ui.activity.AddDischargeActivity
+import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_spring.view.*
 
-class SearchResultsAdapter(val springList: ArrayList<LandingModel>, val context: Context) :
+class SearchResultsAdapter(val springList: ArrayList<AllSpringDataModel>, val context: Context) :
 	    RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,13 +27,16 @@ class SearchResultsAdapter(val springList: ArrayList<LandingModel>, val context:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val springs: LandingModel = springList[position]
+        val springs: AllSpringDataModel = springList[position]
         holder.springNameText.text = springs.springName
-        holder.villageNameText.text = springs.villageName
+        holder.villageNameText.text = springs.location
         Glide.with(context)
-            .load(springs.springImage)
+            .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
+            var dataIntent = Intent(context, SpringDetailsActivity::class.java)
+            dataIntent.putExtra("SpringCode", springs.springCode)
+            dataIntent.putExtra("springName", springs.springName)
             context.startActivity(Intent(context, SpringDetailsActivity::class.java))
             return@OnClickListener
         })
@@ -47,7 +49,7 @@ class SearchResultsAdapter(val springList: ArrayList<LandingModel>, val context:
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val springNameText: TextView = view.spring_name
-        val villageNameText: TextView = view.village_name
+        val villageNameText: TextView = view.location
         val springImage: ImageView = view.img_spring
         //        val favourite: ImageView = view.fav_icon
 //        val springItemADD: LinearLayout = view.springItemADD
