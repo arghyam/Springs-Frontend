@@ -85,4 +85,9 @@ interface ApiInterface {
     @POST("/api/v1/notificationCount/{userId}")
     fun notificationCount(@Path("userId") userId: String, @Body notificationCountRequetModel: RequestModel): Call<ResponseModel>
 
+    @POST("/api/v1/search")
+    fun search(@Body searchRequestModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getRecentSearches")
+    fun getRecentSearches(@Body recentSearchesModel: RequestModel): Call<ResponseModel>
 }

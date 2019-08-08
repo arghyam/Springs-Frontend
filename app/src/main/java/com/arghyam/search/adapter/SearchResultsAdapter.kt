@@ -18,7 +18,7 @@ class SearchResultsAdapter(val springList: ArrayList<AllSpringDataModel>, val co
 	    RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.search_result_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
         return ViewHolder(v)
     }
 
@@ -29,31 +29,33 @@ class SearchResultsAdapter(val springList: ArrayList<AllSpringDataModel>, val co
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val springs: AllSpringDataModel = springList[position]
         holder.springNameText.text = springs.springName
-        holder.villageNameText.text = springs.location
+        holder.springCode.text = springs.springCode
+        holder.ownership.text = springs.ownershipType
+        val string = springs.address
+        val parts = string.split("|")
+        var address = parts[parts.size-1]+", "+parts[0]
+        holder.locationText.text = address.trim()
         Glide.with(context)
             .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
-            dataIntent.putExtra("springName", springs.springName)
-            context.startActivity(Intent(context, SpringDetailsActivity::class.java))
+            dataIntent.putExtra("springCode", springs.springName)
+            context.startActivity(dataIntent)
             return@OnClickListener
         })
-
-
-
 
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val springNameText: TextView = view.spring_name
-        val villageNameText: TextView = view.location
+        val locationText: TextView = view.location
         val springImage: ImageView = view.img_spring
-        //        val favourite: ImageView = view.fav_icon
-//        val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
+        val springCode: TextView = view.spring_code
+        val ownership: TextView = view.ownership_value
 
     }
 }

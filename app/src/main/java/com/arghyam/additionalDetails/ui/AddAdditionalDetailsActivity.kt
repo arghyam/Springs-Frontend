@@ -95,7 +95,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun initIntent() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
-        springName = dataIntent.getStringExtra("springName")
+        springName = dataIntent.getStringExtra("springCode")
         Log.d("Anirudh", "" + springCode)
     }
 

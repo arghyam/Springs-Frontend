@@ -77,7 +77,7 @@ class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, v
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
-        val springcode: TextView = view.springcode
+        val springcode: TextView = view.spring_code
         val village: TextView = view.location
     }
 }

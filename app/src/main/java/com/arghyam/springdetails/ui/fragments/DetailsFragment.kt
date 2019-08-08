@@ -163,7 +163,6 @@ class DetailsFragment : Fragment() {
             object : TypeToken<SpringProfileResponse>() {}.type
         )
         initSetData(springProfileResponse)
-//        imageSample(springProfileResponse)
     }
 
     private fun initSetData(springProfileResponse: SpringProfileResponse) {
@@ -171,7 +170,10 @@ class DetailsFragment : Fragment() {
         springName = "${springProfileResponse.springName}"
 
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
-        tv_spring_location.text = ":  ${springProfileResponse.location}"
+        val string = springProfileResponse.address
+        val parts = string.split("|")
+        var address = parts[parts.size - 1] + ", " + parts[0]
+        tv_spring_location.text = ":  ${address.trim()}"
         tv_spring_ownership.text = ":  ${springProfileResponse.ownershipType}"
         tv_spring_id.text = ":  ${springProfileResponse.springCode}"
         tv_spring_submitted.text = ":  ${springProfileResponse.submittedBy}"
@@ -181,13 +183,6 @@ class DetailsFragment : Fragment() {
         }
 
         Log.e("Spring usage", springProfileResponse.usage.toString())
-//        for (a in 0 until springProfileResponse.extraInformation.dischargeData[0].months.size){
-//            Log.e("Months",springProfileResponse.extraInformation.dischargeData[0].months[a])
-//        }
-
-
-//        tv_spring_submtted.text = ":  ${springProfileResponse.uploadedBy}"
-//        tv_spring_location.text = ":  ${springProfileResponse.latitude}" + " ${springProfileResponse.longitude}"
     }
 
     override fun onResume() {
@@ -252,29 +247,24 @@ class DetailsFragment : Fragment() {
                 val intent = Intent(context, AddAdditionalDetailsActivity::class.java)
 
                 intent.putExtra("SpringCode", springCode)
-                intent.putExtra("springName", springName)
+                intent.putExtra("springCode", springName)
                 Log.e("Code in details", springCode)
                 startActivityForResult(intent, REQUEST_CODE)
-//                val intent = Intent(activity, AddAdditionalDetailsActivity::class.java)
-//                startActivityForResult(intent, REQUEST_CODE)
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                var bundle = data?.getBundleExtra("DataBundle")
-                if (bundle?.get("SelectedMonths") != null)
-                    selectedMonthNames = bundle?.get("SelectedMonths") as ArrayList<String>
-                waterUse = bundle?.get("WaterUse") as ArrayList<String>
-                seasonality = bundle.get("Seasonality") as String
-                houseHoldNumber = bundle.get("HouseHoldNumbers") as Int
-                Log.e("Water use", waterUse.toString())
-                showAdditionalData()
-
-            }
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            var bundle = data?.getBundleExtra("DataBundle")
+            if (bundle?.get("SelectedMonths") != null)
+                selectedMonthNames = bundle?.get("SelectedMonths") as ArrayList<String>
+            waterUse = bundle?.get("WaterUse") as ArrayList<String>
+            seasonality = bundle.get("Seasonality") as String
+            houseHoldNumber = bundle.get("HouseHoldNumbers") as Int
+            Log.e("Water use", waterUse.toString())
+            showAdditionalData()
         }
     }
 
@@ -313,7 +303,7 @@ class DetailsFragment : Fragment() {
 
             } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
-                intent.putExtra("springName", springName)
+                intent.putExtra("springCode", springName)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivity(intent)
@@ -322,7 +312,7 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initImageAdapter(responseModel: ResponseModel) {
-        Log.d("responseCheck", responseModel.response.responseObject.toString())
+        Log.e("responseCheck", responseModel.response.responseObject.toString())
         springProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type
@@ -382,7 +372,11 @@ class DetailsFragment : Fragment() {
     private fun imageSample(springProfileResponse: SpringProfileResponse): ArrayList<String> {
         for (i in 0 until springProfileResponse.extraInformation.dischargeData.size) {
             for (j in 0 until springProfileResponse.extraInformation.dischargeData[i].images.size) {
-                if (MAX_IMAGES > 0 && !springProfileResponse.extraInformation.dischargeData[i].status.equals("Rejected",true) ) {
+                if (MAX_IMAGES > 0 && !springProfileResponse.extraInformation.dischargeData[i].status.equals(
+                        "Rejected",
+                        true
+                    )
+                ) {
                     Log.e("DetailsFragment", "images added$MAX_IMAGES   j$j  i$i")
                     imagelist.add(springProfileResponse.extraInformation.dischargeData[i].images[j])
                     MAX_IMAGES--
@@ -403,15 +397,15 @@ class DetailsFragment : Fragment() {
     private fun imageChangeListener(): ViewPager.OnPageChangeListener {
         return object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
-
+                //Nothing Here
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
+                //Nothing Here
             }
 
             override fun onPageSelected(position: Int) {
-
+                //Nothing Here
             }
 
         }

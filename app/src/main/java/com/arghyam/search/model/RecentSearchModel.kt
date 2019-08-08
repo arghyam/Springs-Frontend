@@ -1,3 +1,4 @@
 package com.arghyam.search.model
 
-data class RecentSearchModel (val recentSearchName: String)
+data class AllRecentSearchModel(var recentSearch: List<String>)
+

@@ -137,14 +137,6 @@ class HomeFragment : Fragment() {
     private fun setObserver() {
         landingViewModel.getIsGpsEnabled().observe(this, Observer {
             if (it) {
-//                if (!firstCallMade) {
-//                    springsList.clear()
-//                    adapter.notifyDataSetChanged()
-//                    count = 1
-//                    Log.e("Call", "from landing view model")
-//                    initApiCall()
-//                    firstCallMade = true
-//                }
                 if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                     if (!firstCallMade) {
                         springsList.clear()
@@ -154,7 +146,6 @@ class HomeFragment : Fragment() {
                     }
                 } else {
                     Log.e("call", "from observer")
-//                    activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                     errorItems.visibility = VISIBLE
                     errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
                     springsLocation.visibility = GONE
@@ -198,8 +189,6 @@ class HomeFragment : Fragment() {
         reload()
         registerReceiver()
 
-
-//        initbell(1)
     }
 
     private fun initNotificationCountResponse() {
@@ -260,12 +249,6 @@ class HomeFragment : Fragment() {
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
-
-
-//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
-//            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
-//        }
-
     }
 
     private fun initApiCall() {
@@ -291,9 +274,6 @@ class HomeFragment : Fragment() {
         getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
             progressBar.visibility = GONE
             saveGetAllSpringsData(it)
-//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-//            }
         })
         getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
             Log.e("error", it)
@@ -318,17 +298,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-//    private fun reload() {
-//        reload.setOnClickListener {
-//            Log.e("Anirudh", "reloaded")
-//            springsList.clear()
-//            adapter.notifyDataSetChanged()
-//            count = 1
-////            initApiCall()
-//            getAllSpringRequest()
-//        }
-//    }
-
     private fun reload() {
         reload.setOnClickListener {
             Log.e("Anirudh", "reloaded")
@@ -347,10 +316,6 @@ class HomeFragment : Fragment() {
                 springsLocation.visibility = GONE
                 firstCallMade = false
             }
-//            springsList.clear()
-//            adapter.notifyDataSetChanged()
-//            count = 1
-//            getAllSpringRequest()
         }
     }
 
@@ -400,15 +365,12 @@ class HomeFragment : Fragment() {
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    if (maxItem > count) {
+                if (!recyclerView.canScrollVertically(1) && maxItem > count) {
                         count++
                         Log.e("karthik", "$count")
                         progressBar.visibility = VISIBLE
                         Log.e("Call made", " from recycler View")
                         getAllSpringRequest()
-//                        initApiCall()
-                    }
                 }
             }
         })
@@ -424,11 +386,4 @@ class HomeFragment : Fragment() {
 
     }
 
-
-    override fun onResume() {
-        super.onResume()
-//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)!! > 0){
-//            SharedPreferenceFactory(activity!!.applicationContext).getInt(NOTIFICATION_COUNT)?.let { initbell(it) }
-//        }
-    }
 }

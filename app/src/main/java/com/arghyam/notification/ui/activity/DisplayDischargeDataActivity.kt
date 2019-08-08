@@ -166,7 +166,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
 //        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
-        intent.putExtra("springName", springName)
+        intent.putExtra("springCode", springName)
         intent.putExtra("caller",1)
 //
         startActivity(intent)

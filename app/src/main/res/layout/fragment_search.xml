@@ -22,6 +22,8 @@
             <!-- INPUT -->
             <EditText
                     android:id="@+id/search_input"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
                     android:layout_toRightOf="@+id/back_icon"
                     android:hint="@string/search_hint"
                     android:padding="10dp"

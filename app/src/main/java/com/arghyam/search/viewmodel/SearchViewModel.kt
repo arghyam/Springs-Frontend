@@ -17,14 +17,13 @@ class SearchViewModel : ViewModel()  {
     val mSearchData = MutableLiveData<ResponseModel>()
     val mSearchDataError: SingleLiveEvent<String> = SingleLiveEvent()
 
-    fun setAdditionalDataRepository(searchRepository: SearchRepository) {
+    fun setSearchDataRepository(searchRepository: SearchRepository) {
         this.searchRepository = searchRepository
     }
 
-    fun searchApi(mContext: Context,springCode:String, requestModel: RequestModel) {
+    fun searchApi(mContext: Context, requestModel: RequestModel) {
         searchRepository!!.searchDataApiRequest(
             mContext,
-            springCode,
             requestModel,
 
             object : ResponseListener<ResponseModel> {

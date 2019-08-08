@@ -1,5 +1,7 @@
 package com.arghyam.geographySearch.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +14,8 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.geographySearch.interfaces.SearchInterface
 import com.arghyam.geographySearch.ui.fragment.*
+import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.search.ui.SearchFragment
 import kotlinx.android.synthetic.main.content_geography_search.*
 import kotlinx.android.synthetic.main.list_spring.*
 
@@ -48,6 +52,7 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        setResult(Activity.RESULT_CANCELED)
         finish()
         return true
     }
@@ -106,8 +111,18 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
                 ArghyamUtils().longToast(this,"Please select the block before you select the rural")
         }
         search_button.setOnClickListener {
-            if (cityOsid.isNotEmpty() || villageOsid.isNotEmpty())
-                ArghyamUtils().longToast(this,"searching")
+            if (cityOsid.isNotEmpty()){
+                val intent = Intent()
+                intent.putExtra("searchText",town_name.text)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+            else if (villageOsid.isNotEmpty()){
+                val intent = Intent()
+                intent.putExtra("searchText",panchayat_name.text)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
             else
                 ArghyamUtils().longToast(this,"please select the area correctly")
         }

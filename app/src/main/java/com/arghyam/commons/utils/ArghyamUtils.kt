@@ -85,7 +85,7 @@ class ArghyamUtils {
             builder.setAlwaysShow(true)
             var result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
             result.setResultCallback {
-                Log.e("location", "" + it.status.statusCode)
+                Log.e("address", "" + it.status.statusCode)
                 when (it.status.statusCode) {
                     LocationSettingsStatusCodes.SUCCESS -> {
 
@@ -182,7 +182,7 @@ class ArghyamUtils {
 //        selectedMonth.sort()
         for (month in selectedMonth) {
             when (month) {
-                "1" -> {
+                "a" -> {
                     if (!selectedMonthNames.contains("Jan"))
                         selectedMonthNames.add("Jan")
                 }

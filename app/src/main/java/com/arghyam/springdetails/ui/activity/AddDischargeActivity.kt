@@ -109,7 +109,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private fun getSpringId() {
         var dataIntent: Intent = intent
         springCode = dataIntent.getStringExtra("SpringCode")
-        springName = dataIntent.getStringExtra("springName")
+        springName = dataIntent.getStringExtra("springCode")
         Log.e("Anirudh", "" + springCode)
     }
 
@@ -587,7 +587,7 @@ class AddDischargeActivity : AppCompatActivity() {
 
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
-        intent.putExtra("springName", springName)
+        intent.putExtra("springCode", springName)
         intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)

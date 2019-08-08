@@ -274,7 +274,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
         springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
-        intent.putExtra("springName", springName)
+        intent.putExtra("springCode", springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()
@@ -300,7 +300,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the spring image")
 
             } else if (mLocation == null) {
-                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the location")
+                ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the address")
 
             }
             else {
@@ -397,7 +397,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         img_GPS.setOnClickListener {
             hideSoftKeyboard()
             getGoogleClient()
-            tv_reposition.text = "fetching location information..."
+            tv_reposition.text = "fetching address information..."
             img_GPS.setImageResource(R.drawable.ic_location_refresh)
             img_GPS.setBackgroundResource(R.drawable.circle_border)
         }
@@ -498,10 +498,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationProviderClient.lastLocation
             .addOnSuccessListener(this) { location ->
-                // Got last known location. In some rare situations this can be null.
+                // Got last known address. In some rare situations this can be null.
                 if (location != null) {
                     toggleLocation()
-                    // Logic to handle location object
+                    // Logic to handle address object
                     mLocation = location
                     latitude.text = ": ${mLocation!!.latitude}"
                     longitude.text = ": ${mLocation!!.longitude}"
@@ -546,11 +546,11 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private val imageUploadInterface = object : ImageUploadInterface {
         override fun onCancel(position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //To change body of created functions use File | Settings | File Templates.
         }
 
         override fun retry(position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //To change body of created functions use File | Settings | File Templates.
         }
 
         override fun onRemove(position: Int) {
@@ -560,7 +560,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
 
         override fun onSuccess(position: Int) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //To change body of created functions use File | Settings | File Templates.
         }
     }
 

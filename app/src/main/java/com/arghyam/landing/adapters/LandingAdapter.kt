@@ -36,14 +36,17 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val springs: AllSpringDataModel = springList[position]
         holder.springNameText.text = springs.springName
-        holder.location.text = springs.location
+        val string = springs.address
+        val parts = string.split("|")
+        var address = parts[parts.size-1]+", "+parts[0]
+        holder.location.text = address.trim()
         Glide.with(context)
             .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
-            dataIntent.putExtra("springName", springs.springName)
+            dataIntent.putExtra("springCode", springs.springName)
             context.startActivity(dataIntent)
 
             return@OnClickListener
@@ -60,7 +63,7 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
-                dataIntent.putExtra("springName", springs.springName)
+                dataIntent.putExtra("springCode", springs.springName)
                 context.startActivity(dataIntent)
             }
             return@OnClickListener
@@ -85,7 +88,6 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         }
         holder.ownership.text = springs.ownershipType
         holder.springCode.text = springs.springCode
-        holder.village.text = springs.location
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -97,7 +99,6 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
-        val springCode: TextView = view.springcode
-        val village: TextView = view.location
+        val springCode: TextView = view.spring_code
     }
 }

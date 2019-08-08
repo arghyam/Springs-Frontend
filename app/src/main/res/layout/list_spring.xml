@@ -90,12 +90,12 @@
                                 android:textSize="12sp"/>
 
                         <TextView
-                                android:id="@+id/springcode"
+                                android:id="@+id/spring_code"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@+id/mytextview1"
                                 android:paddingLeft="32dp"
-                                android:text=": Spring5678"
+                                android:text=":"
                                 android:textColor="#262524"
                                 android:textSize="16sp"/>
 
@@ -124,7 +124,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@+id/ownership"
                                 android:paddingLeft="25dp"
-                                android:text=": Private"
+                                android:text=":"
                                 android:textColor="#262524"
                                 android:textSize="16sp"/>
 

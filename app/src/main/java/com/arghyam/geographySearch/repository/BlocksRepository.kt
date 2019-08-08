@@ -1,4 +1,4 @@
-package com.arghyam.search.repository
+package com.arghyam.geographySearch.repository
 
 import android.content.Context
 import com.arghyam.commons.di.ResponseListener
@@ -13,15 +13,14 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class SearchRepository @Inject constructor()  {
-
-    fun searchDataApiRequest(
+class BlocksRepository @Inject constructor()  {
+    fun blocksApiRequest(
         context: Context,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val makeSearchCall = RestClient.getWebServiceData()?.search(requestModel)
-        makeSearchCall?.enqueue(object : Callback<ResponseModel> {
+        val uploadAdditionalCall = RestClient.getWebServiceData()?.getBlocks(requestModel)
+        uploadAdditionalCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
                 if (null != response.body()) {
