@@ -94,7 +94,7 @@ class SearchFragment : Fragment() {
 
     private fun init() {
         initComponent()
-        initRecyclerview()
+        initRecyclerView()
         initRepository()
         observeData()
         initClick()
@@ -172,7 +172,7 @@ class SearchFragment : Fragment() {
         )
         recentSearchList.clear()
         recentSearchList.addAll(responseData.recentSearch)
-        initRecyclerview()
+        initRecyclerView()
     }
 
     private fun saveFreeTextSearchData(responseModel: ResponseModel) {
@@ -186,7 +186,7 @@ class SearchFragment : Fragment() {
                 ArghyamUtils().longToast(activity as AppCompatActivity,"Please try search by geography")
             else
                 springsList.addAll(responseData.springs)
-            initRecyclerview()
+            initRecyclerView()
         }
     }
 
@@ -265,13 +265,16 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun initRecyclerview() {
+    private fun initRecyclerView() {
         if (recentSearchRecyclerView.visibility == VISIBLE) {
-            recentSearchRecyclerView.layoutManager = activity?.let { LinearLayoutManager(it) }
-            val adapter = activity?.let { RecentSearchAdapter(recentSearchList, it, recentSearchInterface) }
-            recentSearchRecyclerView.adapter = adapter
-            Log.d("RecentSearchList", recentSearchList.toString())
-
+            if (recentSearchList.isNotEmpty()) {
+                recentSearchRecyclerView.layoutManager = activity?.let { LinearLayoutManager(it) }
+                val adapter = activity?.let { RecentSearchAdapter(recentSearchList, it, recentSearchInterface) }
+                recentSearchRecyclerView.adapter = adapter
+                Log.d("RecentSearchList", recentSearchList.toString())
+            }
+            else
+                no_recent_searches.visibility = VISIBLE
         }
 
         if (searchResultRecyclerView.visibility == VISIBLE) {
