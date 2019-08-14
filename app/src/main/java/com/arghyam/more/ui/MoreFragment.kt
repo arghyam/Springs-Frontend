@@ -134,11 +134,9 @@ class MoreFragment : Fragment() {
         }
         faq_layout.setOnClickListener {
             startActivity(Intent(activity!!, FaqActivity::class.java))
-
         }
         help_layout.setOnClickListener {
             startActivity(Intent(activity!!, HelpActivity::class.java))
-
         }
     }
 
@@ -161,6 +159,8 @@ class MoreFragment : Fragment() {
                 if (SharedPreferenceFactory(activity!!.applicationContext).getString(ACCESS_TOKEN) != "") {
                     SharedPreferenceFactory(activity!!.applicationContext).setString(ACCESS_TOKEN, "")
                 }
+                if (SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID) != "")
+                    SharedPreferenceFactory(activity!!.applicationContext).setString(Constants.USER_ID, "")
                 startActivity(Intent(activity!!, LoginActivity::class.java))
                 activity!!.finish()
                 dialog.cancel()

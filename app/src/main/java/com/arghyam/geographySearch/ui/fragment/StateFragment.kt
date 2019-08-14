@@ -168,4 +168,10 @@ class StateFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        Log.e("detached","called")
+        (activity as SearchInterface).isClicked(false,1)
+    }
+
 }

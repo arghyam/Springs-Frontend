@@ -129,7 +129,7 @@ class AddDischargeActivity : AppCompatActivity() {
     }
 
     private fun initSet() {
-        var dischargeSpring: String = "Add additional details for " + "<b> ${springName} </b>"
+        val dischargeSpring = "Add discharge details for <b> $springName </b>"
         add_discharge_name.text = Html.fromHtml(dischargeSpring)
     }
 

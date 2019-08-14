@@ -25,6 +25,7 @@
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:layout_toRightOf="@+id/back_icon"
+                    android:maxLength="100"
                     android:hint="@string/search_hint"
                     android:padding="10dp"
                     android:textSize="14sp"

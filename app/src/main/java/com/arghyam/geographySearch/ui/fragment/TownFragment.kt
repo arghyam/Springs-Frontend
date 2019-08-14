@@ -162,9 +162,15 @@ class TownFragment : Fragment() {
     private var geographyInterface = object : GeographyInterface {
         override fun onGeographyItemClickListener(position: Int) {
             Log.e("town", townList[position].townName)
+
             (activity as SearchInterface).getTitle("" + position, townList[position].townName, townList[position].osid,4)
             activity!!.supportFragmentManager.popBackStack()
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        Log.e("detached","called")
+        (activity as SearchInterface).isClicked(false,4)
+    }
 }

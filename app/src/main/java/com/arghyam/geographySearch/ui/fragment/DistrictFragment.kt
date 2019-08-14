@@ -77,6 +77,7 @@ class DistrictFragment : Fragment() {
         observeData()
         sendRequest()
         initToolbar()
+
     }
 
     private fun initToolbar() {
@@ -171,4 +172,9 @@ class DistrictFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        Log.e("detached","called")
+        (activity as SearchInterface).isClicked(false,2)
+    }
 }

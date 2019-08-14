@@ -74,6 +74,7 @@ class BlockFragment : Fragment() {
         observeData()
         sendRequest()
         initToolbar()
+
     }
 
     private fun initToolbar() {
@@ -167,6 +168,11 @@ class BlockFragment : Fragment() {
             (activity as SearchInterface).getTitle("" + position, blockList[position].blockName,blockList[position].blockOsid ,3)
             activity!!.supportFragmentManager.popBackStack()
         }
+    }
+    override fun onDetach() {
+        super.onDetach()
+        Log.e("detached","called")
+        (activity as SearchInterface).isClicked(false,3)
     }
 
 }

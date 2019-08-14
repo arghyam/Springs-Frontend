@@ -99,7 +99,9 @@
                 android:name="org.apache.http.legacy"
                 android:required="false"/>
 
-        <activity android:name=".example.ui.ExampleActivity"/>
+        <activity android:name=".FAQS.ui.FaqActivity"/>
+        <activity android:name=".about.AboutActivity"/>
+        <activity android:name=".help.ui.HelpActivity"/>
         <activity
                 android:name=".iam.ui.LoginActivity"
                 android:label="@string/app_name"

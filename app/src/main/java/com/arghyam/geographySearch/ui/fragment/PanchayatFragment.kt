@@ -165,4 +165,11 @@ class PanchayatFragment : Fragment() {
             activity!!.supportFragmentManager.popBackStack()
         }
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.e("detached","called")
+        (activity as SearchInterface).isClicked(false,5)
+    }
+
 }
