@@ -45,7 +45,7 @@ android {
     productFlavors {
 
         local {
-            buildConfigField "String", "BASE_URL", '"http://192.168.1.242:9090/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.3.236:9090/"'
             dimension "content"
 
         }

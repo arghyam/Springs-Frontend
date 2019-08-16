@@ -22,5 +22,6 @@
     <color name="selected">#FAFCFF</color>
     <color name="lighter_grey">#8C8C8B</color>
     <color name="button">#33FFFFFF</color>
+    <color name="light_ship_grey">#e6e6e5</color>
 
 </resources>

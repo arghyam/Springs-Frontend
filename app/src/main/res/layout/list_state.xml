@@ -11,19 +11,27 @@
               android:focusable="true"
               android:paddingLeft="16dp">
 
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/state_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Andra Pradesh"
                 android:textColor="#595958"
                 android:paddingBottom="16dp"
                 android:textSize="16sp"/>
+        <TextView
+                android:id="@+id/state_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#595958"
+                android:paddingBottom="16dp"
+                android:textSize="16sp"/>
+    </LinearLayout>
 
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#e6e6e6" />
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#e6e6e6" />
 
     </LinearLayout>
 

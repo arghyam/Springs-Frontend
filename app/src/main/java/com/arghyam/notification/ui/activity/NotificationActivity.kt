@@ -115,20 +115,21 @@ class NotificationActivity : AppCompatActivity() {
             noNotifications.visibility= GONE
             notification_list.visibility = VISIBLE
 
-            Log.e("Anirudh", notificationResponseModel.notifications.size.toString())
             for (i in 0 until notificationResponseModel.notifications.size) {
-                Log.e("Anirudh spring", notificationResponseModel.notifications[i].springCode)
-                springCode = notificationResponseModel.notifications[i].springCode
-                dataModels?.add(
-                    NotificationDataModel(
-                        " "+ notificationResponseModel.notifications[i].notificationTitle,
-                        ArghyamUtils().epochToTime(notificationResponseModel.notifications[i].createdAt),
-                        ArghyamUtils().epochToDateFormat(notificationResponseModel.notifications[i].createdAt)
+                if (notificationResponseModel.notifications[i].status.toLowerCase()!="done"){
+                    Log.e("Notification spring", notificationResponseModel.notifications[i].status)
+                    springCode = notificationResponseModel.notifications[i].springCode
+                    dataModels?.add(
+                        NotificationDataModel(
+                            " "+ notificationResponseModel.notifications[i].notificationTitle,
+                            ArghyamUtils().epochToTime(notificationResponseModel.notifications[i].createdAt),
+                            ArghyamUtils().epochToDateFormat(notificationResponseModel.notifications[i].createdAt)
+                        )
                     )
-                )
-                adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
-                listView.adapter = adapter
-                Log.e("Anirudh", listView.adapter.toString())
+                    adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
+                    listView.adapter = adapter
+                    Log.e("Anirudh", listView.adapter.toString())
+                }
             }
             listView.onItemClickListener =
                 AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->

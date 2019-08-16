@@ -149,7 +149,7 @@ class StateFragment : Fragment() {
             no_districts.visibility = View.VISIBLE
         }
         for (i in 0 until responseData.states.size) {
-            stateList.add(StateModel(responseData.states[i].states, responseData.states[i].osid))
+            stateList.add(StateModel(responseData.states[i].states, responseData.states[i].osid,responseData.states[i].count))
         }
         Log.e("StateFragment", stateList.toString())
     }
