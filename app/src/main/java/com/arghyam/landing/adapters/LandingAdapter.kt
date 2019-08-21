@@ -15,14 +15,19 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.landing.interfaces.FavouritesInterface
 import com.arghyam.landing.model.AllSpringDataModel
+import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_spring.view.*
 
 
-class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context: Context) :
+class LandingAdapter(
+    val springList: ArrayList<AllSpringDataModel>,
+    val context: Context,
+    val favouritesInterface: FavouritesInterface) :
     RecyclerView.Adapter<LandingAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
@@ -69,10 +74,13 @@ class LandingAdapter(val springList: ArrayList<AllSpringDataModel>, val context:
             return@OnClickListener
         })
         holder.favourite.setOnClickListener {
-
+            SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
+                favouritesInterface.onFavouritesItemClickListener(springs.springCode,
+                    it1
+                )
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (holder.favourite.drawable.constantState == context.getDrawable(R.drawable.ic_fav).constantState) {
-
+                if (holder.favourite.drawable.constantState == context.resources.getDrawable(R.drawable.ic_fav).constantState) {
                     holder.favourite.setImageResource(R.drawable.ic_fav_fill)
                 } else {
                     holder.favourite.setImageResource(R.drawable.ic_fav)

@@ -14,7 +14,6 @@ interface ApiInterface {
     @GET("api/breed/hound/images")
     fun getImages(): Call<ExampleEntity>
 
-
     @POST("api/v1/user/login")
     fun userLogin(@Body requestModel: RequestModel): Call<ResponseModel>
 
@@ -90,4 +89,10 @@ interface ApiInterface {
 
     @POST("/api/v1/getRecentSearches")
     fun getRecentSearches(@Body recentSearchesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/getFavourites")
+    fun getFavourites(@Body favouritesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/favourites")
+    fun storeFavourites(@Body favouritesModel: RequestModel): Call<ResponseModel>
 }

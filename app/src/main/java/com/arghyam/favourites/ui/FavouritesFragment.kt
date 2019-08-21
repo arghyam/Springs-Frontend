@@ -23,19 +23,18 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.adapter.FavouritesAdapter
+import com.arghyam.favourites.model.AllFavSpringsData
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.favourites.model.FavSpringDetailsModel
+import com.arghyam.favourites.model.GetAllFavSpringsModel
+import com.arghyam.favourites.repository.GetFavSpringsRepository
 import com.arghyam.favourites.viewmodel.FavouritesViewModel
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
-import com.arghyam.landing.model.AllSpringModel
-import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.landing.model.NotificationCountResponseModel
-import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.repository.NotificationCountRepository
-import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
 import com.arghyam.notification.model.NotificationModel
 import com.arghyam.notification.model.notificationSpringModel
@@ -52,8 +51,7 @@ class FavouritesFragment : Fragment() {
 
 
     @Inject
-    lateinit var getAllSpringRepository: GetAllSpringRepository
-    private var getAllSpringViewModel: GetAllSpringViewModel? = null
+    lateinit var getUserFavSpringRepository: GetFavSpringsRepository
     private lateinit var favouritesViewModel: FavouritesViewModel
     private lateinit var adapter: FavouritesAdapter
     private var springsList = ArrayList<FavSpringDataModel>()
@@ -206,23 +204,20 @@ class FavouritesFragment : Fragment() {
         }
     }
 
-    private fun initGetAllSpring() {
-        getAllSpringViewModel?.getAllSpringResponse()?.observe(this, Observer {
+    private fun initGetAllFavSpring() {
+        favouritesViewModel.getFavSpringData.observe(this, Observer {
             progressBar.visibility = GONE
-            saveGetAllSpringsData(it)
-//            if (getAllSpringViewModel?.getAllSpringResponse()?.hasObservers()!!) {
-//                getAllSpringViewModel?.getAllSpringResponse()?.removeObservers(this)
-//            }
+            GetFavSpringsData(it)
         })
-        getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
+        favouritesViewModel.favouritesError().observe(this, Observer {
             Log.e("error", it)
-            if (getAllSpringViewModel?.getAllSpringError()?.hasObservers()!!) {
-                getAllSpringViewModel?.getAllSpringError()?.removeObservers(this)
+            if (favouritesViewModel.favouritesError().hasObservers()) {
+                favouritesViewModel.favouritesError().removeObservers(this)
             }
         })
     }
 
-    private fun saveGetAllSpringsData(responseModel: ResponseModel) {
+    private fun GetFavSpringsData(responseModel: ResponseModel) {
         if (responseModel.response.responseCode == "200") {
             var responseData: FavSpringDetailsModel = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
@@ -232,50 +227,51 @@ class FavouritesFragment : Fragment() {
                 "Total Springs", ArghyamUtils().convertToString(responseModel.response.responseObject)
             )
 
-            Log.e("Total Springs", responseData.totalFavSprings.toString() + "springs")
-            springsList.addAll(responseData.springs)
+            Log.e("Total Springs", responseData.FavouriteSpring.toString() + "springs")
+            springsList.addAll(responseData.FavouriteSpring)
             for (spring in springsList)
                 Log.e("SpringList", spring.springCode)
-            maxItem = responseData.totalFavSprings / 5
-            if (responseData.totalFavSprings % 5 != 0) {
-                maxItem++
-            }
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun initApiCall() {
-        progressBar.visibility = View.VISIBLE
-        getAllSpringRequest()
-        initGetAllSpring()
+        progressBar.visibility = VISIBLE
+        getFavSpringRequest()
+        initGetAllFavSpring()
     }
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
         val toolbar = toolbar as Toolbar
         toolbar.title = "Favourites"
-//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0){
-//            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)?.let { initbell(it) }
-//        }
     }
 
-    private fun getAllSpringRequest() {
-        var getAllSpringObject = RequestModel(
-            id = Constants.GET_ALL_SPRINGS_ID,
-            ver = BuildConfig.VER,
-            ets = BuildConfig.ETS,
-            params = Params(
-                did = "",
-                key = "",
-                msgid = ""
-            ),
-            request = GetAllSpringsModel(
-                springs = AllSpringModel(
-                    type = "springs"
+    private fun getFavSpringRequest() {
+        var getFavSpringObject = context?.let {
+            SharedPreferenceFactory(it).getString(Constants.USER_ID)?.let {
+                AllFavSpringsData(
+                    userId = it
                 )
-            )
-        )
-        getAllSpringViewModel?.getAllSpringApi(context!!, count, getAllSpringObject)
+            }?.let {
+                GetAllFavSpringsModel(
+                    favourites = it
+                )
+            }?.let {
+                RequestModel(
+                    id = Constants.GET_ADDITIONAL_DETAILS,
+                    ver = BuildConfig.VER,
+                    ets = BuildConfig.ETS,
+                    params = Params(
+                        did = "",
+                        key = "",
+                        msgid = ""
+                    ),
+                    request = it
+                )
+            }
+        }
+        getFavSpringObject?.let { favouritesViewModel.getfavouriteSpringsApi(context!!, it) }
     }
 
 
@@ -283,25 +279,13 @@ class FavouritesFragment : Fragment() {
         favrecyclerview.layoutManager = LinearLayoutManager(activity)
         adapter = activity?.let { FavouritesAdapter(springsList, it) }!!
         favrecyclerview.adapter = adapter
-        favrecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    if (maxItem > count) {
-                        count++
-                        Log.e("karthik", "$count")
-                        progressBar.visibility = View.VISIBLE
-                        getAllSpringRequest()
-//                        initApiCall()
-                    }
-                }
-            }
-        })
+        getFavSpringRequest()
+
     }
 
     private fun initRepository() {
-        getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
-        getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
+        favouritesViewModel = ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
+        favouritesViewModel.setFavouritesRepository(getUserFavSpringRepository)
 
 
         notificationCountViewModel = ViewModelProviders.of(this).get(NotificationCountViewModel::class.java)

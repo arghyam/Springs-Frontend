@@ -12,17 +12,18 @@ import com.arghyam.iam.model.ResponseModel
 
 class FavouritesViewModel : ViewModel(){
 
-    private var getAllSpringRepository: GetFavSpringsRepository? = null
+    private var getFavSpringsRepository: GetFavSpringsRepository? = null
     val getFavSpringData = MutableLiveData<ResponseModel>()
     val getFavSpringError: SingleLiveEvent<String> = SingleLiveEvent()
 
 
-    fun setGetAllSpringRepository(getAllSpringRepository: GetFavSpringsRepository) {
-        this.getAllSpringRepository = getAllSpringRepository
+    fun setFavouritesRepository(favSpringsRepository: GetFavSpringsRepository) {
+        this.getFavSpringsRepository = favSpringsRepository
     }
 
-    fun getAllSpringApi(mContext: Context, pageNumber:Int, requestModel: RequestModel) {
-        getAllSpringRepository?.getFavSpringApiRequest(mContext,pageNumber, requestModel, object :
+    fun storefavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
+        Log.e("fav----------",requestModel.toString()+" ============")
+        getFavSpringsRepository?.storeFavSpringApiRequest(mContext, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())
@@ -40,11 +41,30 @@ class FavouritesViewModel : ViewModel(){
         })
     }
 
-    fun getAllSpringResponse(): MutableLiveData<ResponseModel> {
+    fun getfavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
+        Log.e("fav----------",requestModel.toString()+" ============")
+        getFavSpringsRepository?.getFavSpringApiRequest(mContext, requestModel, object :
+            ResponseListener<ResponseModel> {
+            override fun onSuccess(response: ResponseModel) {
+                Log.d("success",response.toString())
+                getFavSpringData.value=response
+            }
+
+            override fun onError(error: String?) {
+                getFavSpringError.value=error
+            }
+
+            override fun onFailure(message: String?) {
+                getFavSpringError.value=message
+            }
+
+        })
+    }
+    fun favouritesResponse(): MutableLiveData<ResponseModel> {
         return getFavSpringData
     }
 
-    fun getAllSpringError(): SingleLiveEvent<String> {
+    fun favouritesError(): SingleLiveEvent<String> {
         return getFavSpringError
     }
 }

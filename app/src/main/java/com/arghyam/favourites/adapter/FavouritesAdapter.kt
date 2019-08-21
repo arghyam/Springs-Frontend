@@ -33,8 +33,11 @@ class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, v
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val springs: FavSpringDataModel = springList[position]
-        holder.springNameText.text = springs.orgId
-        holder.villageNameText.text = springs.village
+        holder.springNameText.text = springs.springName
+        val string = springs.address
+        val parts = string.split("|")
+        var address = parts[parts.size-1]+", "+parts[0]
+        holder.addressText.text = address.trim()
         Glide.with(context)
             .load(springs.images[0])
             .into(holder.springImage)
@@ -65,19 +68,17 @@ class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, v
         }
         holder.ownership.text = springs.ownershipType
         holder.springcode.text = springs.springCode
-        holder.village.text = springs.village
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val springNameText: TextView = view.spring_name
-        val villageNameText: TextView = view.location
+        val addressText: TextView = view.location
         val springImage: ImageView = view.img_spring
         val favourite: ImageView = view.fav_icon
         val springItemADD: LinearLayout = view.springItemADD
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
         val springcode: TextView = view.spring_code
-        val village: TextView = view.location
     }
 }

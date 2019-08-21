@@ -2,24 +2,14 @@ package com.arghyam.favourites.model
 
 import com.arghyam.landing.model.SpringExtraInformationModel
 
-class FavSpringDetailsModel(var springs: List<FavSpringDataModel>, var totalFavSprings: Int)
+class FavSpringDetailsModel(var FavouriteSpring: List<FavSpringDataModel>)
 
 class FavSpringDataModel(
     var springCode: String,
     var springName: String,
     var userId: String,
-    var tenantId: String,
-    var orgId: String,
-    var latitude: Double,
-    var longitude: Double,
-    var accuracy: Double,
-    var village: String,
-    var numberOfHouseholds: Int,
     var ownershipType: String,
-    var usage: ArrayList<String>,
     var images: List<String>,
-    var extraInformation: SpringExtraInformationModel,
-    var createdTimeStamp: String,
-    var updatedTimeStamp: String
+    var address: String
 )
 

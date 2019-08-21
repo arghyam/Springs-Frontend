@@ -40,6 +40,9 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
+import com.arghyam.favourites.repository.GetFavSpringsRepository
+import com.arghyam.favourites.viewmodel.FavouritesViewModel
+import com.arghyam.landing.interfaces.FavouritesInterface
 import com.arghyam.landing.model.*
 import com.arghyam.landing.repository.NotificationCountRepository
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
@@ -48,6 +51,8 @@ import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_home.progressBar
+
+
 
 
 /**
@@ -71,6 +76,11 @@ class HomeFragment : Fragment() {
     lateinit var notificationCountRepository: NotificationCountRepository
 
     private var notificationCountViewModel: NotificationCountViewModel? = null
+
+    @Inject
+    lateinit var favouritesRepository: GetFavSpringsRepository
+
+    private var favouritesViewModel: FavouritesViewModel? = null
 
     /**
      * Initialize newInstance for passing paameters
@@ -192,8 +202,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun initNotificationCountResponse() {
+        //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
-
             saveNotificationCountData(it)
         })
         notificationCountViewModel?.notificationCountError()?.observe(this, Observer {
@@ -202,6 +212,44 @@ class HomeFragment : Fragment() {
                 notificationCountViewModel?.notificationCountError()?.removeObservers(this)
             }
         })
+
+        //FavouritesObservers
+        favouritesViewModel?.favouritesResponse()?.observe(this,Observer {
+            Log.e("success", it.toString())
+        })
+        favouritesViewModel?.favouritesError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (favouritesViewModel?.favouritesError()?.hasObservers()!!) {
+                favouritesViewModel?.favouritesError()?.removeObservers(this)
+            }
+        })
+    }
+
+    fun sendRequest(springCode: String, userId: String?) {
+        val mRequestData = userId?.let {
+            AllFavouritesRequest(
+                springCode = springCode,
+                userId = it
+            )
+        }?.let {
+            FavouritesModel(
+                favourites = it
+            )
+        }?.let {
+            RequestModel(
+                id = Constants.GET_ADDITIONAL_DETAILS,
+                ver = BuildConfig.VER,
+                ets = BuildConfig.ETS,
+                params = Params(
+                    did = "",
+                    key = "",
+                    msgid = ""
+                ),
+                request = it
+            )
+        }
+        mRequestData?.let { favouritesViewModel?.storefavouriteSpringsApi(context!!, it) }
+
     }
 
     private fun saveNotificationCountData(responseModel: ResponseModel) {
@@ -360,7 +408,7 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE
         springRecyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = activity?.let { LandingAdapter(springsList, it) }!!
+        adapter = activity?.let { LandingAdapter(springsList, it, favouritesInterface) }!!
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -377,13 +425,26 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRepository() {
+        Log.e("HomeFragment","Called")
+        //GetAllSprings
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
 
-
+        //Notifications
         notificationCountViewModel = ViewModelProviders.of(this).get(NotificationCountViewModel::class.java)
         notificationCountViewModel?.setNotificationCountRepository(notificationCountRepository)
 
+        //Favourites
+        favouritesViewModel = ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
+        favouritesViewModel?.setFavouritesRepository(favouritesRepository)
+
+    }
+
+    private var favouritesInterface: FavouritesInterface = object : FavouritesInterface {
+        override fun onFavouritesItemClickListener(springCode: String, userId: String) {
+            Log.e("HomeFragment","Fav Called")
+            sendRequest(springCode,userId)
+        }
     }
 
 }

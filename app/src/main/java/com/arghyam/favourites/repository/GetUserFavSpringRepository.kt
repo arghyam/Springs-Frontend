@@ -14,42 +14,11 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class GetFavSpringsRepository @Inject constructor() {
-    fun getFavSpringApiRequest(context: Context, requestModel: RequestModel,responseListener: ResponseListener<ResponseModel>){
+class GetUserFavSpringRepository @Inject constructor() {
+    fun getFavSpringApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>){
         Log.e("fav----------",requestModel.toString()+" ============")
 
         val getFavSpringCall = RestClient.getWebServiceData()?.getFavourites(requestModel)
-        getFavSpringCall?.enqueue(object : Callback<ResponseModel> {
-
-            override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
-                Log.e("fav----------",response.toString()+" ============")
-                if (null != response.body()) {
-                    if (200 == response.code()) {
-                        Log.d("success--","response code")
-                        responseListener.onSuccess(response.body()!!)
-                    } else {
-                        Log.d("error---",response.code().toString())
-                        responseListener.onError(response.code().toString() + "")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
-                when (t) {
-                    is SocketTimeoutException -> {
-                        Log.d("failure","failure")
-                        responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
-                    }
-                    is UnknownHostException -> responseListener.onFailure(Constants.POOR_INTERNET_CONNECTION)
-                    else -> responseListener.onFailure(t.message)
-                }
-            }
-        })
-    }
-    fun storeFavSpringApiRequest(context: Context, requestModel: RequestModel,responseListener: ResponseListener<ResponseModel>){
-        Log.e("fav----------",requestModel.toString()+" ============")
-
-        val getFavSpringCall = RestClient.getWebServiceData()?.storeFavourites(requestModel)
         getFavSpringCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
