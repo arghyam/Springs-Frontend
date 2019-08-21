@@ -40,6 +40,10 @@ import android.content.Context
 import android.location.LocationManager
 import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.GpsStatus.GPS_EVENT_STARTED
+import com.arghyam.favourites.model.AllFavSpringsData
+import com.arghyam.favourites.model.FavSpringDataModel
+import com.arghyam.favourites.model.FavSpringDetailsModel
+import com.arghyam.favourites.model.GetAllFavSpringsModel
 import com.arghyam.favourites.repository.GetFavSpringsRepository
 import com.arghyam.favourites.viewmodel.FavouritesViewModel
 import com.arghyam.landing.interfaces.FavouritesInterface
@@ -65,6 +69,7 @@ class HomeFragment : Fragment() {
     lateinit var getAllSpringRepository: GetAllSpringRepository
     private var getAllSpringViewModel: GetAllSpringViewModel? = null
     private var springsList = ArrayList<AllSpringDataModel>()
+    private var favSpringsList = ArrayList<FavSpringDataModel>()
     private var count: Int = 1
     private var maxItem: Int = 0
     private var itemsAvailable: Boolean = true
@@ -79,7 +84,6 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var favouritesRepository: GetFavSpringsRepository
-
     private var favouritesViewModel: FavouritesViewModel? = null
 
     /**
@@ -176,6 +180,7 @@ class HomeFragment : Fragment() {
         initRepository()
         initNotificationCountApi()
         initNotificationCountResponse()
+        getFavSpringRequest()
         if (ArghyamUtils().permissionGranted(
                 context!!,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -201,6 +206,21 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun getFavSpringsData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200") {
+            var responseData: FavSpringDetailsModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<FavSpringDetailsModel>() {}.type
+            )
+            if (null!=responseData.FavouriteSpring)
+                favSpringsList.addAll(responseData.FavouriteSpring)
+            for (spring in favSpringsList) {
+                Log.e("FavSpringList", spring.springCode)
+
+            }
+        }
+    }
+
     private fun initNotificationCountResponse() {
         //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
@@ -223,6 +243,44 @@ class HomeFragment : Fragment() {
                 favouritesViewModel?.favouritesError()?.removeObservers(this)
             }
         })
+
+        //FetchFavouritesObservers
+        favouritesViewModel?.getFavSpringData?.observe(this, Observer {
+            getFavSpringsData(it)
+        })
+        favouritesViewModel?.favouritesError()?.observe(this, Observer {
+            Log.e("error", it)
+            if (favouritesViewModel!!.favouritesError().hasObservers()) {
+                favouritesViewModel!!.favouritesError().removeObservers(this)
+            }
+        })
+    }
+
+    private fun getFavSpringRequest() {
+        var getFavSpringObject = context?.let { it ->
+            SharedPreferenceFactory(it).getString(Constants.USER_ID)?.let {
+                AllFavSpringsData(
+                    userId = it
+                )
+            }?.let {
+                GetAllFavSpringsModel(
+                    favourites = it
+                )
+            }?.let {
+                RequestModel(
+                    id = Constants.GET_ADDITIONAL_DETAILS,
+                    ver = BuildConfig.VER,
+                    ets = BuildConfig.ETS,
+                    params = Params(
+                        did = "",
+                        key = "",
+                        msgid = ""
+                    ),
+                    request = it
+                )
+            }
+        }
+        getFavSpringObject?.let { favouritesViewModel?.getfavouriteSpringsApi(context!!, it) }
     }
 
     fun sendRequest(springCode: String, userId: String?) {
@@ -408,7 +466,7 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE
         springRecyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = activity?.let { LandingAdapter(springsList, it, favouritesInterface) }!!
+        adapter = activity?.let { LandingAdapter(springsList, it, favouritesInterface, favSpringsList) }!!
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

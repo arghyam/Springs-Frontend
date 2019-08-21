@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.arghyam.ArghyamApplication
 import com.arghyam.BuildConfig
 import com.arghyam.R
@@ -55,15 +54,10 @@ class FavouritesFragment : Fragment() {
     private lateinit var favouritesViewModel: FavouritesViewModel
     private lateinit var adapter: FavouritesAdapter
     private var springsList = ArrayList<FavSpringDataModel>()
-    private var count: Int = 1
-    private var maxItem: Int = 0
-
-    private var notification: Boolean = true
 
 
     @Inject
     lateinit var notificationCountRepository: NotificationCountRepository
-
     private var notificationCountViewModel: NotificationCountViewModel? = null
 
     companion object {
@@ -207,7 +201,9 @@ class FavouritesFragment : Fragment() {
     private fun initGetAllFavSpring() {
         favouritesViewModel.getFavSpringData.observe(this, Observer {
             progressBar.visibility = GONE
-            GetFavSpringsData(it)
+            getFavSpringsData(it)
+            favouritesViewModel.getFavSpringData.removeObservers(this)
+
         })
         favouritesViewModel.favouritesError().observe(this, Observer {
             Log.e("error", it)
@@ -217,17 +213,12 @@ class FavouritesFragment : Fragment() {
         })
     }
 
-    private fun GetFavSpringsData(responseModel: ResponseModel) {
+    private fun getFavSpringsData(responseModel: ResponseModel) {
         if (responseModel.response.responseCode == "200") {
             var responseData: FavSpringDetailsModel = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<FavSpringDetailsModel>() {}.type
             )
-            Log.e(
-                "Total Springs", ArghyamUtils().convertToString(responseModel.response.responseObject)
-            )
-
-            Log.e("Total Springs", responseData.FavouriteSpring.toString() + "springs")
             springsList.addAll(responseData.FavouriteSpring)
             for (spring in springsList)
                 Log.e("SpringList", spring.springCode)
