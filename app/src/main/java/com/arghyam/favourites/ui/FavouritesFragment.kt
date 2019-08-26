@@ -70,11 +70,6 @@ class FavouritesFragment : Fragment() {
 
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -145,7 +140,7 @@ class FavouritesFragment : Fragment() {
 
     private fun initNotificationCountResponse() {
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
-
+            notificationCountViewModel?.getNotificationCountResponse()?.removeObservers(this)
             saveNotificationCountData(it)
         })
         notificationCountViewModel?.notificationCountError()?.observe(this, Observer {
@@ -221,7 +216,7 @@ class FavouritesFragment : Fragment() {
             )
             springsList.addAll(responseData.FavouriteSpring)
             for (spring in springsList)
-                Log.e("SpringList", spring.springCode)
+                Log.e("FavSpringList", spring.springCode)
             adapter.notifyDataSetChanged()
         }
     }

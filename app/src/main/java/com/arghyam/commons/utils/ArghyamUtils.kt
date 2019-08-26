@@ -182,7 +182,7 @@ class ArghyamUtils {
 //        selectedMonth.sort()
         for (month in selectedMonth) {
             when (month) {
-                "a" -> {
+                "1" -> {
                     if (!selectedMonthNames.contains("Jan"))
                         selectedMonthNames.add("Jan")
                 }

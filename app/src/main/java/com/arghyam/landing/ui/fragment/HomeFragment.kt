@@ -207,7 +207,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getFavSpringsData(responseModel: ResponseModel) {
-        if (responseModel.response.responseCode == "200") {
+        if (responseModel.response.responseCode == "200" && null!=responseModel.response.responseObject) {
             var responseData: FavSpringDetailsModel = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<FavSpringDetailsModel>() {}.type
