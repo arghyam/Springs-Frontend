@@ -271,11 +271,14 @@ class MyActivityFragment : Fragment() {
                 )
             )
         )
-        makeApiCall(mRequestData)
+        makeApiCall(mRequestData )
     }
 
     private fun makeApiCall(mRequestData: RequestModel) {
-        mMyActivitiesViewModel.myActivitiesApi(activity!!.applicationContext, mRequestData)
+        SharedPreferenceFactory(activity!!.applicationContext).getString(USER_ID)?.let {
+            mMyActivitiesViewModel.myActivitiesApi(activity!!.applicationContext,
+                it,mRequestData)
+        }
 
     }
 

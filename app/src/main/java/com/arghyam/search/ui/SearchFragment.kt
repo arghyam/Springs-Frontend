@@ -28,6 +28,8 @@ import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.landing.model.SearchModel
+import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.search.adapter.RecentSearchAdapter
 import com.arghyam.search.adapter.SearchResultsAdapter
 import com.arghyam.search.interfaces.RecentSearchInterface
@@ -39,12 +41,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_search.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
-
-
-
-
-
-
 
 
 class SearchFragment : Fragment() {
@@ -271,6 +267,7 @@ class SearchFragment : Fragment() {
                 recentSearchRecyclerView.layoutManager = activity?.let { LinearLayoutManager(it) }
                 val adapter = activity?.let { RecentSearchAdapter(recentSearchList, it, recentSearchInterface) }
                 recentSearchRecyclerView.adapter = adapter
+                no_recent_searches.visibility = GONE
                 Log.d("RecentSearchList", recentSearchList.toString())
             }
             else
@@ -304,6 +301,20 @@ class SearchFragment : Fragment() {
                 recentSearchesRequest()
             }
         }
+
+        back_icon.setOnClickListener {
+            showHome()
+            (this.activity as LandingActivity?)?.switchHome()
+        }
+    }
+
+    /**
+     * replaces the current fragment with home fragment
+     */
+    private fun showHome() {
+        val fragment = HomeFragment.newInstance()
+        this.fragmentManager?.beginTransaction()?.replace(R.id.content, fragment, fragment.javaClass.simpleName)
+            ?.addToBackStack(fragment.javaClass.simpleName)?.commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -325,5 +336,6 @@ class SearchFragment : Fragment() {
             recent_search.text = "Search results"
         }
     }
+
 
 }

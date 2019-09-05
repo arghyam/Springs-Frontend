@@ -215,6 +215,11 @@ class FavouritesFragment : Fragment() {
                 object : TypeToken<FavSpringDetailsModel>() {}.type
             )
             springsList.addAll(responseData.FavouriteSpring)
+            if (springsList.isEmpty()){
+                notauser.visibility = VISIBLE
+                sign_in_text.visibility = GONE
+                sign_in_button_fav.visibility = GONE
+            }
             for (spring in springsList)
                 Log.e("FavSpringList", spring.springCode)
             adapter.notifyDataSetChanged()

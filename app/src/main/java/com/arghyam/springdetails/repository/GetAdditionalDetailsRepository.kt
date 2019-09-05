@@ -15,8 +15,8 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class GetAdditionalDetailsRepository @Inject constructor() {
-    fun getAdditionalDetailsApiRequest(context: Context, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val springDetailsCall = RestClient.getWebServiceData()?.getAdditionalDetails(requestModel)
+    fun getAdditionalDetailsApiRequest(context: Context,springCode:String, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+        val springDetailsCall = RestClient.getWebServiceData()?.getAdditionalDetails(springCode,requestModel)
         springDetailsCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

@@ -2,6 +2,7 @@ package com.arghyam.myactivity.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,7 @@ class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val myActivities: Activities = myActivityList.get(position)
+        val myActivities: Activities = myActivityList[position]
         holder.dischargeData.text = myActivities.action
         holder.time.text = ArghyamUtils().epochToTime(myActivities.createdAt) + "  |  "+ArghyamUtils().epochToDateFormat(myActivities.createdAt)
         holder.springName.text = myActivities.springName
@@ -32,6 +33,13 @@ class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: 
 
         holder.activity.setOnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
+            if (myActivities.action.contains("discharge",true)){
+                Log.e("MyActivitesAdapter","discharge")
+                dataIntent.putExtra("flag",true)
+            }
+            else {
+                Log.e("MyActivitesAdapter","normal")
+            }
             dataIntent.putExtra("SpringCode", myActivities.springCode)
             dataIntent.putExtra("springCode", myActivities.springName)
             context.startActivity(dataIntent)

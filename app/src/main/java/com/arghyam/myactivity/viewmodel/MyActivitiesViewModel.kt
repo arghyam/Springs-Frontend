@@ -18,9 +18,10 @@ class MyActivitiesViewModel : ViewModel() {
         this.myActivitiesRepository = myActivitiesRepository
     }
 
-    fun myActivitiesApi(mContext: Context, requestModel: RequestModel) {
+    fun myActivitiesApi(mContext: Context, userId:String,requestModel: RequestModel) {
         myActivitiesRepository!!.myActivitiesApiRequest(
             mContext,
+            userId,
             requestModel,
             object : ResponseListener<ResponseModel> {
                 override fun onSuccess(response: ResponseModel) {

@@ -48,8 +48,8 @@ interface ApiInterface {
     @POST("/api/v1/springById")
     fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/getAdditionalDetailsForSpring")
-    fun getAdditionalDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/springs/{springCode}/additionaldetails")
+    fun getAdditionalDetails(@Path("springCode") springCode: String,@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @GET(" /api/v1/users")
     fun getRegisteredUsers(): Call<ResponseModel>
@@ -57,8 +57,8 @@ interface ApiInterface {
     @POST("/api/v1/user/getUserProfile")
     fun getUserProfile(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/user/myActivities")
-    fun getMyActivities(@Body userProfileRequetModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/user/{userId}/activities")
+    fun getMyActivities(@Path("userId") userId: String, @Body userProfileRequetModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/getStates")
     fun getAllStates(@Body statesModel: RequestModel): Call<ResponseModel>
@@ -78,10 +78,10 @@ interface ApiInterface {
     @POST("/api/v1/reviewerData")
     fun reviewerData(@Body reviewerRequetModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/notifications/{userId}")
+    @POST("/api/v1/users/{userId}/notifications")
     fun notification(@Path("userId") userId: String, @Body notificationRequetModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/notificationCount/{userId}")
+    @POST("/api/v1/users/{userId}/notificationCount")
     fun notificationCount(@Path("userId") userId: String, @Body notificationCountRequetModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/search")
@@ -90,9 +90,12 @@ interface ApiInterface {
     @POST("/api/v1/getRecentSearches")
     fun getRecentSearches(@Body recentSearchesModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/getFavourites")
+    @POST("/api/v1/users/getFavourites")
     fun getFavourites(@Body favouritesModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/favourites")
+    @POST("/api/v1/users/favourites")
     fun storeFavourites(@Body favouritesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/searchByLocation")
+    fun deduplication(@Body deduplicationModel: RequestModel): Call<ResponseModel>
 }

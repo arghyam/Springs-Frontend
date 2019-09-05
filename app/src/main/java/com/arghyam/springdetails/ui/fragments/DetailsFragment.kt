@@ -227,7 +227,10 @@ class DetailsFragment : Fragment() {
                 )
             )
         )
-        getAdditionalDetialsViewModel?.getAdditionalDetailsApi(context!!, springAdditionalDetailsObject)
+        springCode?.let {
+            getAdditionalDetialsViewModel?.getAdditionalDetailsApi(context!!,
+                it, springAdditionalDetailsObject)
+        }
     }
 
     private fun initClick() {

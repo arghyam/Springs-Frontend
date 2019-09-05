@@ -118,6 +118,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     private var mLocationManager: LocationManager? = null
     private var isLocationTurnedOn: Boolean = false
     private var isLocationNotAccepted: Boolean = false
+    private var clickable = true
 
     private var mLocation: Location? = null
     var count: Int = 1
@@ -301,12 +302,12 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the address")
-
             }
-            else {
+            else if (clickable){
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
+                clickable = false
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.arghyam.myactivity.repository
+package com.arghyam.deduplication.repository
 
 import android.content.Context
 import com.arghyam.commons.di.ResponseListener
@@ -13,15 +13,13 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class MyActivitiesRepository @Inject constructor() {
-
-    fun myActivitiesApiRequest(
+class DeduplicationRepository @Inject constructor() {
+    fun deduplicationApiRequest(
         context: Context,
-        userId:String,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val uploadAdditionalCall = RestClient.getWebServiceData()?.getMyActivities(userId,requestModel)
+        val uploadAdditionalCall = RestClient.getWebServiceData()?.deduplication(requestModel)
         uploadAdditionalCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
@@ -47,5 +45,4 @@ class MyActivitiesRepository @Inject constructor() {
 
         })
     }
-
 }

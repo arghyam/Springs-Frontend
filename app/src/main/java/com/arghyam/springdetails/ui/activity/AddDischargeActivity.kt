@@ -94,6 +94,7 @@ class AddDischargeActivity : AppCompatActivity() {
     private var volOfContainer: Float? = null
     private var litresPerSec: ArrayList<Float> = ArrayList()
     private var springName: String? = null
+    private var clickable = true
 
     @Inject
     lateinit var dischargeDataRepository: DischargeDataRepository
@@ -516,10 +517,10 @@ class AddDischargeActivity : AppCompatActivity() {
 
         submit_discharge_data.setOnClickListener {
             assignDischargeData()
-            if (volOfContainer != null && validateData()) {
+            if (volOfContainer != null && validateData() && clickable) {
                 addDischargeDataOnClick()
                 ArghyamUtils().longToast(this@AddDischargeActivity, "success")
-
+                clickable = false
             } else
                 showToast()
 

@@ -1,10 +1,17 @@
 package com.arghyam.landing.ui.fragment
 
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.GpsStatus.GPS_EVENT_STARTED
+import android.location.GpsStatus.GPS_EVENT_STOPPED
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,47 +31,58 @@ import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
 import com.arghyam.commons.utils.SharedPreferenceFactory
-import com.arghyam.iam.model.Params
-import com.arghyam.iam.model.RequestModel
-import com.arghyam.iam.model.ResponseModel
-import com.arghyam.iam.ui.LoginActivity
-import com.arghyam.landing.adapters.LandingAdapter
-import com.arghyam.landing.repository.GetAllSpringRepository
-import com.arghyam.landing.viewmodel.GetAllSpringViewModel
-import com.arghyam.landing.viewmodel.LandingViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_home.*
-import javax.inject.Inject
-import android.content.Context
-import android.location.LocationManager
-import android.location.GpsStatus.GPS_EVENT_STOPPED
-import android.location.GpsStatus.GPS_EVENT_STARTED
+import com.arghyam.deduplication.model.DeduplicationModel
+import com.arghyam.deduplication.model.DeduplicationRequest
+import com.arghyam.deduplication.model.DeduplicationRequestModel
+import com.arghyam.deduplication.model.DeduplicationViewModel
+import com.arghyam.deduplication.repository.DeduplicationRepository
+import com.arghyam.deduplication.ui.activity.DeduplicationActivity
 import com.arghyam.favourites.model.AllFavSpringsData
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.favourites.model.FavSpringDetailsModel
 import com.arghyam.favourites.model.GetAllFavSpringsModel
 import com.arghyam.favourites.repository.GetFavSpringsRepository
 import com.arghyam.favourites.viewmodel.FavouritesViewModel
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
+import com.arghyam.iam.model.ResponseModel
+import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.landing.adapters.LandingAdapter
 import com.arghyam.landing.interfaces.FavouritesInterface
 import com.arghyam.landing.model.*
+import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.repository.NotificationCountRepository
+import com.arghyam.landing.viewmodel.GetAllSpringViewModel
+import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
 import com.arghyam.notification.model.NotificationModel
 import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.custom_toolbar.*
-import kotlinx.android.synthetic.main.fragment_home.progressBar
-
-
+import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
 
+    private val TAG = "Home Fragment"
     @Inject
     lateinit var getAllSpringRepository: GetAllSpringRepository
     private var getAllSpringViewModel: GetAllSpringViewModel? = null
@@ -76,6 +94,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: LandingAdapter
     private lateinit var landingViewModel: LandingViewModel
     private var firstCallMade: Boolean = false
+    private var flag: Int = 0
 
     @Inject
     lateinit var notificationCountRepository: NotificationCountRepository
@@ -85,6 +104,10 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var favouritesRepository: GetFavSpringsRepository
     private var favouritesViewModel: FavouritesViewModel? = null
+    private var mLocation: Location? = null
+    @Inject
+    lateinit var deduplicationRepository: DeduplicationRepository
+    private var deduplicationViewModel: DeduplicationViewModel? = null
 
     /**
      * Initialize newInstance for passing paameters
@@ -99,24 +122,23 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun initbell(notificationCount:Int) {
-        Log.d("notificationCountBell--","" + notificationCount)
+    private fun initbell(notificationCount: Int) {
+        Log.d("notificationCountBell--", "" + notificationCount)
 
-        if(notificationCount>0){
+        if (notificationCount > 0) {
             badge.visibility = VISIBLE
             notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
         }
     }
+
     private fun initNotifications() {
-        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
+        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == "") {
             bell.visibility = GONE
             notification_bell.visibility = GONE
-        }
-        else
+        } else
             bell.visibility = VISIBLE
         notification_bell.setOnClickListener {
-            Log.e("Fragment","bell clicked")
             activity?.startActivity(Intent(activity, NotificationActivity::class.java))
         }
     }
@@ -130,14 +152,12 @@ class HomeFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun registerReceiver() {
 
-        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        val lm = context?.getSystemService(LOCATION_SERVICE) as LocationManager?
         lm!!.addGpsStatusListener { event ->
             when (event) {
                 GPS_EVENT_STARTED -> {
-//                    Log.e("Anirudh","gps Enabled")
                 }
                 GPS_EVENT_STOPPED -> {
-//                    Log.e("Anirudh","gps Disabled")
                 }
             }// do your tasks
             // do your tasks
@@ -159,7 +179,6 @@ class HomeFragment : Fragment() {
                         initApiCall()
                     }
                 } else {
-                    Log.e("call", "from observer")
                     errorItems.visibility = VISIBLE
                     errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
                     springsLocation.visibility = GONE
@@ -176,10 +195,11 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         initComponent()
+        getGoogleClient()
         initNotifications()
         initRepository()
         initNotificationCountApi()
-        initNotificationCountResponse()
+        initObservers()
         getFavSpringRequest()
         if (ArghyamUtils().permissionGranted(
                 context!!,
@@ -192,7 +212,6 @@ class HomeFragment : Fragment() {
                     initApiCall()
                 }
             } else {
-                Log.e("call", "from init")
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
                 errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
@@ -203,25 +222,141 @@ class HomeFragment : Fragment() {
         initFab()
         reload()
         registerReceiver()
+    }
+
+
+    private var mGoogleApiClient: GoogleApiClient? = null
+    private var mLocationManager: LocationManager? = null
+
+
+    override fun onStart() {
+        super.onStart()
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient!!.connect()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (mGoogleApiClient != null && mGoogleApiClient!!.isConnected) {
+            mGoogleApiClient!!.disconnect()
+        }
+    }
+
+    private fun getGoogleClient() {
+        mGoogleApiClient = activity?.applicationContext?.let {
+            GoogleApiClient.Builder(it)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build()
+        }
+
+        mLocationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager
+        getLocation()
 
     }
 
-    private fun getFavSpringsData(responseModel: ResponseModel) {
-        if (responseModel.response.responseCode == "200" && null!=responseModel.response.responseObject) {
-            var responseData: FavSpringDetailsModel = Gson().fromJson(
-                ArghyamUtils().convertToString(responseModel.response.responseObject),
-                object : TypeToken<FavSpringDetailsModel>() {}.type
-            )
-            if (null!=responseData.FavouriteSpring)
-                favSpringsList.addAll(responseData.FavouriteSpring)
-            for (spring in favSpringsList) {
-                Log.e("FavSpringList", spring.springCode)
 
+    override fun onConnected(p0: Bundle?) {
+        getLocation()
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+        Log.i(TAG, "Connection Suspended")
+        mGoogleApiClient!!.connect()
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        Log.i(TAG, "Connection failed. Error: ")
+    }
+
+    private fun getLocation() {
+        Dexter.withActivity(this.activity)
+            .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(permissionListener).check()
+    }
+
+
+    private val permissionListener = object : PermissionListener {
+        override fun onPermissionGranted(response: PermissionGrantedResponse) {
+            if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
+                getFusedClient()
+            } else {
+                ArghyamUtils().turnOnLocation(activity!!)
+            }
+        }
+
+        override fun onPermissionDenied(response: PermissionDeniedResponse) {
+            if (response.isPermanentlyDenied) {
+                activity?.applicationContext?.let {
+                    ArghyamUtils().longToast(
+                        it,
+                        Constants.LOCATION_PERMISSION_NOT_GRANTED
+                    )
+                }
+                activity?.parent?.let { ArghyamUtils().openSettings(it) }
+            }
+        }
+
+        override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {
+            token.continuePermissionRequest()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getFusedClient() {
+        var fusedLocationProviderClient:
+                FusedLocationProviderClient? =
+            this.activity?.let { LocationServices.getFusedLocationProviderClient(it) }
+        fusedLocationProviderClient?.lastLocation?.addOnSuccessListener { location ->
+            // Got last known address. In some rare situations this can be null.
+            if (location != null) {
+                Log.e(
+                    "Home Fragment location",
+                    "   location  " + location.latitude + "                  " + location.longitude
+                )
+                mLocation = location
+            } else {
+                getFusedClient()
             }
         }
     }
 
-    private fun initNotificationCountResponse() {
+    private fun getFavSpringsData(responseModel: ResponseModel) {
+        if (responseModel.response.responseCode == "200" && null != responseModel.response.responseObject) {
+            var responseData: FavSpringDetailsModel = Gson().fromJson(
+                ArghyamUtils().convertToString(responseModel.response.responseObject),
+                object : TypeToken<FavSpringDetailsModel>() {}.type
+            )
+            if (null != responseData.FavouriteSpring) {
+                favSpringsList.clear()
+                favSpringsList.addAll(responseData.FavouriteSpring)
+            } else
+                Log.e("getFavSpringsData", "null")
+        }
+        Log.e("Home", "getFavSpringsData called" + favSpringsList.size)
+        addFavToSpring()
+    }
+
+    private fun addFavToSpring() {
+        Log.e("Home", "addFavToSpring called" + favSpringsList.size + "   " + springsList.size)
+
+        for (i in 0 until favSpringsList.size) {
+            for (j in 0 until springsList.size) {
+                if (favSpringsList[i].springCode == springsList[j].springCode && !springsList[j].isFavSelected) {
+                    springsList[j].isFavSelected = true
+                    Log.e("Home", "called" + springsList[j].springCode)
+                } else if (favSpringsList[i].springCode == springsList[j].springCode && springsList[j].isFavSelected) {
+                    springsList[j].isFavSelected = false
+                    Log.e("Home", "called" + springsList[j].springCode)
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun initObservers() {
         //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
             saveNotificationCountData(it)
@@ -234,8 +369,8 @@ class HomeFragment : Fragment() {
         })
 
         //FavouritesObservers
-        favouritesViewModel?.favouritesResponse()?.observe(this,Observer {
-            Log.e("success", it.toString())
+        favouritesViewModel?.favouritesResponse()?.observe(this, Observer {
+            Log.e("success fav", it.toString())
         })
         favouritesViewModel?.favouritesError()?.observe(this, Observer {
             Log.e("error---", it)
@@ -246,6 +381,7 @@ class HomeFragment : Fragment() {
 
         //FetchFavouritesObservers
         favouritesViewModel?.getFavSpringData?.observe(this, Observer {
+            progressBar.visibility = GONE
             getFavSpringsData(it)
         })
         favouritesViewModel?.favouritesError()?.observe(this, Observer {
@@ -254,6 +390,43 @@ class HomeFragment : Fragment() {
                 favouritesViewModel!!.favouritesError().removeObservers(this)
             }
         })
+
+        //Deduplication Observers
+        deduplicationViewModel?.getDeduplicationData?.observe(this, Observer {
+            Log.d("Deduplication Activity", "Success")
+            saveDeduplicationData(it)
+        })
+
+        deduplicationViewModel?.getDeduplicationError?.observe(this, Observer {
+            Log.d("Deduplication Activity", "Api Error")
+        })
+    }
+
+    private fun saveDeduplicationData(responseModel: ResponseModel?) {
+        if (flag == Constants.SPRINGS_NEAR_ME) {
+            var responseData: AllSpringDetailsModel = Gson().fromJson(
+                responseModel?.response?.responseObject?.let { ArghyamUtils().convertToString(it) },
+                object : TypeToken<AllSpringDetailsModel>() {}.type
+            )
+            Log.e(TAG, responseData.springs.size.toString())
+            springsList.clear()
+            springsList.addAll(responseData.springs)
+            adapter.notifyDataSetChanged()
+            addFavToSpring()
+        } else if (flag == Constants.DEDUPLICATION) {
+            val responseData: DeduplicationModel = Gson().fromJson(
+                responseModel?.response?.responseObject?.let { ArghyamUtils().convertToString(it) },
+                object : TypeToken<DeduplicationModel>() {}.type
+            )
+            if (responseData.springs.isNotEmpty()) {
+                val intent = Intent(activity, DeduplicationActivity::class.java)
+                intent.putExtra("location", mLocation)
+                startActivity(intent)
+            } else {
+                val intent = Intent(activity, NewSpringActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun getFavSpringRequest() {
@@ -360,7 +533,6 @@ class HomeFragment : Fragment() {
     private fun initApiCall() {
         if (itemsAvailable) {
             if (!firstCallMade) {
-                Log.e("call made ", "from initApiCall")
                 errorItems?.visibility = GONE
                 springsLocation?.visibility = VISIBLE
                 progressBar.visibility = VISIBLE
@@ -382,7 +554,6 @@ class HomeFragment : Fragment() {
             saveGetAllSpringsData(it)
         })
         getAllSpringViewModel?.getAllSpringError()?.observe(this, Observer {
-            Log.e("error", it)
             if (getAllSpringViewModel?.getAllSpringError()?.hasObservers()!!) {
                 getAllSpringViewModel?.getAllSpringError()?.removeObservers(this)
             }
@@ -401,21 +572,22 @@ class HomeFragment : Fragment() {
                 maxItem++
             }
             adapter.notifyDataSetChanged()
+            addFavToSpring()
         }
     }
 
     private fun reload() {
-        reload.setOnClickListener {
-            Log.e("Anirudh", "reloaded")
+        springsLocation.setOnClickListener {
+            Log.e(TAG, "clicked")
+            flag = Constants.SPRINGS_NEAR_ME
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
-                if (!firstCallMade) {
-                    springsList.clear()
-                    adapter.notifyDataSetChanged()
-                    count = 1
-                    initApiCall()
-                }
+                Log.e(TAG, "LocationEnabled")
+                springsList.clear()
+                deduplicationRequestCall()
+                adapter.notifyDataSetChanged()
+                count = 1
+                initApiCall()
             } else {
-                Log.e("call", "from observer")
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
                 errorDesc.text = activity!!.resources.getText(R.string.turn_on_location_desc)
@@ -457,33 +629,77 @@ class HomeFragment : Fragment() {
                         LoginActivity::class.java
                     )
                 }
-            } else
-                activity?.startActivity(Intent(activity, NewSpringActivity::class.java))
+            } else {
+                flag = Constants.DEDUPLICATION
+                deduplicationRequestCall()
+            }
         }
     }
 
+    private fun deduplicationRequestCall() {
+        Log.e(TAG, "Coming")
+        getGoogleClient()
+        var accuracy: Double? = 0.0
+        if (flag == Constants.DEDUPLICATION)
+            accuracy = mLocation?.accuracy?.toDouble()
+        Log.e(TAG, "" + accuracy + "accuracy")
+        val mRequestData = mLocation?.latitude?.let { it1 ->
+            mLocation?.longitude?.let { it2 ->
+                accuracy?.let {
+                    DeduplicationRequest(
+                        latitude = it1,
+                        longitude = it2,
+                        accuracy = it
+                    )
+                }
+            }
+        }?.let { it2 ->
+            DeduplicationRequestModel(
+                location = it2
+            )
+        }?.let { it3 ->
+            RequestModel(
+                id = Constants.CREATE_STATE,
+                ver = BuildConfig.VER,
+                ets = BuildConfig.ETS,
+                params = Params(
+                    did = "",
+                    key = "",
+                    msgid = ""
+                ),
+                request = it3
+            )
+        }
+        if (mRequestData != null) {
+            deduplicationApiCall(mRequestData)
+        }
+    }
+
+    private fun deduplicationApiCall(mRequestData: RequestModel) {
+        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, mRequestData) }
+    }
 
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE
-        springRecyclerView.layoutManager = LinearLayoutManager(activity)
+        springRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         adapter = activity?.let { LandingAdapter(springsList, it, favouritesInterface, favSpringsList) }!!
+        adapter.notifyDataSetChanged()
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && maxItem > count) {
-                        count++
-                        Log.e("karthik", "$count")
-                        progressBar.visibility = VISIBLE
-                        Log.e("Call made", " from recycler View")
-                        getAllSpringRequest()
+                if (!recyclerView.canScrollVertically(1) && maxItem > count && flag == 0) {
+                    count++
+                    progressBar.visibility = VISIBLE
+                    getAllSpringRequest()
+                    addFavToSpring()
                 }
             }
         })
+        springRecyclerView.itemAnimator?.changeDuration = 0
     }
 
     private fun initRepository() {
-        Log.e("HomeFragment","Called")
         //GetAllSprings
         getAllSpringViewModel = ViewModelProviders.of(this).get(GetAllSpringViewModel::class.java)
         getAllSpringViewModel?.setGetAllSpringRepository(getAllSpringRepository)
@@ -496,13 +712,25 @@ class HomeFragment : Fragment() {
         favouritesViewModel = ViewModelProviders.of(this).get(FavouritesViewModel::class.java)
         favouritesViewModel?.setFavouritesRepository(favouritesRepository)
 
+        //Deduplication
+        deduplicationViewModel = ViewModelProviders.of(this).get(DeduplicationViewModel::class.java)
+        deduplicationViewModel?.setDeduplicationRepository(deduplicationRepository)
+
     }
 
     private var favouritesInterface: FavouritesInterface = object : FavouritesInterface {
-        override fun onFavouritesItemClickListener(springCode: String, userId: String) {
-            Log.e("HomeFragment","Fav Called")
-            sendRequest(springCode,userId)
+        override fun onFavouritesItemClickListener(
+            springCode: String,
+            userId: String,
+            position: Int
+        ) {
+            sendRequest(springCode, userId)
+            progressBar.visibility = VISIBLE
+            var handler = Handler()
+            handler.postDelayed({ getFavSpringRequest() },100)
+//            getFavSpringRequest()
         }
     }
-
 }
+
+

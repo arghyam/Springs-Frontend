@@ -61,6 +61,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private var goBack: Boolean = false
     private lateinit var springCode: String
     private var springName: String? = null
+    private var clickable = true
 
 
     private lateinit var mAdditionalDetailsViewModel: AddAdditionalDetailsViewModel
@@ -372,8 +373,10 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun initSubmitClickListener() {
         submit.setOnClickListener {
             var validated: Boolean = validateData()
-            if (validated)
+            if (validated && clickable) {
+                clickable = false
                 saveData()
+            }
         }
 
     }

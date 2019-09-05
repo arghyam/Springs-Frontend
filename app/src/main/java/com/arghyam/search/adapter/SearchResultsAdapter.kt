@@ -18,7 +18,7 @@ class SearchResultsAdapter(val springList: ArrayList<AllSpringDataModel>, val co
 	    RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.search_list, parent, false)
         return ViewHolder(v)
     }
 

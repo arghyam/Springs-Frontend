@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/fragment_details"
+             tools:context=".springdetails.ui.fragments.DetailsFragment">
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            android:layout_height="match_parent">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize">
+
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:id="@+id/springData"
+                        android:layout_below="@+id/springsLocation"
+                        android:layout_height="match_parent">
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="79dp"
+                            android:id="@+id/springsLocation"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                        <TextView
+                                android:id="@+id/spring_near"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="@dimen/text_size_14"
+                                android:padding="10dp"
+                                android:layout_gravity="center_horizontal"
+                                android:gravity="center_vertical"
+                                android:textColor="#262524"
+                                android:text="The spring may already be added. If you find it in the list below, please add more details.">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/deduplicationRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_below="@+id/spring_near"
+                            android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
+            <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+            />
+
+
+        </FrameLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</FrameLayout>

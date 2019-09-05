@@ -3,6 +3,9 @@ package com.arghyam.commons.di
 import com.arghyam.additionalDetails.ui.AddAdditionalDetailsActivity
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.admin.ui.AdminPanelActivity
+import com.arghyam.deduplication.ui.activity.DeduplicationActivity
+import com.arghyam.deduplication.ui.fragment.DischargeFragment
+import com.arghyam.deduplication.ui.fragment.NewSpringFragment
 import com.arghyam.example.ui.ExampleActivity
 import com.arghyam.favourites.ui.FavouritesFragment
 import com.arghyam.geographySearch.ui.fragment.*
@@ -63,6 +66,12 @@ interface AppComponent {
     fun inject(notificationActivity: NotificationActivity)
 
     fun inject(displayDischargeDataActivity: DisplayDischargeDataActivity)
+
+    fun inject(deduplicationActivity: DeduplicationActivity)
+
+    fun inject(dischargeFragment: DischargeFragment)
+
+    fun inject(newSpringFragment: NewSpringFragment)
 
     fun inject(splashActivity: SplashActivity)
 

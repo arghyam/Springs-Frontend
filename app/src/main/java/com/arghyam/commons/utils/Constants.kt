@@ -42,4 +42,6 @@ object Constants {
     var REQUEST_IMAGE_CAPTURE : Int = 1706
     var ADDITIONAL_DATA_ID ="open-saber.registry.createAdditionalInfo"
     var REVIEWER_DATA_ID = "open-saber.registry.reviewerData"
+    var SPRINGS_NEAR_ME = 1
+    var DEDUPLICATION = 2
 }

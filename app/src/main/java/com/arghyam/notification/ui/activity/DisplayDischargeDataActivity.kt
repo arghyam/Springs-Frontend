@@ -265,16 +265,6 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
-
-    private fun getSpringId() {
-        var dataIntent: Intent = intent
-        springCode = dataIntent.getStringExtra("SpringCode")
-        userId = dataIntent.getStringExtra("userId")
-
-        Log.d("userId--", userId)
-        Log.e("Code", springCode)
-    }
-
     private fun initSpringDetailsResponse() {
         springDetailsViewModel?.getSpringDetailsResponse()?.observe(this, Observer {
             //            initDischargeAdapter(it)

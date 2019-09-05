@@ -1,6 +1,7 @@
 package com.arghyam.springdetails.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,14 +31,12 @@ class DischargeDataAdapter(private val items: ArrayList<DischargeDataModal>, val
         if (item.status == "Accepted") {
             holder.tick.visibility = VISIBLE
         } else if (item.status == "Rejected") {
-//            holder.date.setTextColor(context.resources.getColor(R.color.jumbo))
-//            holder.discharge.setTextColor(context.resources.getColor(R.color.jumbo))
-//            holder.submittedBy.setTextColor(context.resources.getColor(R.color.jumbo))
-//            holder.tick.visibility = INVISIBLE
             holder.dischargeDataLayout.visibility = GONE
         } else {
             holder.tick.visibility = INVISIBLE
-
+            holder.date.setTextColor(Color.parseColor("#8C8C8B"))
+            holder.discharge.setTextColor(Color.parseColor("#8C8C8B"))
+            holder.submittedBy.setTextColor(Color.parseColor("#8C8C8B"))
         }
     }
 
@@ -50,8 +49,8 @@ class DischargeDataAdapter(private val items: ArrayList<DischargeDataModal>, val
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val tick: ImageView = view.dd_tick
-    val date: TextView = view.dd_date
-    val discharge: TextView = view.dd_discharge
-    val submittedBy: TextView = view.dd_submitted
+    var date: TextView = view.dd_date
+    var discharge: TextView = view.dd_discharge
+    var submittedBy: TextView = view.dd_submitted
     val dischargeDataLayout: LinearLayout = view.discharge_data_layout
 }

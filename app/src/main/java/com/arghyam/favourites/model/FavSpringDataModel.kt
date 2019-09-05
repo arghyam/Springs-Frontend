@@ -1,7 +1,5 @@
 package com.arghyam.favourites.model
 
-import com.arghyam.landing.model.SpringExtraInformationModel
-
 class FavSpringDetailsModel(var FavouriteSpring: List<FavSpringDataModel>)
 
 class FavSpringDataModel(

@@ -30,6 +30,7 @@ import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.more.ui.MoreFragment
 import com.arghyam.myactivity.ui.MyActivityFragment
+import com.arghyam.search.interfaces.NavigationInterface
 import com.arghyam.search.ui.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.karumi.dexter.Dexter
@@ -61,12 +62,6 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         showHome()
     }
 
-
-//    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-//        super.onSaveInstanceState(outState, outPersistentState)
-//        supportFragmentManager.putFragment(outState!!,"HomeFragment",mContent!!)
-//    }
-
     private fun initViewModel() {
         landingViewModel = ViewModelProviders.of(this).get(LandingViewModel::class.java)
     }
@@ -83,6 +78,10 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
             val fragment = ErrorFragment.newInstance()
             addFragment(fragment)
         }
+    }
+
+    fun switchHome(){
+        navView.menu[0].isChecked = true
     }
 
     private val onNavigationItemSelectedListener = object : BottomNavigationView.OnNavigationItemSelectedListener {
@@ -202,5 +201,10 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
         }
 
     }
-
+    private var navigationInterface: NavigationInterface = object : NavigationInterface {
+        override fun backButtonClickListener() {
+            showHome()
+            navView.menu[0].isChecked = true
+        }
+    }
 }

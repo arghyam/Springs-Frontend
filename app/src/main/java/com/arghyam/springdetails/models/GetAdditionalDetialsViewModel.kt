@@ -22,8 +22,8 @@ class GetAdditionalDetialsViewModel : ViewModel(){
         this.getAdditionalDetailsRepository = getAdditionalDetailsRepository
     }
 
-    fun getAdditionalDetailsApi(mContext:Context, requestModel: RequestModel){
-        getAdditionalDetailsRepository!!.getAdditionalDetailsApiRequest(mContext, requestModel, object :
+    fun getAdditionalDetailsApi(mContext:Context,springCode:String, requestModel: RequestModel){
+        getAdditionalDetailsRepository!!.getAdditionalDetailsApiRequest(mContext,springCode, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())
