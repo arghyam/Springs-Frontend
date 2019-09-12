@@ -243,6 +243,8 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         }
     }
 
+
+
     private fun getGoogleClient() {
         mGoogleApiClient = activity?.applicationContext?.let {
             GoogleApiClient.Builder(it)
@@ -356,6 +358,9 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         adapter.notifyDataSetChanged()
     }
 
+    fun onLocationChanged(location: Location){
+
+    }
     private fun initObservers() {
         //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {

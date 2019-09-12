@@ -1,3 +1,4 @@
 package com.arghyam.springdetails.models
 
-open class RequestSpringAdditionalDetailsDataModel(var additionalInfo: SpringDetailsModel)
+data class RequestSpringAdditionalDetailsDataModel(var additionalInfo: AdditionalDetailsModel)
+data class AdditionalDetailsModel(var springCode: String?)

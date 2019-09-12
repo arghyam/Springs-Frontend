@@ -1,34 +1,52 @@
 package com.arghyam.admin.ui
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.EditText
+import android.widget.ExpandableListView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.arghyam.ArghyamApplication
+import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.admin.adapter.ExpandableListAdapter
+import com.arghyam.admin.interfaces.AdminPanelInterface
 import com.arghyam.admin.model.AllUsersDataModel
+import com.arghyam.admin.model.RolesModel
+import com.arghyam.admin.model.UserRolesModel
+import com.arghyam.admin.repository.AssignRolesRepository
 import com.arghyam.admin.repository.GetRegisteredUsersRepository
+import com.arghyam.admin.viewmodel.AssignRoleViewModel
 import com.arghyam.admin.viewmodel.GetRegisteredUsersViewModel
 import com.arghyam.commons.utils.ArghyamUtils
+import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.iam.model.Params
+import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_admin_panel.*
 import javax.inject.Inject
 
-class AdminPanelActivity : AppCompatActivity() {
 
+
+class AdminPanelActivity : AppCompatActivity() {
     private var user: ArrayList<User> = ArrayList()
     private lateinit var mGetRegisteredUsersViewModel: GetRegisteredUsersViewModel
-
     @Inject
     lateinit var mRegisteredUsersRepository: GetRegisteredUsersRepository
+
+    private lateinit var mAssignRoleViewModel: AssignRoleViewModel
+    @Inject
+    lateinit var mAssignRolesRepository: AssignRolesRepository
+
     lateinit var listAdapter: ExpandableListAdapter
 
 
@@ -51,7 +69,11 @@ class AdminPanelActivity : AppCompatActivity() {
 
     private fun initRepository() {
         mGetRegisteredUsersViewModel = ViewModelProviders.of(this).get(GetRegisteredUsersViewModel::class.java)
-        mGetRegisteredUsersViewModel.setegisteredUsersRepository(mRegisteredUsersRepository)
+        mGetRegisteredUsersViewModel.setRegisteredUsersRepository(mRegisteredUsersRepository)
+
+        mAssignRoleViewModel = ViewModelProviders.of(this).get(AssignRoleViewModel::class.java)
+        mAssignRoleViewModel.setAssignRoleRepository(mAssignRolesRepository)
+
     }
 
     private fun observeData() {
@@ -63,10 +85,27 @@ class AdminPanelActivity : AppCompatActivity() {
         mGetRegisteredUsersViewModel.getAdditionalDataError().observe(this, androidx.lifecycle.Observer {
             Log.d("registeredUsers", "Api Error")
         })
+
+        mAssignRoleViewModel.assignRoleSuccess().observe(this, androidx.lifecycle.Observer {
+            Log.d("assign role", "success")
+            roleData(it)
+        })
+
+        mAssignRoleViewModel.assignRoleError().observe(this, androidx.lifecycle.Observer {
+            Log.d("assign role", "Api Error")
+        })
+    }
+
+    private fun roleData(it: ResponseModel?) {
+        if (null!=it) {
+            if ("200"==it.response.responseCode) {
+                makeApiCall()
+            }
+        }
     }
 
     private fun saveRegisteredUsers(responseModel: ResponseModel) {
-        Log.e("response", ArghyamUtils().convertToString(responseModel.response.responseObject))
+        user.clear()
         if (responseModel.response.responseCode == "200") {
             var responseData: List<AllUsersDataModel> = Gson().fromJson(
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
@@ -74,18 +113,35 @@ class AdminPanelActivity : AppCompatActivity() {
             )
             var i = 0
             while (i < responseData.size) {
-                if (responseData[i].firstName != null && responseData[i].username!=null){
+                if (responseData[i].firstName != null && responseData[i].username != null && responseData[i].username!="admin" ) {
                     user.add(
                         User(
                             responseData[i].firstName,
                             responseData[i].username,
-                            mutableListOf("Admin", "Reviewer")
+                            responseData[i].admin,
+                            responseData[i].reviewer,
+                            responseData[i].id
                         )
                     )
                 }
                 i++
             }
         }
+        oneListExpand()
+        admin_progress_bar.visibility = GONE
+    }
+
+    private fun oneListExpand() {
+        val expandableListView = findViewById<ExpandableListView>(R.id.user_list)
+        expandableListView.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
+            var previousItem = -1
+
+            override fun onGroupExpand(groupPosition: Int) {
+                if (groupPosition != previousItem)
+                    expandableListView.collapseGroup(previousItem)
+                previousItem = groupPosition
+            }
+        })
     }
 
     private fun clearSearchEditText() {
@@ -94,6 +150,45 @@ class AdminPanelActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun sendRequestForRoles(role: String, id: String) {
+        var userRole = ""
+        if ("admin" == role)
+            userRole = "Arghyam-admin"
+        else if ("reviewer" == role)
+            userRole = "Arghyam-reviewer"
+        var mRequestData = SharedPreferenceFactory(this).getString(Constants.USER_ID)?.let {
+            UserRolesModel(
+                userId = id,
+                role = userRole,
+                admin = it
+            )
+        }?.let {
+            RolesModel(
+                roles = it
+            )
+        }?.let {
+            RequestModel(
+                id = "forWater.user.createDischargeData",
+                ver = BuildConfig.VER,
+                ets = BuildConfig.ETS,
+                params = Params(
+                    did = "",
+                    key = "",
+                    msgid = ""
+                ),
+                request = it
+            )
+        }
+        makeApiCallForAssignRole(mRequestData)
+    }
+
+    private fun makeApiCallForAssignRole(mRequestData: RequestModel?) {
+        if (mRequestData != null) {
+            mAssignRoleViewModel.assignRoleApi(this, mRequestData)
+        }
+    }
+
 
     private fun makeApiCall() {
         mGetRegisteredUsersViewModel.getRegisteredUsersApi(this)
@@ -112,7 +207,6 @@ class AdminPanelActivity : AppCompatActivity() {
             hasConsumed
         }
     }
-
 
     private fun textChangeListenerForSearchEditText() {
         user_search_input.addTextChangedListener(object : TextWatcher {
@@ -137,8 +231,7 @@ class AdminPanelActivity : AppCompatActivity() {
     fun filter(text: String) {
         val filterName = java.util.ArrayList<User>()
         for (s in user) {
-            Log.e("AdminPanel",s.username+"   "+s.phoneNumber)
-            if (s.username!!.toLowerCase().contains(text.toLowerCase())||s.phoneNumber!!.contains(text)) {
+            if (s.username!!.toLowerCase().contains(text.toLowerCase()) || s.phoneNumber!!.contains(text)) {
                 filterName.add(s)
             }
         }
@@ -147,7 +240,8 @@ class AdminPanelActivity : AppCompatActivity() {
 
     private fun initData(responseModel: ResponseModel) {
         saveRegisteredUsers(responseModel)
-        listAdapter = ExpandableListAdapter(this, user as ArrayList<com.arghyam.admin.adapter.User>)
+        listAdapter =
+            ExpandableListAdapter(this, user as ArrayList<com.arghyam.admin.adapter.User>, adminPanelInterface)
         user_list.setAdapter(listAdapter)
     }
 
@@ -164,7 +258,15 @@ class AdminPanelActivity : AppCompatActivity() {
     private fun initComponent() {
         (this.application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
+
+    private var adminPanelInterface: AdminPanelInterface = object : AdminPanelInterface {
+        override fun onCheckBoxListener(role: String, id: String) {
+            admin_progress_bar.visibility = VISIBLE
+            Log.e("adminPanel",role+"        "+id)
+            sendRequestForRoles(role, id)
+        }
+    }
 }
 
 
-data class User(var username: String?, var phoneNumber: String?, var role: List<String>?)
+data class User(var username: String?, var phoneNumber: String?, var admin: Boolean, var reviewer: Boolean, var id: String?)

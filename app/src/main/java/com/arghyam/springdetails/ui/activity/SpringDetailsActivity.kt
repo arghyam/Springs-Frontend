@@ -20,6 +20,7 @@ import com.arghyam.iam.model.RequestModel
 import com.arghyam.springdetails.models.RequestSpringDetailsDataModel
 import com.arghyam.springdetails.models.SpringDetailsModel
 import com.arghyam.springdetails.repository.SpringDetailsRepository
+import com.arghyam.springdetails.ui.fragments.AnalysisFragment
 import com.arghyam.springdetails.ui.fragments.DetailsFragment
 import com.arghyam.springdetails.ui.fragments.DischargeDataFragment
 import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
@@ -106,6 +107,7 @@ class SpringDetailsActivity : AppCompatActivity() {
 //        detailsFragment.arguments=
         adapter.addFragment(DetailsFragment(), "Details")
         adapter.addFragment(DischargeDataFragment(), "Discharge Data")
+        adapter.addFragment(AnalysisFragment(), "Analysis")
         viewPager.adapter = adapter
     }
 

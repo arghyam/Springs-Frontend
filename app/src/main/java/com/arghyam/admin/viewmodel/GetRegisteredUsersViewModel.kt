@@ -1,6 +1,5 @@
 package com.arghyam.admin.viewmodel
 
-
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,7 @@ class GetRegisteredUsersViewModel : ViewModel() {
     val mRegisteredUsers = MutableLiveData<ResponseModel>()
     val mRegisteredUsersError: SingleLiveEvent<String> = SingleLiveEvent()
 
-    fun setegisteredUsersRepository(getRegisteredUsersRepository: GetRegisteredUsersRepository) {
+    fun setRegisteredUsersRepository(getRegisteredUsersRepository: GetRegisteredUsersRepository) {
         this.getRegisteredUsersRepository = getRegisteredUsersRepository
     }
 

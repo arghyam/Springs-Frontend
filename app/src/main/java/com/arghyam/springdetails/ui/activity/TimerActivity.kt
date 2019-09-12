@@ -85,18 +85,18 @@ class TimerActivity : AppCompatActivity() {
     private fun initTimerDone() {
         timerDone.setOnClickListener {
             if (!validate()){
-                returnIntent()
+                returnIntent(1)
             }
             else
                 ArghyamUtils().longToast(this,"Please set the time first")
         }
     }
 
-    private fun returnIntent() {
+    private fun returnIntent(int:Int) {
         var dataIntent: Intent = Intent().apply {
             putExtra("timerList", timerList)
         }
-        if (!isTimerSetEmpty()) {
+        if (!isTimerSetEmpty() && int == 1) {
             setResult(Activity.RESULT_OK, dataIntent)
             finish()
         } else {
@@ -223,12 +223,12 @@ class TimerActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        returnIntent()
+        returnIntent(0)
         return true
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        returnIntent()
+        returnIntent(0)
     }
 }

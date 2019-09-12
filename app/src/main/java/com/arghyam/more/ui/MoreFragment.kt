@@ -300,7 +300,7 @@ class MoreFragment : Fragment() {
             )
             tv_username.text = responseData.firstName
             tv_user_phone.text = responseData.userName
-            if (responseData.role.contains("arghyam-admin") && SharedPreferenceFactory(activity!!).getString(ACCESS_TOKEN) != "")
+            if (responseData.role.contains("Arghyam-admin") && SharedPreferenceFactory(activity!!).getString(ACCESS_TOKEN) != "")
                 admin_layout.visibility = VISIBLE
         }
     }

@@ -7,23 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.arghyam.R
+import com.arghyam.admin.interfaces.AdminPanelInterface
+
+
 
 class ExpandableListAdapter : BaseExpandableListAdapter {
+
     private var context: Context
     private var user: ArrayList<User>
+    private var adminPanelInterface: AdminPanelInterface
 
     constructor(
         context: Context,
-        user: ArrayList<User>
+        user: ArrayList<User>,
+        adminPanelInterface: AdminPanelInterface
     ) : super() {
         this.context = context
         this.user = user
+        this.adminPanelInterface = adminPanelInterface
     }
 
     override fun getGroup(groupPosition: Int): Any {
-        return user.get(groupPosition)
+        return user[groupPosition]
     }
-
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
         return true
@@ -36,7 +42,9 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
         var username: String? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).username
         var phoneNumber: String? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).phoneNumber
-        var role: List<String>? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).role
+        var admin: Boolean = (getGroup(groupPosition) as com.arghyam.admin.ui.User).admin
+        var reviewer: Boolean = (getGroup(groupPosition) as com.arghyam.admin.ui.User).reviewer
+        var id: String? = (getGroup(groupPosition) as com.arghyam.admin.ui.User).id
         var convertView = convertView
         if (convertView == null) {
             val inflater = this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -50,31 +58,29 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
         var text_breaker = convertView!!.findViewById<TextView>(R.id.breaker)
 
 
-
         userName.text = username
         phonenumber.text = phoneNumber
 
-        if (role?.size == 1) {
-            text_breaker.visibility = View.GONE
-            role_layout.visibility = View.VISIBLE
-            if (role.get(0).equals("Admin")) {
-                Log.e("role admin", "visible")
-                adminRole.visibility = View.VISIBLE
-                reviewerRole.visibility = View.GONE
-
-            } else {
-
-                Log.e("role review", "visible")
-                reviewerRole.visibility = View.VISIBLE
-                adminRole.visibility = View.GONE
-            }
-        } else if (role?.size == 2) {
+        if (admin && reviewer) {
             text_breaker.visibility = View.VISIBLE
             role_layout.visibility = View.VISIBLE
             Log.e("role", " 2 visible")
             adminRole.visibility = View.VISIBLE
             reviewerRole.visibility = View.VISIBLE
 
+        } else if (admin || reviewer) {
+            text_breaker.visibility = View.GONE
+            role_layout.visibility = View.VISIBLE
+            if (admin) {
+                Log.e("role admin", "visible")
+                adminRole.visibility = View.VISIBLE
+                reviewerRole.visibility = View.GONE
+
+            } else {
+                Log.e("role review", "visible")
+                reviewerRole.visibility = View.VISIBLE
+                adminRole.visibility = View.GONE
+            }
         } else {
             text_breaker.visibility = View.GONE
 
@@ -114,11 +120,34 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        var convertView = convertView
-        if (convertView == null) {
+        var convertView: View?
+        Log.e("Adapter", (getGroup(groupPosition) as com.arghyam.admin.ui.User).username)
             val inflater = this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.list_item, null)
-        }
+            val adminCheckBox = convertView.findViewById<CheckBox>(R.id.admin_checkbox)
+            if((getGroup(groupPosition) as com.arghyam.admin.ui.User).admin){
+                adminCheckBox.isChecked = true
+            }
+            adminCheckBox.setOnClickListener {
+                (getGroup(groupPosition) as com.arghyam.admin.ui.User).id?.let { it1 ->
+                    adminPanelInterface.onCheckBoxListener(
+                        "admin",
+                        it1
+                    )
+                }
+            }
+            val reviewerCheckBox = convertView.findViewById<CheckBox>(R.id.reviewer_checkbox)
+            if ((getGroup(groupPosition) as com.arghyam.admin.ui.User).reviewer){
+                reviewerCheckBox.isChecked = true
+            }
+            reviewerCheckBox.setOnClickListener {
+                (getGroup(groupPosition) as com.arghyam.admin.ui.User).id?.let { it1 ->
+                    adminPanelInterface.onCheckBoxListener(
+                        "reviewer",
+                        it1
+                    )
+                }
+            }
         return convertView!!
     }
 
@@ -140,5 +169,6 @@ class ExpandableListAdapter : BaseExpandableListAdapter {
 data class User(
     var userName: String,
     var phoneNumber: String,
-    var role: List<String>?
+    var role: List<String>?,
+    var id: String
 )

@@ -23,10 +23,6 @@ import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.notification.adapter.NotificationAdapter
-import com.arghyam.notification.model.NotificationDataModel
-import com.arghyam.notification.model.NotificationModel
-import com.arghyam.notification.model.NotificationResponseModel
-import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.repository.NotificationRepository
 import com.arghyam.notification.viewmodel.NotificationViewModel
 import com.arghyam.springdetails.repository.SpringDetailsRepository
@@ -37,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.activity_notification.custom_toolbar
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.activity_notification.progressBar as progressBar1
+import com.arghyam.notification.model.*
 
 
 class NotificationActivity : AppCompatActivity() {
@@ -69,7 +65,7 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun init() {
         initComponent()
-        progressBar.visibility = VISIBLE
+        notification_progressBar.visibility = VISIBLE
 
         initRepository()
 
@@ -80,7 +76,7 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun initNotificationResponse() {
         notificationViewModel?.getNotificationResponse()?.observe(this, Observer {
-            progressBar.visibility = GONE
+            notification_progressBar.visibility = GONE
             saveNotificationlData(it)
         })
         notificationViewModel?.getNotifyError()?.observe(this, Observer {
@@ -111,49 +107,54 @@ class NotificationActivity : AppCompatActivity() {
     private fun loadNotification(notificationResponseModel: NotificationResponseModel) {
         listView = notification_list
         if (notificationResponseModel.notifications.isNotEmpty()) {
-
             noNotifications.visibility= GONE
             notification_list.visibility = VISIBLE
+            val deletedNotificationList= ArrayList<AllNotificationModel>()
 
-            for (i in 0 until notificationResponseModel.notifications.size) {
+            for(i in 0 until notificationResponseModel.notifications.size){
                 if (notificationResponseModel.notifications[i].status.toLowerCase()!="done"){
-                    Log.e("Notification spring", notificationResponseModel.notifications[i].status)
-                    springCode = notificationResponseModel.notifications[i].springCode
+                    deletedNotificationList.add(notificationResponseModel.notifications[i])
+                }
+            }
+            for (i in 0 until deletedNotificationList.size) {
+                    Log.e("Notification spring","notification"+ deletedNotificationList[i].firstName+"     "
+                            +deletedNotificationList[i].dischargeDataOsid+"    "
+                            +deletedNotificationList[i].status)
+                    springCode = deletedNotificationList[i].springCode
                     dataModels?.add(
                         NotificationDataModel(
-                            " "+ notificationResponseModel.notifications[i].notificationTitle,
-                            ArghyamUtils().epochToTime(notificationResponseModel.notifications[i].createdAt),
-                            ArghyamUtils().epochToDateFormat(notificationResponseModel.notifications[i].createdAt)
+                            " "+ deletedNotificationList[i].notificationTitle ,
+                            ArghyamUtils().epochToTime(deletedNotificationList[i].createdAt),
+                            ArghyamUtils().epochToDateFormat(deletedNotificationList[i].createdAt)
                         )
                     )
                     adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
                     listView.adapter = adapter
-                    Log.e("Anirudh", listView.adapter.toString())
-                }
             }
             listView.onItemClickListener =
                 AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, position: Int, l: Long ->
                     val (notification, time, date) = dataModels!![position]
                     Log.e(
-                        "Anirudh",
-                        notificationResponseModel.notifications[position].dischargeDataOsid + "  " + notificationResponseModel.notifications[position].springCode
+                        "Notification spring", "notification"+
+                                deletedNotificationList[position].dischargeDataOsid + "  " + deletedNotificationList[position].firstName+"    "
+                                +deletedNotificationList[position].status
                     )
                     val intent = Intent(this, DisplayDischargeDataActivity::class.java)
                     intent.putExtra(
                         "DischargeOSID",
-                        notificationResponseModel.notifications[position].dischargeDataOsid
+                        deletedNotificationList[position].dischargeDataOsid
                     )
                     intent.putExtra(
                         "osid",
-                        notificationResponseModel.notifications[position].osid
+                        deletedNotificationList[position].osid
                     )
                     intent.putExtra(
                         "submittedBy",
-                        notificationResponseModel.notifications[position].firstName
+                        deletedNotificationList[position].firstName
                     )
-                    intent.putExtra("SpringCode", notificationResponseModel.notifications[position].springCode)
-                    intent.putExtra("submittedById",notificationResponseModel.notifications[position].userId)
-                    if(notificationResponseModel.notifications[position].status == "Created")
+                    intent.putExtra("SpringCode", deletedNotificationList[position].springCode)
+                    intent.putExtra("submittedById",deletedNotificationList[position].userId)
+                    if(deletedNotificationList[position].status == "Created")
                         startActivity(intent)
                     else
                         listView.isClickable = false

@@ -98,4 +98,7 @@ interface ApiInterface {
 
     @POST("/api/v1/searchByLocation")
     fun deduplication(@Body deduplicationModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/user/roles")
+    fun assignRoles(@Body assignRolesModel: RequestModel): Call<ResponseModel>
 }

@@ -222,15 +222,16 @@ class DetailsFragment : Fragment() {
                 msgid = ""
             ),
             request = RequestSpringAdditionalDetailsDataModel(
-                additionalInfo = SpringDetailsModel(
+                additionalInfo = AdditionalDetailsModel(
                     springCode = springCode
                 )
             )
         )
         springCode?.let {
             getAdditionalDetialsViewModel?.getAdditionalDetailsApi(context!!,
-                it, springAdditionalDetailsObject)
+                it,springAdditionalDetailsObject)
         }
+
     }
 
     private fun initClick() {

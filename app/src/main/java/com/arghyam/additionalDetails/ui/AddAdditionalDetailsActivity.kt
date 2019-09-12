@@ -33,6 +33,7 @@ import com.arghyam.additionalDetails.viewmodel.AddAdditionalDetailsViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.OnFocusLostListener
+import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import kotlinx.android.synthetic.main.content_add_additional_details.*
@@ -467,28 +468,37 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         args.putStringArrayList("WaterUse", waterUse)
 
 
-        var mRequestData = RequestModel(
-            id = Constants.ADDITIONAL_DATA_ID,
-            ver = BuildConfig.VER,
-            ets = BuildConfig.ETS,
-            params = Params(
-                did = "",
-                key = "",
-                msgid = ""
-            ),
-            request = RequestAdditionalDetailsDataModel(
-                additionalInfo = AdditionalDetailsModel(
-                    springCode = springCode,
-                    seasonality = seasonality,
-                    usage = waterUse,
-                    months = selectedMonth,
-                    numberOfHousehold = houseNumber
-                )
+        var mRequestData = SharedPreferenceFactory(this).getString(Constants.USER_ID)?.let {
+            AdditionalDetailsModel(
+                springCode = springCode,
+                seasonality = seasonality,
+                usage = waterUse,
+                months = selectedMonth,
+                numberOfHousehold = houseNumber,
+                userId = it
             )
-        )
+        }?.let {
+            RequestAdditionalDetailsDataModel(
+                additionalInfo = it
+            )
+        }?.let {
+            RequestModel(
+                id = Constants.ADDITIONAL_DATA_ID,
+                ver = BuildConfig.VER,
+                ets = BuildConfig.ETS,
+                params = Params(
+                    did = "",
+                    key = "",
+                    msgid = ""
+                ),
+                request = it
+            )
+        }
 
         Log.e("Request", mRequestData.toString())
-        makeApiCall(mRequestData)
+        if (mRequestData != null) {
+            makeApiCall(mRequestData)
+        }
     }
 
 

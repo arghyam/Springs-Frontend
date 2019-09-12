@@ -44,18 +44,27 @@ class SplashActivity : AppCompatActivity() {
         init()
     }
 
-    private fun init(){
+    private fun init() {
         initComponent()
         initUser()
     }
 
-    private fun initComponent(){
+    private fun initComponent() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
     private fun initUser() {
         initRepository()
-        getUserProfileRequest()
+        if (SharedPreferenceFactory(this@SplashActivity).getString(ACCESS_TOKEN)?.isNotEmpty()!! ||
+            SharedPreferenceFactory(this).getString(Constants.USER_PHONE)?.isNotEmpty()!!)
+            getUserProfileRequest()
+        else{
+            Handler().postDelayed({
+                mainIntent = Intent(this, LoginActivity::class.java)
+                startActivity(mainIntent)
+                finish()
+            }, 2000)
+        }
         initGetUserProfile()
     }
 
@@ -106,17 +115,24 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun initHandle(responseData: UserProfileDataDetailsModel){
+    private fun initHandle(responseData: UserProfileDataDetailsModel) {
 
+        Log.e("splash",SharedPreferenceFactory(this).getString(ACCESS_TOKEN)?.isEmpty()!!.toString()
+                +"    "+ SharedPreferenceFactory(this).getString(Constants.USER_PHONE)?.isEmpty()!!)
         Handler().postDelayed({
-            if (SharedPreferenceFactory(this@SplashActivity).getString(ACCESS_TOKEN) == "") {
+            if (SharedPreferenceFactory(this).getString(ACCESS_TOKEN)?.isEmpty()!! ||
+                SharedPreferenceFactory(this).getString(Constants.USER_PHONE)?.isEmpty()!!) {
+                Log.e("splash","if")
                 mainIntent = Intent(this, LoginActivity::class.java)
-            }
-            else if (responseData.firstName == null || responseData.firstName == "" ){
+            } else if (responseData.firstName == null || responseData.firstName == "") {
+                Log.e("splash","else if")
                 mainIntent = Intent(this, ProfileActivity::class.java)
-                mainIntent.putExtra(Constants.PHONE_NUMBER, SharedPreferenceFactory(this@SplashActivity).getString(Constants.USER_PHONE))
-            }
-            else {
+                mainIntent.putExtra(
+                    Constants.PHONE_NUMBER,
+                    SharedPreferenceFactory(this@SplashActivity).getString(Constants.USER_PHONE)
+                )
+            } else {
+                Log.e("splash","else")
                 mainIntent = Intent(this, LandingActivity::class.java)
             }
             startActivity(mainIntent)

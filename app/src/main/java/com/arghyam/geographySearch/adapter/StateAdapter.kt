@@ -2,6 +2,7 @@ package com.arghyam.geographySearch.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,14 +26,16 @@ class StateAdapter(val stateList : ArrayList<StateModel>, context: Context,val g
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        val states: StateModel = stateList[position]
         holder.stateName.text = states.stateName
-        if (states.stateCount>0){
+        if (states.stateCount>0 && states.stateName == holder.stateName.text){
+            Log.e("StateAdapter",states.stateName+states.stateCount+ holder.stateName.text)
             holder.stateCount.text = " ("+states.stateCount+")"
             holder.itemView.setOnClickListener {
                 geographyInterface.onGeographyItemClickListener(position)
             }
         }
-        else
+        else if (states.stateCount==0)
             holder.stateName.setTextColor(Color.parseColor("#e6e6e5"))
+        holder.setIsRecyclable(false)
 
     }
 

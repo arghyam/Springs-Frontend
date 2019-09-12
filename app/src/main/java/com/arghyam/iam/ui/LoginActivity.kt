@@ -205,7 +205,6 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun getUserProfileRequest() {
-        Log.e("Anirudh", this?.let { SharedPreferenceFactory(it).getString(Constants.USER_PHONE) })
         var getUserProfileObject = RequestModel(
             id = Constants.GET_USER_PROFILE,
             ver = BuildConfig.VER,
