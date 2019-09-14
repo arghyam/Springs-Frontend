@@ -3,16 +3,20 @@ package com.arghyam.addspring.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
+import android.content.pm.ActivityInfo
+import android.graphics.*
 import android.location.Location
 import android.location.LocationManager
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.Spannable
 import android.text.TextWatcher
@@ -45,20 +49,15 @@ import com.arghyam.addspring.viewmodel.GetSpringOptionalViewModel
 import com.arghyam.addspring.viewmodel.UploadImageViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
-import com.arghyam.commons.utils.Constants.CAMERA_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.CREATE_SPRING_ID
 import com.arghyam.commons.utils.Constants.LOCATION_PERMISSION_NOT_GRANTED
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_ON_RESULT_CODE
 import com.arghyam.commons.utils.Constants.PERMISSION_LOCATION_RESULT_CODE
-import com.arghyam.commons.utils.Constants.REQUEST_IMAGE_CAPTURE
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.model.AllSpringDataModel
-import com.arghyam.landing.model.AllSpringDetailsModel
-import com.arghyam.landing.model.AllSpringModel
-import com.arghyam.landing.model.GetAllSpringsModel
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -67,21 +66,22 @@ import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
@@ -302,8 +302,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
             } else if (mLocation == null) {
                 ArghyamUtils().longToast(this@NewSpringActivity, "Please upload the address")
-            }
-            else if (clickable){
+            } else if (clickable) {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                 ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
@@ -334,7 +333,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
     }
 
     private fun createSpringOnClick() {
-        Log.e("NewSpringActivity","  imagelist size "+ imageList.size)
+        Log.e("NewSpringActivity", "  imagelist size " + imageList.size)
 
         var createSpringObject = RequestModel(
             id = CREATE_SPRING_ID,
@@ -364,7 +363,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 )
             )
         )
-        Log.e("NewSpringActivity","  imagelist size "+ imageList.size)
+        Log.e("NewSpringActivity", "  imagelist size " + imageList.size)
 
         createSpringViewModel?.createSpringApi(this, createSpringObject)
 
@@ -471,26 +470,35 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
     private fun openCamera() {
         Dexter.withActivity(this)
-            .withPermission(Manifest.permission.CAMERA)
+            .withPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
             .withListener(cameraPermissionListener).check()
     }
 
-    private val cameraPermissionListener = object : PermissionListener {
-        override fun onPermissionGranted(response: PermissionGrantedResponse) {
-            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(i, REQUEST_IMAGE_CAPTURE)
+    val PICTURE_RESULT = 0
+    private val values = ContentValues()
+    var imageUri: Uri? = null
+    var body: MultipartBody.Part? = null
+
+    private val cameraPermissionListener = object : MultiplePermissionsListener {
+        override fun onPermissionRationaleShouldBeShown(
+            permissions: MutableList<PermissionRequest>?,
+            token: PermissionToken?
+        ) {
+            token?.continuePermissionRequest()
         }
 
-        override fun onPermissionDenied(response: PermissionDeniedResponse) {
-            if (response.isPermanentlyDenied) {
-                ArghyamUtils().longToast(this@NewSpringActivity, CAMERA_PERMISSION_NOT_GRANTED)
-                ArghyamUtils().openSettings(this@NewSpringActivity)
-            }
+        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+            imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            i.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+            i.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            startActivityForResult(i, PICTURE_RESULT)
         }
 
-        override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest, token: PermissionToken) {
-            token.continuePermissionRequest()
-        }
     }
 
     @SuppressLint("MissingPermission")
@@ -580,7 +588,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         imageRecyclerView[position].upload_status.text = "Uploading"
 
         imageUploaderAdapter.notifyItemRemoved(position)
-        imageUploaderAdapter.notifyItemRangeChanged(position,imageList.size)
+        imageUploaderAdapter.notifyItemRangeChanged(position, imageList.size)
 
         if (position == 0 && imageList.size > 0) {
             imageRecyclerView[position].progress.visibility = GONE
@@ -595,18 +603,34 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
 
 
+    }
 
+    private fun getRealPathFromURI(contentUri: Uri): String {
+        var proj: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = managedQuery(contentUri, proj, null, null, null)
+        val columnIndex = cursor
+            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            REQUEST_IMAGE_CAPTURE -> {
+            PICTURE_RESULT -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    onImageReceive(data)
-                    imageCount++
+                    val thumbnail = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                    val path = imageUri?.let { getRealPathFromURI(it) }
+                    Log.e("NewSpring",path)
+                    if (null != thumbnail) {
+                        Log.e("NewSpring", "onActivityResult")
+                        onImageReceive(thumbnail, path)
+                        imageCount++
+                    } else
+                        Log.e("NewSpring", "onActivityResult null")
                 }
             }
+
             PERMISSION_LOCATION_RESULT_CODE -> {
                 getGoogleClient()
             }
@@ -626,7 +650,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                     var bundle = data?.getBundleExtra("DataBundle")
                     Log.d("bundleSpring", bundle.toString())
                 }
-
             }
         }
     }
@@ -652,16 +675,27 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
-    private fun onImageReceive(intent: Intent?) {
-        var bitmap: Bitmap? = intent!!.extras.get("data") as Bitmap
-        addBitmapToList(bitmap)
+    private fun onImageReceive(data: Bitmap?, path: String?) {
+        val bitmap: Bitmap? = data
+        body = getMultipartBodyFromBitmap(path)
         makeUploadApiCall(bitmap)
+
     }
 
-    var body: MultipartBody.Part? = null
     private fun makeUploadApiCall(bitmap: Bitmap?) {
-        body = getMultipartBodyFromBitmap(bitmap)
-        MyAsyncTask().execute()
+        if (null == bitmap) {
+            Log.e("NewSpring", "bitmap is null")
+        }
+        if (null == body) {
+            Log.e("NewSpring", "body is null")
+        }
+        if (null != bitmap && null != body) {
+            Log.e("NewSpring", "onImageReceive")
+            addBitmapToList(bitmap)
+            MyAsyncTask().execute()
+        } else
+            Log.e("NewSpring", "onImageReceive null")
+
     }
 
     private fun updateProgressbar(progress: Int) {
@@ -676,7 +710,6 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         override fun doInBackground(vararg params: Void?): Void? {
             var a = 0
             uploadImageViewModel.uploadImageApi(this@NewSpringActivity, body!!)
-            Thread.sleep(100)
             while (a < 100) {
                 Thread.sleep(10)
                 updateProgressbar(++a)
@@ -695,25 +728,18 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         }
     }
 
-    private fun getMultipartBodyFromBitmap(bitmap: Bitmap?): MultipartBody.Part? {
-        var body: MultipartBody.Part? = null
-        try {
-            var filesDir: File = applicationContext.filesDir
-            var file = File(filesDir, "SPRING_NAME_" + String.format("%3d", count) + ".png")
-            val bos = ByteArrayOutputStream()
-            var mBitMap: Bitmap = bitmap!!
-            mBitMap.compress(Bitmap.CompressFormat.PNG, 0, bos)
-            var bitmapdata = bos.toByteArray()
-            var fos = FileOutputStream(file)
-            fos.write(bitmapdata)
-            fos.flush()
-            fos.close()
+    private fun getMultipartBodyFromBitmap(path: String?): MultipartBody.Part? {
+        val file = File(path)
 
-            if (file.length() < FILE_SIZE_LIMIT) {
-                var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
-                body = MultipartBody.Part.createFormData("file", file.name, reqFile)
-            }
-        } catch (ex: Exception) {
+        var bitmap = BitmapFactory.decodeFile(file.path)
+        val stream:OutputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG,30,stream)
+        stream.flush()
+        stream.close()
+
+        if (file.length() < FILE_SIZE_LIMIT) {
+            var reqFile: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            body = MultipartBody.Part.createFormData("file", file.name, reqFile)
         }
         return body
     }
@@ -740,6 +766,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+
 
 }
 
