@@ -56,7 +56,7 @@ class SpringDetailsActivity : AppCompatActivity() {
     private fun getSpringId() {
             var dataIntent: Intent = intent
             springCode = dataIntent.getStringExtra("SpringCode")
-            springName = dataIntent.getStringExtra("springCode")
+            springName = dataIntent.getStringExtra("SpringName")
             Log.e("Code", springCode)
     }
 

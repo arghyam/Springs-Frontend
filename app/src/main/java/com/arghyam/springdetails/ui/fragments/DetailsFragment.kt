@@ -316,7 +316,8 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initImageAdapter(responseModel: ResponseModel) {
-        Log.e("responseCheck", responseModel.response.responseObject.toString())
+        imagelist.clear()
+        Log.e("responseCheckinitImage", responseModel.response.responseObject.toString())
         springProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
             object : TypeToken<SpringProfileResponse>() {}.type

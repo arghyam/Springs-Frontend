@@ -22,8 +22,8 @@ class GetAllSpringViewModel: ViewModel()  {
         this.getAllSpringRepository = getAllSpringRepository
     }
 
-    fun getAllSpringApi(mContext: Context,pageNumber:Int, requestModel: RequestModel) {
-        getAllSpringRepository?.getAllSpringApiRequest(mContext,pageNumber, requestModel, object :
+    fun getAllSpringApi(mContext: Context,pageNumber:Int,userId:String, requestModel: RequestModel) {
+        getAllSpringRepository?.getAllSpringApiRequest(mContext,pageNumber,userId, requestModel, object :
             ResponseListener<ResponseModel> {
             override fun onSuccess(response: ResponseModel) {
                 Log.d("success",response.toString())

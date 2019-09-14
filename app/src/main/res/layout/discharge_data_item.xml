@@ -14,7 +14,8 @@
 
 
         <LinearLayout
-                android:padding="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="5dp"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:orientation="horizontal"
@@ -38,7 +39,7 @@
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:text=""
                     android:textColor="@color/bokara_grey"
                     android:layout_height="fill_parent"/>

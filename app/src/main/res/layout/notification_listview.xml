@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="10dp" tools:targetApi="lollipop">
 <LinearLayout
         android:id="@+id/spring_notification"
         android:layout_width="match_parent"
         android:layout_height="99dp"
         android:paddingStart="16dp"
         android:gravity="center_vertical"
+        android:background="@color/white"
         android:orientation="vertical">
     <TextView
             android:id="@+id/notification_data"
@@ -17,7 +20,8 @@
             android:layout_height="wrap_content"
             android:text="Notification"
             android:textSize="@dimen/test_size_16"
-            android:textColor="@color/black" android:layout_marginTop="0dp"/>
+            android:textColor="@color/black"
+            android:layout_marginTop="0dp"/>
 
     <LinearLayout
             android:layout_width="wrap_content"
@@ -46,10 +50,40 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/date_notification"
                 android:textColor="@color/lighter_grey"/>
-
     </LinearLayout>
-</LinearLayout>
 
+</LinearLayout>
+<LinearLayout
+        android:id="@+id/private_notification_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_below="@+id/spring_notification"
+        android:layout_marginBottom="@dimen/padding_20"
+        android:paddingStart="16dp">
+    <Button
+            android:id="@+id/reject_private"
+            android:layout_width="126dp"
+            android:layout_height="36dp"
+            android:textColor="@color/colorPrimary"
+            android:text="REJECT"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:background="@android:color/white"
+            android:focusable="true" tools:ignore="UnusedAttribute"/>
+    <Button android:id="@+id/accept_private"
+            android:layout_width="126dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/margin_32"
+            android:textColor="@color/white"
+            android:text="APPROVE"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:background="@color/colorPrimary"
+            android:focusable="true" tools:ignore="UnusedAttribute"/>
+
+</LinearLayout>
 
 
     <ImageView

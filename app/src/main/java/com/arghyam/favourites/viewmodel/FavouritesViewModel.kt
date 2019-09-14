@@ -21,7 +21,7 @@ class FavouritesViewModel : ViewModel(){
         this.getFavSpringsRepository = favSpringsRepository
     }
 
-    fun storefavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
+    fun storeFavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
         Log.e("fav----------", "$requestModel ============")
         getFavSpringsRepository?.storeFavSpringApiRequest(mContext, requestModel, object :
             ResponseListener<ResponseModel> {
@@ -41,7 +41,7 @@ class FavouritesViewModel : ViewModel(){
         })
     }
 
-    fun getfavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
+    fun getFavouriteSpringsApi(mContext: Context, requestModel: RequestModel) {
         Log.e("fav----------", "$requestModel ============")
         getFavSpringsRepository?.getFavSpringApiRequest(mContext, requestModel, object :
             ResponseListener<ResponseModel> {

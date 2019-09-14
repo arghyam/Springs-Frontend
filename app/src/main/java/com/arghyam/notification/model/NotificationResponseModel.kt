@@ -11,6 +11,6 @@ class AllNotificationModel(
     var notificationTitle: String,
     var firstName: String,
     var createdAt: Long,
-    var osid: String
-
+    var osid: String,
+    var requesterId:String
     )

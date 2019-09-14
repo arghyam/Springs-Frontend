@@ -46,6 +46,7 @@ class DeduplicationAdapter(private val springList: ArrayList<DeduplicationDataMo
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
+            dataIntent.putExtra("SpringName", springs.springName)
             context.startActivity(dataIntent)
 
             return@OnClickListener
@@ -62,6 +63,8 @@ class DeduplicationAdapter(private val springList: ArrayList<DeduplicationDataMo
             } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
+                dataIntent.putExtra("SpringName", springs.springName)
+
                 context.startActivity(dataIntent)
             }
             return@OnClickListener

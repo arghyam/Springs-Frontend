@@ -2,7 +2,6 @@ package com.arghyam.commons.network
 
 import com.arghyam.addspring.model.UploadImageResponseModel
 import com.arghyam.commons.entities.ExampleEntity
-import com.arghyam.geographySearch.model.AllStatesModel
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import okhttp3.MultipartBody
@@ -21,7 +20,7 @@ interface ApiInterface {
     fun verifyOtp(@Body verifyOtpRequestModel: RequestModel): Call<ResponseModel>
 
     @PUT("/api/v1//users/profile/{userId}")
-    fun updateUserProfile(@Path("userId") userId: String,@Body updateProfileRequestModel: RequestModel): Call<ResponseModel>
+    fun updateUserProfile(@Path("userId") userId: String, @Body updateProfileRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("api/v1/sendOTP")
     fun resendOtp(@Body requestOtpDataModel: RequestModel): Call<ResponseModel>
@@ -39,8 +38,8 @@ interface ApiInterface {
     @POST("/api/v1/springs/{springCode}/discharge")
     fun uploadDischargeData(@Path("springCode") springCode: String, @Body dischargeDataRequestModel: RequestModel): Call<ResponseModel>
 
-    @POST("/api/v1/getSprings")
-    fun getAllSprings(@Query("pageNumber") pageNumber: Int ,@Body springRequestModel: RequestModel): Call<ResponseModel>
+    @POST("/api/v1/{userId}/getSprings")
+    fun getAllSprings(@Path("userId") userId: String, @Query("pageNumber") pageNumber: Int, @Body springRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/getSprings")
     fun getAllSpringsOptional(@Body springOptionalRequestModel: RequestModel): Call<ResponseModel>
@@ -49,7 +48,7 @@ interface ApiInterface {
     fun springDetails(@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @POST("/api/v1/springs/{springCode}/additionaldetails")
-    fun getAdditionalDetails(@Path("springCode") springCode: String,@Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
+    fun getAdditionalDetails(@Path("springCode") springCode: String, @Body springDetailsRequestModel: RequestModel): Call<ResponseModel>
 
     @GET(" /api/v1/users")
     fun getRegisteredUsers(): Call<ResponseModel>
@@ -101,4 +100,10 @@ interface ApiInterface {
 
     @POST("/api/v1/user/roles")
     fun assignRoles(@Body assignRolesModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/user/privateSpringAccess")
+    fun privateSpringAccess(@Body privateSpringModel: RequestModel): Call<ResponseModel>
+
+    @POST("/api/v1/user/reviewPrivateAccess")
+    fun privateSpringReview(@Body privateSpringModel: RequestModel): Call<ResponseModel>
 }

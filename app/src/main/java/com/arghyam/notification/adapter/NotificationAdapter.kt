@@ -1,7 +1,6 @@
 package com.arghyam.notification.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Color.rgb
 import android.text.Spannable
 import android.text.SpannableString
@@ -9,19 +8,18 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.arghyam.R
+import com.arghyam.notification.`interface`.NotificationInterface
 import com.arghyam.notification.model.NotificationDataModel
-import kotlinx.android.synthetic.main.notification_listview.*
+import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.notification_listview.view.*
 import kotlinx.android.synthetic.main.notification_listview.view.breaker
 import kotlinx.android.synthetic.main.notification_listview.view.date
 import kotlinx.android.synthetic.main.notification_listview.view.notification_data
 import kotlinx.android.synthetic.main.notification_listview.view.right_arrow
-import kotlinx.android.synthetic.main.notification_listview.view.spring_notification
 import kotlinx.android.synthetic.main.notification_listview.view.time
 
 
@@ -29,6 +27,7 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
 
     private var notificationArray: ArrayList<NotificationDataModel>? = null
     var mContext: Context? = null
+    var notificationInterface: NotificationInterface? = null
 
     private class ViewHolder {
         internal lateinit var notification: TextView
@@ -36,16 +35,25 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
         internal lateinit var time: TextView
         internal lateinit var button: ImageView
         internal lateinit var breaker: ImageView
+        internal lateinit var private: LinearLayout
+        internal lateinit var accept: Button
+        internal lateinit var reject: Button
+
 
     }
 
-    constructor(context: Context, data: ArrayList<NotificationDataModel>) : super(
+    constructor(
+        context: Context,
+        data: ArrayList<NotificationDataModel>,
+        notificationInterface: NotificationInterface
+    ) : super(
         context,
         R.layout.notification_listview,
         data
     ) {
         this.notificationArray = data
         this.mContext = context
+        this.notificationInterface = notificationInterface
     }
 
 
@@ -69,6 +77,9 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
             viewHolder.time = convertView.time
             viewHolder.button = convertView.right_arrow
             viewHolder.breaker = convertView.breaker
+            viewHolder.private = convertView.private_notification_layout
+            viewHolder.reject = convertView.reject_private
+            viewHolder.accept = convertView.accept_private
 
             result = convertView
 
@@ -85,8 +96,14 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
         viewHolder.date.text = dataModel.date
         viewHolder.button.setImageResource(R.drawable.ic_notif_icon)
         viewHolder.breaker.setImageResource(R.drawable.ic_break)
-
-
+        if (viewHolder.notification.text.contains(" is requesting permission to view details and add discharge data for "))
+            viewHolder.private.visibility = VISIBLE
+        viewHolder.accept.setOnClickListener {
+            notificationInterface?.onPrivateReview("Accepted",dataModel.springCode,dataModel.osid.substring(2),dataModel.userId,dataModel.requesterId)
+        }
+        viewHolder.reject.setOnClickListener {
+            notificationInterface?.onPrivateReview("Rejected",dataModel.springCode,dataModel.osid.substring(2),dataModel.userId,dataModel.requesterId)
+        }
 
         // Return the completed view to render on screen
         return convertView

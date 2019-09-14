@@ -1,4 +1,4 @@
-package com.arghyam.landing.repository
+package com.arghyam.notification.repository
 
 import android.content.Context
 import android.util.Log
@@ -14,12 +14,11 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class GetAllSpringRepository @Inject constructor()  {
+class PrivateReviewRepository @Inject constructor(){
 
-
-    fun getAllSpringApiRequest(context: Context,pageNumber:Int,userId: String, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val getAllSpringCall = RestClient.getWebServiceData()?.getAllSprings(userId,pageNumber,requestModel)
-        getAllSpringCall?.enqueue(object : Callback<ResponseModel> {
+    fun privateReviewApiRequest(requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+        val privateReviewCall = RestClient.getWebServiceData()?.privateSpringReview(requestModel)
+        privateReviewCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
                 if (null != response.body()) {
@@ -43,9 +42,6 @@ class GetAllSpringRepository @Inject constructor()  {
                     else -> responseListener.onFailure(t.message)
                 }
             }
-
-
-
         })
     }
 }

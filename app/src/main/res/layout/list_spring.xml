@@ -199,6 +199,27 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                    android:id="@+id/request_access_layout"
+                    android:paddingLeft="32dp"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
+
+                <TextView
+                        android:id="@+id/tv_request_access"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/add_icon"
+                        android:paddingLeft="6dp"
+                        android:text="Request Access"
+                        android:textColor="#2372D9"
+                        android:textSize="16sp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

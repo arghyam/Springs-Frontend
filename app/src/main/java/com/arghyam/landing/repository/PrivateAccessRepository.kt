@@ -14,12 +14,12 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-class GetAllSpringRepository @Inject constructor()  {
+class PrivateAccessRepository @Inject constructor() {
 
 
-    fun getAllSpringApiRequest(context: Context,pageNumber:Int,userId: String, requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
-        val getAllSpringCall = RestClient.getWebServiceData()?.getAllSprings(userId,pageNumber,requestModel)
-        getAllSpringCall?.enqueue(object : Callback<ResponseModel> {
+    fun privateSpringAccessApiRequest(requestModel: RequestModel, responseListener: ResponseListener<ResponseModel>) {
+        val privateSpringAccessCall = RestClient.getWebServiceData()?.privateSpringAccess(requestModel)
+        privateSpringAccessCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
                 if (null != response.body()) {
@@ -28,6 +28,7 @@ class GetAllSpringRepository @Inject constructor()  {
                         responseListener.onSuccess(response.body()!!)
                     } else {
                         Log.d("error---",response.code().toString())
+
                         responseListener.onError(response.code().toString() + "")
                     }
                 }
@@ -48,4 +49,5 @@ class GetAllSpringRepository @Inject constructor()  {
 
         })
     }
+
 }

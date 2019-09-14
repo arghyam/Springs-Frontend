@@ -1,6 +1,7 @@
 package com.arghyam.more.ui
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -16,6 +17,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
@@ -46,7 +48,9 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_admin_panel.*
 import kotlinx.android.synthetic.main.content_more.*
 import kotlinx.android.synthetic.main.content_more.view.*
+import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.fragment_more.*
+import kotlinx.android.synthetic.main.fragment_more.toolbar
 import kotlinx.android.synthetic.main.fragment_more.view.*
 import javax.inject.Inject
 
@@ -149,8 +153,6 @@ class MoreFragment : Fragment() {
     }
 
     private fun showDialog(it: View?) {
-
-//        ArghyamUtils().AlertBox(activity!!.applicationContext,activity as AppCompatActivity,"Are you sure ?","Do you want to Sign Out?",LoginActivity::class.java)
         val dialogBuilder = AlertDialog.Builder(context!!)
         dialogBuilder.setMessage("Do you want to sign out")
 
@@ -304,5 +306,6 @@ class MoreFragment : Fragment() {
                 admin_layout.visibility = VISIBLE
         }
     }
+
 
 }

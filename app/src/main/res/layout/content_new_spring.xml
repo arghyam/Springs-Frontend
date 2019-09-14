@@ -9,7 +9,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"/>
 
-    <ScrollView android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/toolbar"
                 android:layout_above="@+id/button_layout">
@@ -149,18 +149,15 @@
                         android:text="@string/max_image"
                         android:paddingTop="8dp"
                 />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/imageRecyclerView"
+                            android:layout_width="match_parent"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_below="@+id/spring_near"
+                            android:layout_height="match_parent"/>
+                </LinearLayout>
 
-                <!--<ImageView-->
-                <!--android:id="@+id/image_load"-->
-                <!--android:layout_width="100dp"-->
-                <!--android:layout_height="100dp"-->
-                <!--app:srcCompat="@drawable/ic_icon_shape"/>-->
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/imageRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_below="@+id/spring_near"
-                        android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -296,7 +293,7 @@
 
                     <ImageView
                             android:layout_gravity="center"
-                            android:layout_width="21dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="5dp"
                             app:srcCompat="@drawable/ic_address"
@@ -307,6 +304,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
+                            android:textAlignment="viewStart"
                             android:layout_marginLeft="16dp"
                             android:gravity="center"
                             android:textColor="#262524"
@@ -449,7 +447,7 @@
                     android:paddingBottom="8dp"
                     android:background="#e6e6e6"/>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
             android:id="@+id/button_layout"

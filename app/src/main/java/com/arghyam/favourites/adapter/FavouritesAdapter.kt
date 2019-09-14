@@ -15,12 +15,17 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.landing.interfaces.HomeFragmentInterface
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_spring.view.*
 
-class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, val context: Context) :
+class FavouritesAdapter(
+    private val springList: ArrayList<FavSpringDataModel>,
+    val context: Context,
+    val favFragmentInterface: HomeFragmentInterface
+) :
     RecyclerView.Adapter<FavouritesAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.list_spring, parent, false)
@@ -65,6 +70,9 @@ class FavouritesAdapter(private val springList: ArrayList<FavSpringDataModel>, v
             return@OnClickListener
         })
         holder.favourite.setOnClickListener {
+            SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
+                favFragmentInterface.onFavouritesItemClickListener(springs.springCode, it1, position)
+            }
         }
         holder.ownership.text = springs.ownershipType
         holder.springcode.text = springs.springCode

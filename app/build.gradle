@@ -52,6 +52,10 @@ android {
             buildConfigField "String", "BASE_URL", '"http://192.168.3.236:9090/"'
             dimension "content"
         }
+        localSai {
+            buildConfigField "String", "BASE_URL", '"http://192.168.0.107:9090/"'
+            dimension "content"
+        }
         prod {
             buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
             dimension "content"

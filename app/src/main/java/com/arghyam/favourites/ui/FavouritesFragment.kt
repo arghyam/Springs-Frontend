@@ -2,8 +2,8 @@ package com.arghyam.favourites.ui
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +32,9 @@ import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
+import com.arghyam.landing.interfaces.HomeFragmentInterface
+import com.arghyam.landing.model.AllFavouritesRequest
+import com.arghyam.landing.model.FavouritesModel
 import com.arghyam.landing.model.NotificationCountResponseModel
 import com.arghyam.landing.repository.NotificationCountRepository
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
@@ -42,7 +45,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.custom_toolbar.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
-import kotlinx.android.synthetic.main.fragment_favourites.toolbar
 import javax.inject.Inject
 
 
@@ -54,7 +56,6 @@ class FavouritesFragment : Fragment() {
     private lateinit var favouritesViewModel: FavouritesViewModel
     private lateinit var adapter: FavouritesAdapter
     private var springsList = ArrayList<FavSpringDataModel>()
-
 
     @Inject
     lateinit var notificationCountRepository: NotificationCountRepository
@@ -87,8 +88,8 @@ class FavouritesFragment : Fragment() {
         init()
     }
 
-    private fun initbell(notificationCount:Int) {
-        if(notificationCount>0){
+    private fun initbell(notificationCount: Int) {
+        if (notificationCount > 0) {
             badge.visibility = VISIBLE
             notification_count.visibility = VISIBLE
             notification_count.text = notificationCount.toString()
@@ -169,18 +170,17 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initNotifications() {
-        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
+        if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == "") {
             notauser.visibility = VISIBLE
             scrollView.visibility = GONE
             bell.visibility = GONE
             notification_bell.visibility = GONE
             initsigninbutton()
-        }
-        else{
+        } else {
             notauser.visibility = GONE
             bell.visibility = VISIBLE
         }
-        bell.setOnClickListener{
+        bell.setOnClickListener {
             Log.e("Anirudh", "bell clicked")
             this.startActivity(Intent(activity!!, NotificationActivity::class.java))
         }
@@ -197,8 +197,6 @@ class FavouritesFragment : Fragment() {
         favouritesViewModel.getFavSpringData.observe(this, Observer {
             progressBar.visibility = GONE
             getFavSpringsData(it)
-            favouritesViewModel.getFavSpringData.removeObservers(this)
-
         })
         favouritesViewModel.favouritesError().observe(this, Observer {
             Log.e("error", it)
@@ -214,21 +212,22 @@ class FavouritesFragment : Fragment() {
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<FavSpringDetailsModel>() {}.type
             )
-            springsList.addAll(responseData.FavouriteSpring)
-            if (springsList.isEmpty()){
-                notauser.visibility = VISIBLE
-                sign_in_text.visibility = GONE
-                sign_in_button_fav.visibility = GONE
+            if (null != responseData.FavouriteSpring) {
+                springsList.clear()
+                springsList.addAll(responseData.FavouriteSpring)
+                if (springsList.isEmpty()) {
+                    notauser.visibility = VISIBLE
+                    sign_in_text.visibility = GONE
+                    sign_in_button_fav.visibility = GONE
+                }
+                progressBar.visibility = GONE
+                adapter.notifyDataSetChanged()
             }
-            for (spring in springsList)
-                Log.e("FavSpringList", spring.springCode)
-            adapter.notifyDataSetChanged()
         }
     }
 
     private fun initApiCall() {
         progressBar.visibility = VISIBLE
-        getFavSpringRequest()
         initGetAllFavSpring()
     }
 
@@ -262,13 +261,13 @@ class FavouritesFragment : Fragment() {
                 )
             }
         }
-        getFavSpringObject?.let { favouritesViewModel.getfavouriteSpringsApi(context!!, it) }
+        getFavSpringObject?.let { favouritesViewModel.getFavouriteSpringsApi(context!!, it) }
     }
 
 
     private fun initRecyclerView() {
         favrecyclerview.layoutManager = LinearLayoutManager(activity)
-        adapter = activity?.let { FavouritesAdapter(springsList, it) }!!
+        adapter = activity?.let { FavouritesAdapter(springsList, it, favFragmentInterface) }!!
         favrecyclerview.adapter = adapter
         getFavSpringRequest()
 
@@ -284,11 +283,46 @@ class FavouritesFragment : Fragment() {
 
     }
 
+    private var favFragmentInterface: HomeFragmentInterface = object : HomeFragmentInterface {
+        override fun onRequestAccess(springCode: String, userId: String) {
 
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        }
+
+        override fun onFavouritesItemClickListener(
+            springCode: String,
+            userId: String,
+            position: Int
+        ) {
+            sendRequest(springCode, userId)
+            progressBar.visibility = VISIBLE
+            val handler = Handler()
+            handler.postDelayed({ getFavSpringRequest() }, 200)
+        }
     }
 
-
+    private fun sendRequest(springCode: String, userId: String) {
+        val mRequestData = userId?.let {
+            AllFavouritesRequest(
+                springCode = springCode,
+                userId = it
+            )
+        }?.let {
+            FavouritesModel(
+                favourites = it
+            )
+        }?.let {
+            RequestModel(
+                id = Constants.GET_ADDITIONAL_DETAILS,
+                ver = BuildConfig.VER,
+                ets = BuildConfig.ETS,
+                params = Params(
+                    did = "",
+                    key = "",
+                    msgid = ""
+                ),
+                request = it
+            )
+        }
+        mRequestData?.let { favouritesViewModel?.storeFavouriteSpringsApi(context!!, it) }
+    }
 }

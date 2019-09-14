@@ -26,6 +26,7 @@ import com.arghyam.admin.viewmodel.AssignRoleViewModel
 import com.arghyam.admin.viewmodel.GetRegisteredUsersViewModel
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.OnFocusLostListener
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
@@ -62,10 +63,18 @@ class AdminPanelActivity : AppCompatActivity() {
         observeData()
         makeApiCall()
         initToolBar()
+        user_search_input.hideSoftKeyboardOnFocusLostEnabled(true)
         textChangeListenerForSearchEditText()
         clearSearchEditText()
     }
 
+    private fun EditText.hideSoftKeyboardOnFocusLostEnabled(enabled: Boolean) {
+        val listener = if (enabled)
+            OnFocusLostListener()
+        else
+            null
+        onFocusChangeListener = listener
+    }
 
     private fun initRepository() {
         mGetRegisteredUsersViewModel = ViewModelProviders.of(this).get(GetRegisteredUsersViewModel::class.java)

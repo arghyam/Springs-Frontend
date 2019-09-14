@@ -1,11 +1,13 @@
 package com.arghyam.landing.adapters
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,8 +19,9 @@ import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.model.FavSpringDataModel
 import com.arghyam.iam.ui.LoginActivity
-import com.arghyam.landing.interfaces.FavouritesInterface
+import com.arghyam.landing.interfaces.HomeFragmentInterface
 import com.arghyam.landing.model.AllSpringDataModel
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
@@ -28,7 +31,7 @@ import kotlinx.android.synthetic.main.list_spring.view.*
 class LandingAdapter(
     val springList: ArrayList<AllSpringDataModel>,
     val context: Context,
-    val favouritesInterface: FavouritesInterface,
+    val homeFragmentInterface: HomeFragmentInterface,
     val favSpringsList: ArrayList<FavSpringDataModel>
 ) :
     RecyclerView.Adapter<LandingAdapter.ViewHolder>() {
@@ -55,11 +58,21 @@ class LandingAdapter(
             .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
-            var dataIntent = Intent(context, SpringDetailsActivity::class.java)
-            dataIntent.putExtra("SpringCode", springs.springCode)
-            dataIntent.putExtra("springCode", springs.springName)
-            context.startActivity(dataIntent)
-
+            if (springs.ownershipType == "Private" && !springs.privateAccess){
+                ArghyamUtils().makeSnackbar(
+                    it,
+                    "This is a private spring. Please request access to view the spring",
+                    "",
+                    context,
+                    LandingActivity::class.java
+                )
+            }
+            else {
+                val dataIntent = Intent(context, SpringDetailsActivity::class.java)
+                dataIntent.putExtra("SpringCode", springs.springCode)
+                dataIntent.putExtra("SpringName", springs.springName)
+                context.startActivity(dataIntent)
+            }
             return@OnClickListener
         })
         holder.springItemADD.setOnClickListener(View.OnClickListener {
@@ -74,34 +87,53 @@ class LandingAdapter(
             } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
-                dataIntent.putExtra("springCode", springs.springName)
+                dataIntent.putExtra("SpringName", springs.springName)
                 context.startActivity(dataIntent)
             }
             return@OnClickListener
         })
 
+        if (springs.ownershipType == "Private" && !springs.privateAccess) {
+            holder.dischargeLayout.visibility = View.GONE
+            holder.requestAccess.visibility = View.VISIBLE
+        } else {
+            holder.dischargeLayout.visibility = View.VISIBLE
+            holder.requestAccess.visibility = View.GONE
+        }
+
+        holder.requestAccess.setOnClickListener(View.OnClickListener {
+            if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN) == "") {
+                ArghyamUtils().makeSnackbar(
+                    holder.springItemADD,
+                    "SignIn To Continue",
+                    "SIGN IN",
+                    context,
+                    LoginActivity::class.java
+                )
+            } else {
+                showDialogBox(holder,it)
+            }
+            return@OnClickListener
+        })
 
         holder.favourite.setOnClickListener {
-            //            if (holder.favourite.drawable.constantState == context.getDrawable(R.drawable.ic_fav).constantState) {
-//                holder.favourite.setImageResource(R.drawable.ic_fav_fill)
-//            } else {
-//                holder.favourite.setImageResource(R.drawable.ic_fav)
-//            }
-//            if (holder.favourite.drawable.constantState == context.getDrawable(R.drawable.ic_fav_fill).constantState)
-//                holder.favourite.setImageResource(R.drawable.ic_fav)
             SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
-                favouritesInterface.onFavouritesItemClickListener(springs.springCode, it1, position)
+                homeFragmentInterface.onFavouritesItemClickListener(springs.springCode, it1, position)
             }
         }
         holder.ownership.text = springs.ownershipType
         holder.springCode.text = springs.springCode
         Log.e("Landing adapter", springs.isFavSelected.toString())
-        if (springs.isFavSelected) {
-            holder.favourite.setImageResource(R.drawable.ic_fav_fill)
-        } else if (!springs.isFavSelected) {
-            holder.favourite.setImageResource(R.drawable.ic_fav)
+        if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN).isNullOrEmpty()) {
+            holder.favourite.visibility = GONE
         }
-
+        else {
+            if (springs.isFavSelected) {
+                holder.favourite.setImageResource(R.drawable.ic_fav_fill)
+            } else if (!springs.isFavSelected) {
+                holder.favourite.setImageResource(R.drawable.ic_fav)
+            }
+        }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -113,5 +145,36 @@ class LandingAdapter(
         val springBody: LinearLayout = view.spring_body
         val ownership: TextView = view.ownership_value
         val springCode: TextView = view.spring_code
+        val requestAccess: LinearLayout = view.request_access_layout
+        val requestAccessTextView: TextView = view.tv_request_access
+        val dischargeLayout: LinearLayout = view.add_discharge_layout
+    }
+
+    private fun showDialogBox(holder: ViewHolder, it:View){
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setMessage("To view details and add discharge data, spring owner's permission required")
+            .setCancelable(true)
+            .setPositiveButton("OK") { dialog, which ->
+                ArghyamUtils().makeSnackbar(
+                    it,
+                    "Your request has been sent to the owner",
+                    "",
+                    context,
+                    LandingActivity::class.java
+                )
+                holder.requestAccessTextView.setTextColor(context.resources.getColor(R.color.grey))
+                holder.requestAccessTextView.text = "Request Sent"
+                holder.requestAccess.isClickable = false
+                holder.requestAccessTextView.isClickable = false
+                SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
+                    homeFragmentInterface.onRequestAccess(holder.springCode.text.toString(), it1)
+                }
+                dialog.cancel()
+
+            }
+        val alert = dialogBuilder.create()
+        alert.setTitle("Permission Needed")
+        alert.show()
+
     }
 }

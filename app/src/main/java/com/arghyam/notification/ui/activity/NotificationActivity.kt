@@ -22,18 +22,19 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.ui.activity.LandingActivity
+import com.arghyam.notification.`interface`.NotificationInterface
 import com.arghyam.notification.adapter.NotificationAdapter
 import com.arghyam.notification.repository.NotificationRepository
 import com.arghyam.notification.viewmodel.NotificationViewModel
-import com.arghyam.springdetails.repository.SpringDetailsRepository
-import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.activity_notification.custom_toolbar
-import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 import com.arghyam.notification.model.*
+import com.arghyam.notification.repository.PrivateReviewRepository
+import com.arghyam.notification.viewmodel.PrivateReviewViewModel
 
 
 class NotificationActivity : AppCompatActivity() {
@@ -46,14 +47,14 @@ class NotificationActivity : AppCompatActivity() {
     var dataModels: ArrayList<NotificationDataModel>? = ArrayList()
     private lateinit var listView: ListView
 
-    private var springDetailsViewModel: SpringDetailsViewModel? = null
-
+    private var privateReviewViewModel: PrivateReviewViewModel? = null
+    private val deletedNotificationList= ArrayList<AllNotificationModel>()
     private var notificationViewModel: NotificationViewModel? = null
 
     @Inject
     lateinit var notificationRepository: NotificationRepository
     @Inject
-    lateinit var springDetailsRepository: SpringDetailsRepository
+    lateinit var privateReviewRepository: PrivateReviewRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,18 +67,46 @@ class NotificationActivity : AppCompatActivity() {
     private fun init() {
         initComponent()
         notification_progressBar.visibility = VISIBLE
-
         initRepository()
-
+        initObservers()
         initNotificationApi()
-        initNotificationResponse()
 
     }
 
-    private fun initNotificationResponse() {
+    fun privateAccessReview(status: String,springCode:String,osid:String,adminId:String,userId:String) {
+        var notificationObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = PrivateReviewModel(
+                Reviewer = PrivateReviewDataModel(
+                    status = status,
+                    springCode = springCode,
+                    osid = osid,
+                    adminId = adminId,
+                    userId = userId
+                )
+            )
+        )
+        privateReviewViewModel?.privateReviewApi(notificationObject)
+        if (status.toLowerCase() == "accepted")
+            ArghyamUtils().longToast(this,"You have approved the request to view spring details")
+        else if (status.toLowerCase() == "rejected")
+            ArghyamUtils().longToast(this,"You have rejected the request to view spring details")
+        val intent = Intent(this, LandingActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun initObservers() {
+        //Notification Observers
         notificationViewModel?.getNotificationResponse()?.observe(this, Observer {
             notification_progressBar.visibility = GONE
-            saveNotificationlData(it)
+            saveNotificationData(it)
         })
         notificationViewModel?.getNotifyError()?.observe(this, Observer {
             Log.e("error---", it)
@@ -85,9 +114,19 @@ class NotificationActivity : AppCompatActivity() {
                 notificationViewModel?.getNotifyError()?.removeObservers(this)
             }
         })
+        //Private Review Observers
+        privateReviewViewModel?.getPrivateReviewResponse()?.observe(this, Observer {
+            Log.d("Private Review", "success")
+        })
+        privateReviewViewModel?.getPrivateReviewerError()?.observe(this, Observer {
+            Log.e("error---", it)
+            if (privateReviewViewModel?.getPrivateReviewerError()?.hasObservers()!!) {
+                privateReviewViewModel?.getPrivateReviewerError()?.removeObservers(this)
+            }
+        })
     }
 
-    private fun saveNotificationlData(responseModel: ResponseModel) {
+    private fun saveNotificationData(responseModel: ResponseModel) {
         if (responseModel.response.responseCode == "200") {
             Log.d("success_i", "yes")
 
@@ -109,7 +148,6 @@ class NotificationActivity : AppCompatActivity() {
         if (notificationResponseModel.notifications.isNotEmpty()) {
             noNotifications.visibility= GONE
             notification_list.visibility = VISIBLE
-            val deletedNotificationList= ArrayList<AllNotificationModel>()
 
             for(i in 0 until notificationResponseModel.notifications.size){
                 if (notificationResponseModel.notifications[i].status.toLowerCase()!="done"){
@@ -125,10 +163,14 @@ class NotificationActivity : AppCompatActivity() {
                         NotificationDataModel(
                             " "+ deletedNotificationList[i].notificationTitle ,
                             ArghyamUtils().epochToTime(deletedNotificationList[i].createdAt),
-                            ArghyamUtils().epochToDateFormat(deletedNotificationList[i].createdAt)
+                            ArghyamUtils().epochToDateFormat(deletedNotificationList[i].createdAt),
+                            deletedNotificationList[i].springCode,
+                            deletedNotificationList[i].osid,
+                            deletedNotificationList[i].userId,
+                            deletedNotificationList[i].requesterId
                         )
                     )
-                    adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it) }
+                    adapter = this.dataModels?.let { NotificationAdapter(applicationContext, it,notificationInterface) }
                     listView.adapter = adapter
             }
             listView.onItemClickListener =
@@ -170,7 +212,6 @@ class NotificationActivity : AppCompatActivity() {
 
         var userId = SharedPreferenceFactory(this@NotificationActivity).getString(Constants.USER_ID)!!
 
-
         var notificationObject = RequestModel(
             id = GET_ALL_SPRINGS_ID,
             ver = BuildConfig.VER,
@@ -186,8 +227,6 @@ class NotificationActivity : AppCompatActivity() {
                 )
             )
         )
-
-
         notificationViewModel?.notificationApi(this,userId, notificationObject)
 
 
@@ -197,13 +236,14 @@ class NotificationActivity : AppCompatActivity() {
         (application as ArghyamApplication).getmAppComponent()?.inject(this)
     }
 
-
     private fun initRepository() {
-
+        //GetAllNotifications
         notificationViewModel = ViewModelProviders.of(this).get(NotificationViewModel::class.java)
         notificationViewModel?.setNotificationRepository(notificationRepository)
 
-
+        //Private Notification Review
+        privateReviewViewModel = ViewModelProviders.of(this).get(PrivateReviewViewModel::class.java)
+        privateReviewViewModel?.setPrivateReviewRepository(privateReviewRepository)
     }
 
     private fun initToolBar() {
@@ -217,7 +257,11 @@ class NotificationActivity : AppCompatActivity() {
         return true
     }
 
-
+    private var notificationInterface: NotificationInterface = object : NotificationInterface {
+        override fun onPrivateReview(status: String,springCode:String,osid:String,adminId:String,requesterId:String) {
+            privateAccessReview(status,springCode,osid,adminId,requesterId)
+        }
+    }
 }
 
 

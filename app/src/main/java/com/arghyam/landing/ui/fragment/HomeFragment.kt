@@ -48,13 +48,15 @@ import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
 import com.arghyam.iam.ui.LoginActivity
 import com.arghyam.landing.adapters.LandingAdapter
-import com.arghyam.landing.interfaces.FavouritesInterface
+import com.arghyam.landing.interfaces.HomeFragmentInterface
 import com.arghyam.landing.model.*
 import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.repository.NotificationCountRepository
+import com.arghyam.landing.repository.PrivateAccessRepository
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
+import com.arghyam.landing.viewmodel.PrivateAccessViewModel
 import com.arghyam.notification.model.NotificationModel
 import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
@@ -89,6 +91,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     private var springsList = ArrayList<AllSpringDataModel>()
     private var favSpringsList = ArrayList<FavSpringDataModel>()
     private var count: Int = 1
+    private var userId: String = ""
     private var maxItem: Int = 0
     private var itemsAvailable: Boolean = true
     private lateinit var adapter: LandingAdapter
@@ -104,6 +107,11 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     @Inject
     lateinit var favouritesRepository: GetFavSpringsRepository
     private var favouritesViewModel: FavouritesViewModel? = null
+
+    @Inject
+    lateinit var privateAccessRepository: PrivateAccessRepository
+    private var privateAccessViewModel: PrivateAccessViewModel? = null
+
     private var mLocation: Location? = null
     @Inject
     lateinit var deduplicationRepository: DeduplicationRepository
@@ -244,7 +252,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     }
 
 
-
     private fun getGoogleClient() {
         mGoogleApiClient = activity?.applicationContext?.let {
             GoogleApiClient.Builder(it)
@@ -358,9 +365,10 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         adapter.notifyDataSetChanged()
     }
 
-    fun onLocationChanged(location: Location){
+    fun onLocationChanged(location: Location) {
 
     }
+
     private fun initObservers() {
         //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
@@ -404,6 +412,15 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
 
         deduplicationViewModel?.getDeduplicationError?.observe(this, Observer {
             Log.d("Deduplication Activity", "Api Error")
+        })
+
+        //Private Springs Observers
+        privateAccessViewModel?.privateAccessData?.observe(this, Observer {
+            Log.d("Private Spring ","Access Request "+"Success")
+        })
+
+        privateAccessViewModel?.privateAccessError?.observe(this, Observer {
+            Log.d("Private Spring", "Access Request "+"Api Error")
         })
     }
 
@@ -458,7 +475,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
                 )
             }
         }
-        getFavSpringObject?.let { favouritesViewModel?.getfavouriteSpringsApi(context!!, it) }
+        getFavSpringObject?.let { favouritesViewModel?.getFavouriteSpringsApi(context!!, it) }
     }
 
     fun sendRequest(springCode: String, userId: String?) {
@@ -484,7 +501,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
                 request = it
             )
         }
-        mRequestData?.let { favouritesViewModel?.storefavouriteSpringsApi(context!!, it) }
+        mRequestData?.let { favouritesViewModel?.storeFavouriteSpringsApi(context!!, it) }
 
     }
 
@@ -619,7 +636,17 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
                 )
             )
         )
-        getAllSpringViewModel?.getAllSpringApi(context!!, count, getAllSpringObject)
+        if (!activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN)}.isNullOrEmpty()) {
+            userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }
+                .toString()
+        }
+        else {
+            userId = "123" //dummyUserid to get springs
+            Log.e(
+                "getallsprings",
+                userId + "   " + activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) })
+        }
+        userId.let { getAllSpringViewModel?.getAllSpringApi(context!!, count, userId, getAllSpringObject) }
     }
 
     private fun initFab() {
@@ -680,6 +707,26 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         }
     }
 
+    private fun privateAccessRequest(springCode: String, userId: String) {
+        var privateAccessObject = RequestModel(
+            id = GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = PrivateSpringsModel(
+                privateSpring = AllPrivateSpringModel(
+                    springCode = springCode,
+                    userId = userId
+                )
+            )
+        )
+        privateAccessViewModel?.privateAccessApi(privateAccessObject)
+    }
+
     private fun deduplicationApiCall(mRequestData: RequestModel) {
         activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, mRequestData) }
     }
@@ -687,7 +734,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     private fun initRecyclerView() {
         springsLocation.visibility = VISIBLE
         springRecyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
-        adapter = activity?.let { LandingAdapter(springsList, it, favouritesInterface, favSpringsList) }!!
+        adapter = activity?.let { LandingAdapter(springsList, it, homeFragmentInterface, favSpringsList) }!!
         adapter.notifyDataSetChanged()
         springRecyclerView.adapter = adapter
         springRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -721,9 +768,18 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         deduplicationViewModel = ViewModelProviders.of(this).get(DeduplicationViewModel::class.java)
         deduplicationViewModel?.setDeduplicationRepository(deduplicationRepository)
 
+        //Private Access
+        privateAccessViewModel = ViewModelProviders.of(this).get(PrivateAccessViewModel::class.java)
+        privateAccessViewModel?.setPrivateAccessRepositoryRepository(privateAccessRepository)
+
     }
 
-    private var favouritesInterface: FavouritesInterface = object : FavouritesInterface {
+    private var homeFragmentInterface: HomeFragmentInterface = object : HomeFragmentInterface {
+        override fun onRequestAccess(springCode: String, userId: String) {
+            Log.e("HomeFragment", "$springCode           $userId")
+            privateAccessRequest(springCode,userId)
+        }
+
         override fun onFavouritesItemClickListener(
             springCode: String,
             userId: String,
@@ -732,10 +788,11 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
             sendRequest(springCode, userId)
             progressBar.visibility = VISIBLE
             var handler = Handler()
-            handler.postDelayed({ getFavSpringRequest() },100)
+            handler.postDelayed({ getFavSpringRequest() }, 200)
 //            getFavSpringRequest()
         }
     }
+
 }
 
 
