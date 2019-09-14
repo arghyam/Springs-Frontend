@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.*
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.media.ExifInterface
@@ -423,6 +424,8 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         card_device.visibility = VISIBLE
         tv_coordinates.visibility = VISIBLE
         tl_cooridinates.visibility = VISIBLE
+        tv_address.visibility = VISIBLE
+        address_layout.visibility = VISIBLE
         location_layout.visibility = GONE
     }
 
@@ -510,7 +513,10 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
                 // Got last known address. In some rare situations this can be null.
                 if (location != null) {
                     toggleLocation()
-                    // Logic to handle address object
+                    val geocoder: Geocoder = Geocoder(this)
+                    val address = geocoder.getFromLocation(location.latitude,location.longitude,1)
+                    tv_address_location.text = address[0].getAddressLine(0)
+                            // Logic to handle address object
                     mLocation = location
                     latitude.text = ": ${mLocation!!.latitude}"
                     longitude.text = ": ${mLocation!!.longitude}"

@@ -67,6 +67,7 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".addspring.ui.NewSpringActivity"
+                android:windowSoftInputMode="stateAlwaysHidden"
                 android:label="@string/new_spring">
         </activity>
         <activity
