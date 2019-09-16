@@ -192,27 +192,39 @@ class OtpVerifyActivity : AppCompatActivity() {
     }
 
     private fun initResendTimer() {
-        resendCode.alpha = 0.5f
-        isCounterRunning = true
-        countDownTimer = object : CountDownTimer(30000, 1000) {
-            override fun onFinish() {
-                resendCode.text = "${getString(R.string.resend)}"
-                maxTime = 30
-                resendOtpCount++
-                isCounterRunning = false
-                resendCode.alpha = 1.0f
-            }
+        if (!isCounterRunning) {
+            isCounterRunning = true
+            resendCode.alpha = 0.5f
+            countDownTimer = object : CountDownTimer(30000, 1000) {
+                override fun onFinish() {
+                    resendCode.text = "${getString(R.string.resend)}"
+                    maxTime = 30
+                    resendOtpCount++
+                    isCounterRunning = false
+                    resendCode.alpha = 1.0f
+                }
 
-            override fun onTick(millisUntilFinished: Long) {
-                val codeResend = SpannableString("${getString(R.string.resend)}")
-                codeResend.setSpan( ForegroundColorSpan(resources.getColor(R.color.colorPrimary)), 0, codeResend.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                resendCode.text= codeResend
-                val timeRemaining = SpannableString(" (00:${ArghyamUtils().checkDigit(maxTime)})")
-                timeRemaining.setSpan( ForegroundColorSpan(Color.BLACK), 0, timeRemaining.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                resendCode.append(timeRemaining)
-                maxTime--
-            }
-        }.start()
+                override fun onTick(millisUntilFinished: Long) {
+                    val codeResend = SpannableString("${getString(R.string.resend)}")
+                    codeResend.setSpan(
+                        ForegroundColorSpan(resources.getColor(R.color.colorPrimary)),
+                        0,
+                        codeResend.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    resendCode.text = codeResend
+                    val timeRemaining = SpannableString(" (00:${ArghyamUtils().checkDigit(maxTime)})")
+                    timeRemaining.setSpan(
+                        ForegroundColorSpan(Color.BLACK),
+                        0,
+                        timeRemaining.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    resendCode.append(timeRemaining)
+                    maxTime--
+                }
+            }.start()
+        }
     }
 
     private fun initTermsCheckBox() {
