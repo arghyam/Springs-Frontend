@@ -157,21 +157,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun registerReceiver() {
-
-        val lm = context?.getSystemService(LOCATION_SERVICE) as LocationManager?
-        lm!!.addGpsStatusListener { event ->
-            when (event) {
-                GPS_EVENT_STARTED -> {
-                }
-                GPS_EVENT_STOPPED -> {
-                }
-            }// do your tasks
-            // do your tasks
-        }
-    }
-
     private fun getViewModel() {
         landingViewModel = ViewModelProviders.of(activity!!).get(LandingViewModel::class.java)
     }
@@ -229,7 +214,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         }
         initFab()
         reload()
-        registerReceiver()
     }
 
 
@@ -363,10 +347,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
             }
         }
         adapter.notifyDataSetChanged()
-    }
-
-    fun onLocationChanged(location: Location) {
-
     }
 
     private fun initObservers() {
