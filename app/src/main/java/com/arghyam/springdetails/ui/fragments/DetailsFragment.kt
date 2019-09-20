@@ -121,7 +121,6 @@ class DetailsFragment : Fragment() {
                 object : TypeToken<AdditionalDetailsResponse>() {}.type
             )
             if (additionalDetailsResponse.springCode != null) {
-                Log.e("DetailsFragment", additionalDetailsResponse.numberOfHousehold.toString())
                 seasonality = additionalDetailsResponse.seasonality
                 selectedMonthNames = ArghyamUtils().convertToNames(additionalDetailsResponse.months)
                 waterUse = additionalDetailsResponse.usage
@@ -319,6 +318,7 @@ class DetailsFragment : Fragment() {
 
     private fun initImageAdapter(responseModel: ResponseModel) {
         imagelist.clear()
+        MAX_IMAGES = 3
         Log.e("responseCheckinitImage", responseModel.response.responseObject.toString())
         springProfileResponse = Gson().fromJson(
             ArghyamUtils().convertToString(responseModel.response.responseObject),
@@ -340,7 +340,6 @@ class DetailsFragment : Fragment() {
     private fun setupAutoPager() {
         val handler = Handler()
 
-        Log.e("DetailsFragment", currentPage.toString() + " " + imagelist.size)
         val update = Runnable {
             if (currentPage == Integer.MAX_VALUE) {
                 currentPage = 0
@@ -353,14 +352,12 @@ class DetailsFragment : Fragment() {
         left_scroll.setOnClickListener {
             if (currentPage >= 1)
                 --currentPage
-            Log.e("DetailsFragment", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
 
         }
         right_scroll.setOnClickListener {
             if (currentPage < imagelist.size - 1)
                 ++currentPage
-            Log.e("DetailsFragment", currentPage.toString())
             images_view_pager.setCurrentItem(currentPage, true)
         }
 

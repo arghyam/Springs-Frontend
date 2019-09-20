@@ -54,11 +54,12 @@ class LandingAdapter(
         val parts = string.split("|")
         var address = parts[parts.size - 1] + ", " + parts[0]
         holder.location.text = address.trim()
+        holder.setIsRecyclable(false)
         Glide.with(context)
             .load(springs.images[0])
             .into(holder.springImage)
         holder.springBody.setOnClickListener(View.OnClickListener {
-            if (springs.ownershipType == "Private" && !springs.privateAccess){
+            if (springs.ownershipType == "Private" && !springs.privateAccess) {
                 ArghyamUtils().makeSnackbar(
                     it,
                     "This is a private spring. Please request access to view the spring",
@@ -66,8 +67,7 @@ class LandingAdapter(
                     context,
                     LandingActivity::class.java
                 )
-            }
-            else {
+            } else {
                 val dataIntent = Intent(context, SpringDetailsActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
                 dataIntent.putExtra("SpringName", springs.springName)
@@ -93,7 +93,7 @@ class LandingAdapter(
             return@OnClickListener
         })
 
-        if(springs.requested){
+        if (springs.requested && !springs.privateAccess ) {
             holder.requestAccessTextView.setTextColor(context.resources.getColor(R.color.grey))
             holder.requestAccessTextView.text = "Request Sent"
             holder.requestAccess.isClickable = false
@@ -116,15 +116,27 @@ class LandingAdapter(
                     context,
                     LoginActivity::class.java
                 )
-            } else {
-                showDialogBox(holder,it)
+            } else if (springs.requested) {
+                ArghyamUtils().makeSnackbar(
+                    holder.springItemADD,
+                    "You request has already been sent to the owner",
+                    "",
+                    context,
+                    LoginActivity::class.java
+                )
+            } else if (!springs.requested) {
+                showDialogBox(holder, it)
             }
             return@OnClickListener
         })
 
         holder.favourite.setOnClickListener {
             SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
-                homeFragmentInterface.onFavouritesItemClickListener(springs.springCode, it1, position)
+                homeFragmentInterface.onFavouritesItemClickListener(
+                    springs.springCode,
+                    it1,
+                    position
+                )
             }
         }
         holder.ownership.text = springs.ownershipType
@@ -132,8 +144,7 @@ class LandingAdapter(
         Log.e("Landing adapter", springs.isFavSelected.toString())
         if (SharedPreferenceFactory(context).getString(Constants.ACCESS_TOKEN).isNullOrEmpty()) {
             holder.favourite.visibility = GONE
-        }
-        else {
+        } else {
             if (springs.isFavSelected) {
                 holder.favourite.setImageResource(R.drawable.ic_fav_fill)
             } else if (!springs.isFavSelected) {
@@ -156,7 +167,7 @@ class LandingAdapter(
         val dischargeLayout: LinearLayout = view.add_discharge_layout
     }
 
-    private fun showDialogBox(holder: ViewHolder, it:View){
+    private fun showDialogBox(holder: ViewHolder, it: View) {
         val dialogBuilder = AlertDialog.Builder(context)
         dialogBuilder.setMessage("To view details and add discharge data, spring owner's permission required")
             .setCancelable(true)

@@ -19,7 +19,6 @@ import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.deduplication.`interface`.DeduplicationInterface
 import com.arghyam.deduplication.model.DeduplicationDataModel
 import com.arghyam.iam.ui.LoginActivity
-import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.springdetails.ui.activity.AddDischargeActivity
 import com.arghyam.springdetails.ui.activity.SpringDetailsActivity
 import com.bumptech.glide.Glide
@@ -29,7 +28,7 @@ import kotlinx.android.synthetic.main.list_spring.view.*
 class DeduplicationAdapter(
     private val springList: ArrayList<DeduplicationDataModel>,
     val context: Context,
-    val deduplicationInterface: DeduplicationInterface
+    private val deduplicationInterface: DeduplicationInterface
 ) :
     RecyclerView.Adapter<DeduplicationAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
