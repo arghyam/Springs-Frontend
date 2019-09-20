@@ -2,6 +2,7 @@ package com.arghyam.myactivity.ui
 
 
 import android.content.Intent
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -48,9 +49,7 @@ import kotlin.collections.ArrayList
 
 
 class MyActivityFragment : Fragment() {
-    private var notification: Boolean = true
 
-    private var myActivityList = ArrayList<MyActivityModel>()
     private lateinit var mMyActivitiesViewModel: MyActivitiesViewModel
 
     @Inject
@@ -198,26 +197,12 @@ class MyActivityFragment : Fragment() {
             myActivityRecyclerView.layoutManager = LinearLayoutManager(activity)
             val adapter = activity?.let { MyActivityAdapter(responseData.activities, it) }
             myActivityRecyclerView.adapter = adapter
-            for (activity in responseData.activities) {
-                myActivityList.add(
-                    MyActivityModel(
-                        activity.action,
-                        activity.createdAt,
-                        activity.springName,
-                        activity.latitude.toString() + activity.longitude.toString(),
-                        activity.springCode
-                    )
-                )
-            }
+
         }
     }
 
     private fun initComponent() {
         (activity!!.application as ArghyamApplication).getmAppComponent()?.inject(this)
-//        if (SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)!! > 0) {
-//            SharedPreferenceFactory(activity!!.applicationContext).getInt(Constants.NOTIFICATION_COUNT)
-//                ?.let { initbell(it) }
-//        }
     }
 
     private fun initRepository() {

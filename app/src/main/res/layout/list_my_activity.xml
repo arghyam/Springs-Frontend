@@ -69,7 +69,7 @@
                         android:id="@+id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kedarnath, Uttarakhand"
+                        android:text=""
                         android:textColor="#8C8C8B"
                         android:layout_below="@+id/name"
                         android:textSize="12sp"/>

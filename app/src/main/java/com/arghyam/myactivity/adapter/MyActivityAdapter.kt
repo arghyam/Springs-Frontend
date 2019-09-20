@@ -2,6 +2,7 @@ package com.arghyam.myactivity.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,10 @@ class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: 
         holder.dischargeData.text = myActivities.action
         holder.time.text = ArghyamUtils().epochToTime(myActivities.createdAt) + "  |  "+ArghyamUtils().epochToDateFormat(myActivities.createdAt)
         holder.springName.text = myActivities.springName
-        holder.villageName.text = "Location"
+        val geocoder = Geocoder(context)
+        val address = geocoder.getFromLocation(myActivities.latitude.toDouble(),
+            myActivities.longitude.toDouble(),1)
+        holder.villageName.text = address[0].locality+", "+address[0].adminArea
 
         holder.activity.setOnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
