@@ -27,7 +27,7 @@ class DischargeDataAdapter(private val items: ArrayList<DischargeDataModal>, val
         holder.discharge.text = item.discharge
         holder.submittedBy.text = item.submitted
 
-        Log.d("status--item", "" + item.status)
+        Log.d("status--item", "" + item.status + holder.discharge.text)
         if (item.status == "Accepted") {
             holder.tick.visibility = VISIBLE
         } else if (item.status == "Rejected") {

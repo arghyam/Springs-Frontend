@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.arghyam.ArghyamApplication
@@ -27,10 +26,6 @@ import com.arghyam.springdetails.viewmodel.SpringDetailsViewModel
 import kotlinx.android.synthetic.main.activity_spring_details.*
 import kotlinx.android.synthetic.main.content_spring_details.*
 import javax.inject.Inject
-import com.google.android.material.tabs.TabLayout
-
-
-
 
 
 class SpringDetailsActivity : AppCompatActivity() {
@@ -54,10 +49,10 @@ class SpringDetailsActivity : AppCompatActivity() {
     }
 
     private fun getSpringId() {
-            var dataIntent: Intent = intent
-            springCode = dataIntent.getStringExtra("SpringCode")
-            springName = dataIntent.getStringExtra("SpringName")
-            Log.e("Code", springCode)
+        var dataIntent: Intent = intent
+        springCode = dataIntent.getStringExtra("SpringCode")
+        springName = dataIntent.getStringExtra("SpringName")
+        Log.e("Code", springCode)
     }
 
     private fun init() {
@@ -72,8 +67,8 @@ class SpringDetailsActivity : AppCompatActivity() {
     }
 
     private fun loadFragment() {
-        if (checkForUpcoming()){
-            Log.e("SpringDetails","coming inside")
+        if (checkForUpcoming()) {
+            Log.e("SpringDetails", "coming inside")
             details_view_pager.currentItem = 1
         }
     }
@@ -92,6 +87,10 @@ class SpringDetailsActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun setActionBarTitle(title: String) {
+        supportActionBar!!.title = title
     }
 
     private fun initViewPager() {

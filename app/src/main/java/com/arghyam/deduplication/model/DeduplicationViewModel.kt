@@ -20,10 +20,11 @@ class DeduplicationViewModel : ViewModel() {
         this.getDeduplicationRepository = deduplicationRepository
     }
 
-    fun deduplicationSpringsApi(mContext: Context, requestModel: RequestModel) {
+    fun deduplicationSpringsApi(mContext: Context,userId: String, requestModel: RequestModel) {
         Log.e("fav----------", "$requestModel ============")
         getDeduplicationRepository?.deduplicationApiRequest(
             mContext,
+            userId,
             requestModel,
             object : ResponseListener<ResponseModel> {
                 override fun onSuccess(response: ResponseModel) {

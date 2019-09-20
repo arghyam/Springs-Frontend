@@ -93,6 +93,12 @@ class LandingAdapter(
             return@OnClickListener
         })
 
+        if(springs.requested){
+            holder.requestAccessTextView.setTextColor(context.resources.getColor(R.color.grey))
+            holder.requestAccessTextView.text = "Request Sent"
+            holder.requestAccess.isClickable = false
+            holder.requestAccessTextView.isClickable = false
+        }
         if (springs.ownershipType == "Private" && !springs.privateAccess) {
             holder.dischargeLayout.visibility = View.GONE
             holder.requestAccess.visibility = View.VISIBLE

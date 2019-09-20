@@ -18,12 +18,18 @@ import com.arghyam.R
 import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.SharedPreferenceFactory
+import com.arghyam.deduplication.`interface`.DeduplicationInterface
 import com.arghyam.deduplication.adapter.DeduplicationAdapter
 import com.arghyam.deduplication.model.*
 import com.arghyam.deduplication.repository.DeduplicationRepository
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
 import com.arghyam.iam.model.ResponseModel
+import com.arghyam.landing.model.AllPrivateSpringModel
+import com.arghyam.landing.model.PrivateSpringsModel
+import com.arghyam.landing.repository.PrivateAccessRepository
+import com.arghyam.landing.viewmodel.PrivateAccessViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -41,6 +47,10 @@ class DeduplicationActivity : AppCompatActivity() {
     private lateinit var adapter: DeduplicationAdapter
     var TAG = "DeduplicationActivity"
     lateinit var mlocation: Location
+
+    @Inject
+    lateinit var privateAccessRepository: PrivateAccessRepository
+    private var privateAccessViewModel: PrivateAccessViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +92,35 @@ class DeduplicationActivity : AppCompatActivity() {
         deduplicationViewModel?.getDeduplicationError?.observe(this, Observer {
             Log.d("Deduplication Activity", "Api Error")
         })
+
+        //Private Springs Observers
+        privateAccessViewModel?.privateAccessData?.observe(this, Observer {
+            Log.d("Private Spring ","Access Request "+"Success")
+        })
+
+        privateAccessViewModel?.privateAccessError?.observe(this, Observer {
+            Log.d("Private Spring", "Access Request "+"Api Error")
+        })
+    }
+
+    private fun privateAccessRequest(springCode: String, userId: String) {
+        var privateAccessObject = RequestModel(
+            id = Constants.GET_ALL_SPRINGS_ID,
+            ver = BuildConfig.VER,
+            ets = BuildConfig.ETS,
+            params = Params(
+                did = "",
+                key = "",
+                msgid = ""
+            ),
+            request = PrivateSpringsModel(
+                privateSpring = AllPrivateSpringModel(
+                    springCode = springCode,
+                    userId = userId
+                )
+            )
+        )
+        privateAccessViewModel?.privateAccessApi(privateAccessObject)
     }
 
     private fun saveDeduplicationData(responseModel: ResponseModel?) {
@@ -111,12 +150,14 @@ class DeduplicationActivity : AppCompatActivity() {
     private fun initRecyclerView(responseData: DeduplicationModel) {
         deduplicationRecyclerView.layoutManager = LinearLayoutManager(this)
         deduplicationSpringsList.addAll(responseData.springs)
-        adapter = DeduplicationAdapter(deduplicationSpringsList, this)
+        adapter = DeduplicationAdapter(deduplicationSpringsList, this, deduplicationInterface)
         deduplicationRecyclerView.adapter = adapter
         progressBar.visibility = GONE
     }
 
     private fun sendRequest() {
+        var userId = SharedPreferenceFactory(this).getString(Constants.USER_ID)!!
+
         val mRequestData = RequestModel(
             id = Constants.CREATE_STATE,
             ver = BuildConfig.VER,
@@ -134,15 +175,26 @@ class DeduplicationActivity : AppCompatActivity() {
                 )
             )
         )
-        makeApiCall(mRequestData)
+        makeApiCall(mRequestData,userId)
     }
 
-    private fun makeApiCall(mRequestData: RequestModel) {
-        deduplicationViewModel?.deduplicationSpringsApi(this, mRequestData)
+    private fun makeApiCall(mRequestData: RequestModel,userId: String) {
+        deduplicationViewModel?.deduplicationSpringsApi(this,userId, mRequestData)
     }
 
     private fun initRepository() {
         deduplicationViewModel = ViewModelProviders.of(this).get(DeduplicationViewModel::class.java)
         deduplicationViewModel?.setDeduplicationRepository(deduplicationRepository)
+
+        //Private Access
+        privateAccessViewModel = ViewModelProviders.of(this).get(PrivateAccessViewModel::class.java)
+        privateAccessViewModel?.setPrivateAccessRepositoryRepository(privateAccessRepository)
+    }
+
+    private var deduplicationInterface: DeduplicationInterface = object : DeduplicationInterface {
+        override fun onRequestAccess(springCode: String, userId: String) {
+            Log.e("HomeFragment", "$springCode           $userId")
+            privateAccessRequest(springCode,userId)
+        }
     }
 }

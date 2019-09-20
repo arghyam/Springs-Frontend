@@ -276,7 +276,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
 
         springName = spring_name.text.toString().trim()
         intent.putExtra("SpringCode", createSpringResponseObject.springCode)
-        intent.putExtra("springCode", springName)
+        intent.putExtra("SpringName", springName)
         Log.e("Code", createSpringResponseObject.springCode)
         startActivity(intent)
         finish()

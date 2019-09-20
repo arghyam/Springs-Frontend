@@ -16,10 +16,11 @@ import javax.inject.Inject
 class DeduplicationRepository @Inject constructor() {
     fun deduplicationApiRequest(
         context: Context,
+        springCode: String,
         requestModel: RequestModel,
         responseListener: ResponseListener<ResponseModel>
     ) {
-        val uploadAdditionalCall = RestClient.getWebServiceData()?.deduplication(requestModel)
+        val uploadAdditionalCall = RestClient.getWebServiceData()?.deduplication(springCode,requestModel)
         uploadAdditionalCall?.enqueue(object : Callback<ResponseModel> {
 
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {

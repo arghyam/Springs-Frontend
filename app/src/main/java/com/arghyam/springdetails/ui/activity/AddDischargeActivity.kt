@@ -16,9 +16,11 @@ import android.text.Html
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.NotificationCompat
@@ -60,6 +62,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.content_add_discharge.*
+import kotlinx.android.synthetic.main.content_new_spring.*
 import kotlinx.android.synthetic.main.list_image_uploader.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -588,14 +591,20 @@ class AddDischargeActivity : AppCompatActivity() {
 
         val intent = Intent(this@AddDischargeActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
-        intent.putExtra("springCode", springName)
+        intent.putExtra("SpringName", springName)
         intent.putExtra("SpringCode", dischargeDataResponseObject.springCode)
         Log.e("Code", dischargeDataResponseObject.springCode)
         startActivity(intent)
         finish()
     }
 
-
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     private fun assignDischargeData() {
         containerString = volumeOfContainer.text.toString()
@@ -643,5 +652,11 @@ class AddDischargeActivity : AppCompatActivity() {
             )
         )
         addDischargeDataViewModel?.addDischargeApi(this, springCode, createSpringObject)
+    }
+
+
+    private fun hideSoftKeyboard() {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

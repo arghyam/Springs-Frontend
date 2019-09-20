@@ -9,8 +9,10 @@
                 android:background="#F5F5F5">
 
     <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/search_layout">
+                                           android:layout_height="match_parent"
+                                           android:clickable="true"
+                                           android:focusableInTouchMode="true"
+                                           android:layout_above="@+id/search_layout">
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -20,7 +22,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:id="@+id/view"
-                    android:background="#e6e6e6" />
+                    android:background="#e6e6e6"/>
             <RelativeLayout
                     android:id="@+id/geo_layout"
                     android:layout_width="match_parent"
@@ -53,7 +55,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#e6e6e6" />
+                    android:background="#e6e6e6"/>
 
             <TextView
                     android:id="@+id/recent_search"
@@ -90,11 +92,11 @@
             <LinearLayout
                     android:id="@+id/no_recent_searches"
                     android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_marginTop="150dp"
-                          android:visibility="gone">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="150dp"
+                    android:visibility="gone">
 
                 <ImageView android:layout_width="83.38dp"
                            android:layout_height="83.32dp"

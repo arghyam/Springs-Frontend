@@ -153,7 +153,7 @@ class DischargeDataFragment : Fragment() {
 
             } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
-                intent.putExtra("springCode", springName)
+                intent.putExtra("SpringName", springName)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivity(intent)

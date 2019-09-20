@@ -1,6 +1,7 @@
 package com.arghyam.search.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +13,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -43,6 +45,12 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
 
+
+
+
+
+
+
 class SearchFragment : Fragment() {
 
     private var recentSearchList = ArrayList<String>()
@@ -71,18 +79,21 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (savedInstanceState != null) {
-            val hello = savedInstanceState!!.getString("hello")
-            Log.e("Searchsaveinstance",hello)
+            val hello = savedInstanceState.getString("hello")
+            Log.e("Searchsaveinstance", hello)
         }
         return inflater.inflate(R.layout.fragment_search, container, false)
 
     }
 
+    private fun hideKeyboard(v: View) {
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(v.windowToken, 0)
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
@@ -121,7 +132,7 @@ class SearchFragment : Fragment() {
             )
         }
         mRequestData?.let { makeApiCallRecentSearch(it) }
-        Log.e("userid",SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID))
+        Log.e("userid", SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID))
     }
 
     private fun initComponent() {
@@ -179,7 +190,7 @@ class SearchFragment : Fragment() {
             )
             springsList.clear()
             if (responseData.springs.isEmpty())
-                ArghyamUtils().longToast(activity as AppCompatActivity,"Please try search by geography")
+                ArghyamUtils().longToast(activity as AppCompatActivity, "Please try search by geography")
             else
                 springsList.addAll(responseData.springs)
             initRecyclerView()
@@ -269,8 +280,7 @@ class SearchFragment : Fragment() {
                 recentSearchRecyclerView.adapter = adapter
                 no_recent_searches.visibility = GONE
                 Log.d("RecentSearchList", recentSearchList.toString())
-            }
-            else
+            } else
                 no_recent_searches.visibility = VISIBLE
         }
 

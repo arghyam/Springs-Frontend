@@ -5,7 +5,6 @@ import android.graphics.Color.rgb
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -14,13 +13,14 @@ import android.widget.*
 import com.arghyam.R
 import com.arghyam.notification.`interface`.NotificationInterface
 import com.arghyam.notification.model.NotificationDataModel
-import com.arghyam.notification.ui.activity.NotificationActivity
 import kotlinx.android.synthetic.main.notification_listview.view.*
 import kotlinx.android.synthetic.main.notification_listview.view.breaker
 import kotlinx.android.synthetic.main.notification_listview.view.date
 import kotlinx.android.synthetic.main.notification_listview.view.notification_data
 import kotlinx.android.synthetic.main.notification_listview.view.right_arrow
 import kotlinx.android.synthetic.main.notification_listview.view.time
+
+
 
 
 class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickListener {
@@ -82,7 +82,6 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
             viewHolder.accept = convertView.accept_private
 
             result = convertView
-
             convertView.tag = viewHolder
         } else {
             viewHolder = convertView.tag as ViewHolder
@@ -137,6 +136,16 @@ class NotificationAdapter : ArrayAdapter<NotificationDataModel>, View.OnClickLis
             }
             ofs = ofe + 1
         }
+    }
+
+    override fun getViewTypeCount(): Int {
+
+        return count
+    }
+
+    override fun getItemViewType(position: Int): Int {
+
+        return position
     }
 
     override fun onClick(v: View?) {

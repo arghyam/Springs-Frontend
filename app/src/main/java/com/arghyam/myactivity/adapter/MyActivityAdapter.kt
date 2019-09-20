@@ -41,7 +41,7 @@ class MyActivityAdapter(val myActivityList: ArrayList<Activities>, val context: 
                 Log.e("MyActivitesAdapter","normal")
             }
             dataIntent.putExtra("SpringCode", myActivities.springCode)
-            dataIntent.putExtra("springCode", myActivities.springName)
+            dataIntent.putExtra("SpringName", myActivities.springName)
             context.startActivity(dataIntent)
 
             return@setOnClickListener

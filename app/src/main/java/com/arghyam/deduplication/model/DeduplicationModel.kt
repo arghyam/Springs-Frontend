@@ -9,5 +9,6 @@ class DeduplicationDataModel(
     var springName: String,
     var ownershipType: String,
     var images: List<String>,
-    var address: String
+    var address: String,
+    var privateAccess : Boolean
 ) : Serializable

@@ -49,6 +49,7 @@ class FavouritesAdapter(
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
+            dataIntent.putExtra("SpringName", springs.springName)
             context.startActivity(dataIntent)
 
             return@OnClickListener
@@ -65,10 +66,12 @@ class FavouritesAdapter(
             } else {
                 var dataIntent = Intent(context, AddDischargeActivity::class.java)
                 dataIntent.putExtra("SpringCode", springs.springCode)
+                dataIntent.putExtra("SpringName", springs.springName)
                 context.startActivity(dataIntent)
             }
             return@OnClickListener
         })
+        holder.favourite.setImageResource(R.drawable.ic_fav_fill)
         holder.favourite.setOnClickListener {
             SharedPreferenceFactory(context).getString(Constants.USER_ID)?.let { it1 ->
                 favFragmentInterface.onFavouritesItemClickListener(springs.springCode, it1, position)

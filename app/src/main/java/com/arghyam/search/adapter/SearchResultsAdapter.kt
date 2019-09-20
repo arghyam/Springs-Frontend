@@ -41,7 +41,7 @@ class SearchResultsAdapter(val springList: ArrayList<AllSpringDataModel>, val co
         holder.springBody.setOnClickListener(View.OnClickListener {
             var dataIntent = Intent(context, SpringDetailsActivity::class.java)
             dataIntent.putExtra("SpringCode", springs.springCode)
-            dataIntent.putExtra("springCode", springs.springName)
+            dataIntent.putExtra("SpringName", springs.springName)
             context.startActivity(dataIntent)
             return@OnClickListener
         })

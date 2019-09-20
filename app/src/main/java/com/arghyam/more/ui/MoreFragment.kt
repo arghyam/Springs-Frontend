@@ -106,7 +106,7 @@ class MoreFragment : Fragment() {
             save_name.setText(responseData.firstName)
             edit_name_layout.visibility = VISIBLE
         }
-        save_name.setOnClickListener {
+        tick_icon.setOnClickListener {
             if (save_name.text == null || save_name.text.toString().trim().equals("")) {
                 ArghyamUtils().longToast(context!!, "Please enter name")
             } else if (save_name.text.toString().trim().length < 3) {

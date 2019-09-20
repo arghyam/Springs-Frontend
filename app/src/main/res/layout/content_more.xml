@@ -157,11 +157,12 @@
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_user_profile"/>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                     android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     app:passwordToggleEnabled="true"
                     android:paddingLeft="10dp"
+                    android:weightSum="1"
                     android:textColorHint="@color/white"
                     android:layout_height="wrap_content">
 
@@ -170,14 +171,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint=""
+                        android:layout_weight="1"
                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:textColor="@color/white"
-                        android:drawableRight="@drawable/ic_tick_icon"
                         android:textSize="30sp"
                         android:singleLine="true">
                 </EditText>
-
-            </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                        android:id="@+id/tick_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_tick_icon"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

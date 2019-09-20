@@ -45,15 +45,11 @@ android {
     productFlavors {
 
         localPasta {
-            buildConfigField "String", "BASE_URL", '"http://192.168.0.33:9090/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.1.62:9090/"'
             dimension "content"
         }
         localSVC {
             buildConfigField "String", "BASE_URL", '"http://192.168.3.236:9090/"'
-            dimension "content"
-        }
-        localSai {
-            buildConfigField "String", "BASE_URL", '"http://192.168.0.107:9090/"'
             dimension "content"
         }
         prod {

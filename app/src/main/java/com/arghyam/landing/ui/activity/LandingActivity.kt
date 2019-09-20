@@ -2,11 +2,13 @@ package com.arghyam.landing.ui.activity
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -68,7 +70,13 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     private fun initViewModel() {
         landingViewModel = ViewModelProviders.of(this).get(LandingViewModel::class.java)
     }
-
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
     private fun showHome() {
         if (ArghyamUtils().permissionGranted(
                 this@LandingActivity,

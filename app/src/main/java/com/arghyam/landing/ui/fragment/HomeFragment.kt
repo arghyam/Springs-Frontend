@@ -669,12 +669,12 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     }
 
     private fun deduplicationRequestCall() {
-        Log.e(TAG, "Coming")
         getGoogleClient()
         var accuracy: Double? = 0.0
+        getFusedClient()
         if (flag == Constants.DEDUPLICATION)
             accuracy = mLocation?.accuracy?.toDouble()
-        Log.e(TAG, "" + accuracy + "accuracy")
+        Log.e(TAG, "" + accuracy + "accuracy"+mLocation.toString())
         val mRequestData = mLocation?.latitude?.let { it1 ->
             mLocation?.longitude?.let { it2 ->
                 accuracy?.let {
@@ -728,7 +728,8 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     }
 
     private fun deduplicationApiCall(mRequestData: RequestModel) {
-        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, mRequestData) }
+        var userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }!!
+        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it,userId, mRequestData) }
     }
 
     private fun initRecyclerView() {

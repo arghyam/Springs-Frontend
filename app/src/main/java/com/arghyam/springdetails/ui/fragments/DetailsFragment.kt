@@ -168,7 +168,7 @@ class DetailsFragment : Fragment() {
     private fun initSetData(springProfileResponse: SpringProfileResponse) {
 
         springName = "${springProfileResponse.springName}"
-
+        (activity as SpringDetailsActivity).setActionBarTitle(springName!!)
         tv_spring_name.text = ":  ${springProfileResponse.springName}"
         val string = springProfileResponse.address
         val parts = string.split("|")
@@ -228,8 +228,10 @@ class DetailsFragment : Fragment() {
             )
         )
         springCode?.let {
-            getAdditionalDetialsViewModel?.getAdditionalDetailsApi(context!!,
-                it,springAdditionalDetailsObject)
+            getAdditionalDetialsViewModel?.getAdditionalDetailsApi(
+                context!!,
+                it, springAdditionalDetailsObject
+            )
         }
 
     }
@@ -251,7 +253,7 @@ class DetailsFragment : Fragment() {
                 val intent = Intent(context, AddAdditionalDetailsActivity::class.java)
 
                 intent.putExtra("SpringCode", springCode)
-                intent.putExtra("springCode", springName)
+                intent.putExtra("SpringName", springName)
                 Log.e("Code in details", springCode)
                 startActivityForResult(intent, REQUEST_CODE)
             }
@@ -307,7 +309,7 @@ class DetailsFragment : Fragment() {
 
             } else {
                 val intent = Intent(context, AddDischargeActivity::class.java)
-                intent.putExtra("springCode", springName)
+                intent.putExtra("SpringName", springName)
                 intent.putExtra("SpringCode", springCode)
                 Log.e("Code in details", springCode)
                 startActivity(intent)

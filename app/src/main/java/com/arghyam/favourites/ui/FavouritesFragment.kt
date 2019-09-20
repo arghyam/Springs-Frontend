@@ -212,7 +212,7 @@ class FavouritesFragment : Fragment() {
                 ArghyamUtils().convertToString(responseModel.response.responseObject),
                 object : TypeToken<FavSpringDetailsModel>() {}.type
             )
-            if (null != responseData.FavouriteSpring) {
+            if (null != responseData.FavouriteSpring && context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } != "") {
                 springsList.clear()
                 springsList.addAll(responseData.FavouriteSpring)
                 if (springsList.isEmpty()) {
@@ -222,6 +222,10 @@ class FavouritesFragment : Fragment() {
                 }
                 progressBar.visibility = GONE
                 adapter.notifyDataSetChanged()
+            }
+            else if (context?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) } == ""){
+                sign_in_text.visibility = VISIBLE
+                sign_in_button_fav.visibility = VISIBLE
             }
         }
     }

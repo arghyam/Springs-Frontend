@@ -160,15 +160,10 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
 
     }
     private fun gotoDischargeData(responseModel: ResponseModel) {
-//        val fragment = DischargeDataFragment()
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.replace(R.id.notification_content, fragment).commit()
         var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java).putExtra("flag",true)
-//        var intent = Intent(this@DisplayDischargeDataActivity, SpringDetailsActivity::class.java)
         intent.putExtra("SpringCode", springCode)
-        intent.putExtra("springCode", springName)
+        intent.putExtra("SpringName", springName)
         intent.putExtra("caller",1)
-//
         startActivity(intent)
         this.finish()
 
@@ -250,8 +245,8 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
                     reviewerId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
                     notificationOsid = osid,
                     submittedBy = submittedById,
-                    status = status
-
+                    status = status,
+                    springCode = springCode
 
                 )
             )
