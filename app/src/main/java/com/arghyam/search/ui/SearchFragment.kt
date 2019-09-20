@@ -313,18 +313,8 @@ class SearchFragment : Fragment() {
         }
 
         back_icon.setOnClickListener {
-            showHome()
             (this.activity as LandingActivity?)?.switchHome()
         }
-    }
-
-    /**
-     * replaces the current fragment with home fragment
-     */
-    private fun showHome() {
-        val fragment = HomeFragment.newInstance()
-        this.fragmentManager?.beginTransaction()?.replace(R.id.content, fragment, fragment.javaClass.simpleName)
-            ?.addToBackStack(fragment.javaClass.simpleName)?.commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
