@@ -48,6 +48,9 @@ import com.karumi.dexter.listener.single.PermissionListener
 
 class LandingActivity : AppCompatActivity(), PermissionInterface {
 
+//        if(savedInstanceState!=null){
+//            mContent = supportFragmentManager.getFragment(savedInstanceState, "HomeFragment")
+//        }
     var landingViewModel: LandingViewModel? = null
     var CURRENT_TAG: String = TAG_HOME
     var isAccepted: Boolean = false
@@ -92,6 +95,7 @@ class LandingActivity : AppCompatActivity(), PermissionInterface {
     }
 
     fun switchHome(){
+        showHome()
         navView.menu[0].isChecked = true
     }
 

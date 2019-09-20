@@ -5,9 +5,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.pm.PackageManager
-import android.location.GpsStatus.GPS_EVENT_STARTED
-import android.location.GpsStatus.GPS_EVENT_STOPPED
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -53,6 +52,7 @@ import com.arghyam.landing.model.*
 import com.arghyam.landing.repository.GetAllSpringRepository
 import com.arghyam.landing.repository.NotificationCountRepository
 import com.arghyam.landing.repository.PrivateAccessRepository
+import com.arghyam.landing.ui.activity.LandingActivity
 import com.arghyam.landing.viewmodel.GetAllSpringViewModel
 import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
@@ -157,21 +157,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun registerReceiver() {
-
-        val lm = context?.getSystemService(LOCATION_SERVICE) as LocationManager?
-        lm!!.addGpsStatusListener { event ->
-            when (event) {
-                GPS_EVENT_STARTED -> {
-                }
-                GPS_EVENT_STOPPED -> {
-                }
-            }// do your tasks
-            // do your tasks
-        }
-    }
-
     private fun getViewModel() {
         landingViewModel = ViewModelProviders.of(activity!!).get(LandingViewModel::class.java)
     }
@@ -204,21 +189,24 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     private fun init() {
         initComponent()
         getGoogleClient()
-        initNotifications()
-        initRepository()
-        initNotificationCountApi()
-        initObservers()
-        getFavSpringRequest()
+
         if (ArghyamUtils().permissionGranted(
                 context!!,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+            initNotifications()
+            initRepository()
+            initNotificationCountApi()
+            initObservers()
+            getFavSpringRequest()
             initRecyclerView()
             if (activity?.let { ArghyamUtils().isLocationEnabled(it) }!!) {
                 if (springsList.size == 0) {
+                    Log.e("homefragment", "else")
                     initApiCall()
-                }
+                } else
+                    Log.e("homefragment", "else")
             } else {
                 activity?.let { ArghyamUtils().turnOnLocation(it) }!!
                 errorItems.visibility = VISIBLE
@@ -229,7 +217,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         }
         initFab()
         reload()
-        registerReceiver()
     }
 
 
@@ -365,10 +352,6 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         adapter.notifyDataSetChanged()
     }
 
-    fun onLocationChanged(location: Location) {
-
-    }
-
     private fun initObservers() {
         //NotificationCountObservers
         notificationCountViewModel?.getNotificationCountResponse()?.observe(this, Observer {
@@ -416,11 +399,11 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
 
         //Private Springs Observers
         privateAccessViewModel?.privateAccessData?.observe(this, Observer {
-            Log.d("Private Spring ","Access Request "+"Success")
+            Log.d("Private Spring ", "Access Request " + "Success")
         })
 
         privateAccessViewModel?.privateAccessError?.observe(this, Observer {
-            Log.d("Private Spring", "Access Request "+"Api Error")
+            Log.d("Private Spring", "Access Request " + "Api Error")
         })
     }
 
@@ -636,11 +619,10 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
                 )
             )
         )
-        if (!activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN)}.isNullOrEmpty()) {
+        if (!activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) }.isNullOrEmpty()) {
             userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }
                 .toString()
-        }
-        else {
+        } else {
             userId = "123" //dummyUserid to get springs
             Log.e(
                 "getallsprings",
@@ -674,7 +656,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         getFusedClient()
         if (flag == Constants.DEDUPLICATION)
             accuracy = mLocation?.accuracy?.toDouble()
-        Log.e(TAG, "" + accuracy + "accuracy"+mLocation.toString())
+        Log.e(TAG, "" + accuracy + "accuracy" + mLocation.toString())
         val mRequestData = mLocation?.latitude?.let { it1 ->
             mLocation?.longitude?.let { it2 ->
                 accuracy?.let {
@@ -729,7 +711,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
 
     private fun deduplicationApiCall(mRequestData: RequestModel) {
         var userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }!!
-        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it,userId, mRequestData) }
+        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, userId, mRequestData) }
     }
 
     private fun initRecyclerView() {
@@ -778,7 +760,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     private var homeFragmentInterface: HomeFragmentInterface = object : HomeFragmentInterface {
         override fun onRequestAccess(springCode: String, userId: String) {
             Log.e("HomeFragment", "$springCode           $userId")
-            privateAccessRequest(springCode,userId)
+            privateAccessRequest(springCode, userId)
         }
 
         override fun onFavouritesItemClickListener(
