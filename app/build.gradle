@@ -13,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "3.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -21,7 +21,16 @@ android {
     buildTypes {
         release {
             applicationIdSuffix ".release"
-            minifyEnabled true
+            debuggable true
+            buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
+            buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
+            buildConfigField "String", "GRANT_TYPE", '"password"'
+            buildConfigField "String", "ID", '"forWater.user.login"'
+            buildConfigField "String", "VER", '"1.0"'
+            buildConfigField "String", "ETS", '"11234"'
+            buildConfigField "String", "DID", '"did"'
+            buildConfigField "String", "KEY", '"key"'
+            buildConfigField "String", "MSGID", '"msgid"'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 

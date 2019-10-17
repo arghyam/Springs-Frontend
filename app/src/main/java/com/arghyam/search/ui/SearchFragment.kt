@@ -31,7 +31,6 @@ import com.arghyam.iam.model.ResponseModel
 import com.arghyam.landing.model.AllSpringDataModel
 import com.arghyam.landing.model.SearchModel
 import com.arghyam.landing.ui.activity.LandingActivity
-import com.arghyam.landing.ui.fragment.HomeFragment
 import com.arghyam.search.adapter.RecentSearchAdapter
 import com.arghyam.search.adapter.SearchResultsAdapter
 import com.arghyam.search.interfaces.RecentSearchInterface
@@ -43,13 +42,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.content_search.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
-
-
-
-
-
-
-
 
 class SearchFragment : Fragment() {
 
@@ -191,24 +183,30 @@ class SearchFragment : Fragment() {
             springsList.clear()
             if (responseData.springs.isEmpty())
                 ArghyamUtils().longToast(activity as AppCompatActivity, "Please try search by geography")
-            else
+            else {
                 springsList.addAll(responseData.springs)
+                no_recent_searches.visibility = GONE
+            }
             initRecyclerView()
         }
     }
 
     private fun makeSearchRequest(text: String) {
         Log.e("Search", text)
-        val mRequestData = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)?.let {
-            SearchResultsModel(
-                userId = it,
-                searchString = text
-            )
-        }?.let {
+        var userId: String
+        userId = if (!activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) }.isNullOrEmpty()) {
+            activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }
+                .toString()
+        } else
+            "123"
+        val mRequestData = SearchResultsModel(
+            userId = userId,
+            searchString = text
+        ).let {
             RequestSearchResultDataModel(
                 springs = it
             )
-        }?.let {
+        }.let {
             RequestModel(
                 id = Constants.SEARCH_SPRINGS,
                 ver = BuildConfig.VER,
@@ -221,7 +219,7 @@ class SearchFragment : Fragment() {
                 request = it
             )
         }
-        mRequestData?.let { makeApiCall(it) }
+        makeApiCall(mRequestData)
     }
 
     private fun makeApiCallRecentSearch(mRequestData: RequestModel) {
@@ -319,6 +317,7 @@ class SearchFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.e("SearchFragment" , resultCode.toString())
         if (resultCode == Activity.RESULT_OK) {
             data?.getStringExtra("searchText")?.let { makeSearchRequest(it) }
             recentSearchRecyclerView.visibility = GONE

@@ -80,6 +80,7 @@ class DeduplicationActivity : AppCompatActivity() {
         builder.setSpan(ImageSpan(this, R.drawable.ic_add_circle), builder.length - 1, builder.length, 0)
         builder.append(" to continue adding the new spring")
         val snackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), builder, Snackbar.LENGTH_LONG)
+        snackbar.duration = 10000
         snackbar.show()
     }
 

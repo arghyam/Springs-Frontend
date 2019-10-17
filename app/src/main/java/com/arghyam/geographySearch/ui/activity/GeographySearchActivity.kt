@@ -125,12 +125,16 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
                     val intent = Intent()
                     intent.putExtra("searchText",town_name.text)
                     setResult(Activity.RESULT_OK, intent)
+                    Log.e("GeoSearch",this.javaClass.name.toString())
+
                     finish()
                 }
                 villageOsid.isNotEmpty() -> {
                     val intent = Intent()
                     intent.putExtra("searchText",panchayat_name.text)
                     setResult(Activity.RESULT_OK, intent)
+                    Log.e("GeoSearch",this.javaClass.name.toString())
+
                     finish()
                 }
                 else -> ArghyamUtils().longToast(this,"please select the area correctly")

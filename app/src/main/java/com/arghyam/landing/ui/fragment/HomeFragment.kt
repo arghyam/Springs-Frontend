@@ -710,7 +710,11 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
     }
 
     private fun deduplicationApiCall(mRequestData: RequestModel) {
-        var userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }!!
+        var userId = "123"
+        if (!activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.ACCESS_TOKEN) }.isNullOrEmpty()) {
+            userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }
+                .toString()
+        }
         activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, userId, mRequestData) }
     }
 
