@@ -13,7 +13,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "3.1.0"
+        versionName "0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -21,7 +21,6 @@ android {
     buildTypes {
         release {
             applicationIdSuffix ".release"
-            debuggable true
             buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
             buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
             buildConfigField "String", "GRANT_TYPE", '"password"'
