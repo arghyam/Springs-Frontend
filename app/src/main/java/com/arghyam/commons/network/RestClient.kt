@@ -25,8 +25,8 @@ class RestClient {
             try {
                 loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
                 clientLogin.addInterceptor(loggingInterceptor)
-                clientLogin.readTimeout(120, TimeUnit.SECONDS)
-                    .connectTimeout(120, TimeUnit.SECONDS)
+                clientLogin.readTimeout(180, TimeUnit.SECONDS)
+                    .connectTimeout(180, TimeUnit.SECONDS)
                 clientLogin.addInterceptor { chain ->
                     var request = chain.request()
                     val url = request.url().newBuilder().build()

@@ -20,6 +20,7 @@ import com.arghyam.BuildConfig
 import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
+import com.arghyam.commons.utils.Constants.SEARCH_SPRINGS
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.favourites.adapter.FavouritesAdapter
 import com.arghyam.favourites.model.AllFavSpringsData
@@ -39,6 +40,7 @@ import com.arghyam.landing.model.NotificationCountResponseModel
 import com.arghyam.landing.repository.NotificationCountRepository
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
 import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationCountModel
 import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
@@ -121,7 +123,7 @@ class FavouritesFragment : Fragment() {
         var userId = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)!!
 
         var notificationCountObject = RequestModel(
-            id = Constants.GET_ALL_SPRINGS_ID,
+            id = SEARCH_SPRINGS,
             ver = BuildConfig.VER,
             ets = BuildConfig.ETS,
             params = Params(
@@ -129,10 +131,8 @@ class FavouritesFragment : Fragment() {
                 key = "",
                 msgid = ""
             ),
-            request = notificationSpringModel(
-                notifications = NotificationModel(
-                    type = "notifications"
-                )
+            request = notificationCountModel(
+                userId = userId
             )
         )
 

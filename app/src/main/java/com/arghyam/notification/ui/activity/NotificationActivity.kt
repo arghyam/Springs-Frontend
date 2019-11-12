@@ -18,6 +18,7 @@ import com.arghyam.R
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.commons.utils.Constants.SEARCH_SPRINGS
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.iam.model.Params
 import com.arghyam.iam.model.RequestModel
@@ -217,7 +218,7 @@ class NotificationActivity : AppCompatActivity() {
         var userId = SharedPreferenceFactory(this@NotificationActivity).getString(Constants.USER_ID)!!
 
         var notificationObject = RequestModel(
-            id = GET_ALL_SPRINGS_ID,
+            id = SEARCH_SPRINGS,
             ver = BuildConfig.VER,
             ets = BuildConfig.ETS,
             params = Params(

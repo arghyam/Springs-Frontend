@@ -29,6 +29,7 @@ import com.arghyam.addspring.ui.NewSpringActivity
 import com.arghyam.commons.utils.ArghyamUtils
 import com.arghyam.commons.utils.Constants
 import com.arghyam.commons.utils.Constants.GET_ALL_SPRINGS_ID
+import com.arghyam.commons.utils.Constants.SEARCH_SPRINGS
 import com.arghyam.commons.utils.SharedPreferenceFactory
 import com.arghyam.deduplication.model.DeduplicationModel
 import com.arghyam.deduplication.model.DeduplicationRequest
@@ -58,6 +59,7 @@ import com.arghyam.landing.viewmodel.LandingViewModel
 import com.arghyam.landing.viewmodel.NotificationCountViewModel
 import com.arghyam.landing.viewmodel.PrivateAccessViewModel
 import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationCountModel
 import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.android.gms.common.ConnectionResult
@@ -512,7 +514,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
         var userId = SharedPreferenceFactory(activity!!.applicationContext).getString(Constants.USER_ID)!!
 
         var notificationCountObject = RequestModel(
-            id = GET_ALL_SPRINGS_ID,
+            id = SEARCH_SPRINGS,
             ver = BuildConfig.VER,
             ets = BuildConfig.ETS,
             params = Params(
@@ -520,10 +522,8 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
                 key = "",
                 msgid = ""
             ),
-            request = notificationSpringModel(
-                notifications = NotificationModel(
-                    type = "notifications"
-                )
+            request = notificationCountModel(
+                userId = userId
             )
         )
 

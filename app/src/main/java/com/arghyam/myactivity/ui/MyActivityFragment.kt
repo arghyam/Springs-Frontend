@@ -37,6 +37,7 @@ import com.arghyam.myactivity.model.RequestMyActivitiesModel
 import com.arghyam.myactivity.repository.MyActivitiesRepository
 import com.arghyam.myactivity.viewmodel.MyActivitiesViewModel
 import com.arghyam.notification.model.NotificationModel
+import com.arghyam.notification.model.notificationCountModel
 import com.arghyam.notification.model.notificationSpringModel
 import com.arghyam.notification.ui.activity.NotificationActivity
 import com.google.gson.Gson
@@ -173,10 +174,8 @@ class MyActivityFragment : Fragment() {
                 key = "",
                 msgid = ""
             ),
-            request = notificationSpringModel(
-                notifications = NotificationModel(
-                    type = "notifications"
-                )
+            request = notificationCountModel(
+                userId = userId
             )
         )
         notificationCountViewModel?.notificationCountApi(context!!, userId, notificationCountObject)
