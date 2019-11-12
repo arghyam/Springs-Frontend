@@ -115,7 +115,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         verifyOtpViewModel?.resendOtpResponse()?.observe(this@OtpVerifyActivity, Observer {
             if (it?.response?.responseCode.equals("200")) {
                 initResendTimer()
-                ArghyamUtils().longToast(this@OtpVerifyActivity, "Otp has been sent to your mobile")
+                ArghyamUtils().longToast(this@OtpVerifyActivity, "An OTP has been sent your mobile number")
             }
         })
         verifyOtpViewModel?.resendOtpError()?.observe(this@OtpVerifyActivity, Observer {

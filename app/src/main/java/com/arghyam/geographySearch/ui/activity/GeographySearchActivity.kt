@@ -137,7 +137,7 @@ class GeographySearchActivity : AppCompatActivity(), SearchInterface {
 
                     finish()
                 }
-                else -> ArghyamUtils().longToast(this,"please select the area correctly")
+                else -> ArghyamUtils().longToast(this,"Please select an option for each of the area available")
             }
         }
     }

@@ -42,6 +42,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_display_discharge_data.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 class DisplayDischargeDataActivity : AppCompatActivity() {
@@ -245,8 +246,7 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
                     reviewerId = SharedPreferenceFactory(this@DisplayDischargeDataActivity).getString(Constants.USER_ID)!!,
                     notificationOsid = osid,
                     submittedBy = submittedById,
-                    status = status,
-                    springCode = springCode
+                    status = status
 
                 )
             )
@@ -297,16 +297,17 @@ class DisplayDischargeDataActivity : AppCompatActivity() {
                 var size = springProfileResponse.extraInformation.dischargeData[i].dischargeTime.size
                 if (size == 3) {
                     tv_attempt1.text = ArghyamUtils().secondsToMinutes(
-                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toInt())
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toFloat().roundToInt()
+                    )
                     tv_attempt2.text = ArghyamUtils().secondsToMinutes(
-                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toInt())
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toFloat().roundToInt())
                     tv_attempt3.text = ArghyamUtils().secondsToMinutes(
-                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toInt())
+                        springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toFloat().roundToInt())
                     average_time.text =
                         ArghyamUtils().secondsToMinutes(
-                            (springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toInt() +
-                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toInt() +
-                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toInt())/3
+                            (springProfileResponse.extraInformation.dischargeData[i].dischargeTime[0].toFloat().roundToInt() +
+                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[1].toFloat().roundToInt() +
+                                    springProfileResponse.extraInformation.dischargeData[i].dischargeTime[2].toFloat().roundToInt())/3
                         )
                 }
 

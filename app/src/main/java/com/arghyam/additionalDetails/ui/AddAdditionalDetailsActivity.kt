@@ -105,6 +105,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
     private fun observeData() {
         mAdditionalDetailsViewModel.getAdditionalDataSuccess().observe(this, androidx.lifecycle.Observer {
             Log.d("AddAdditionalDetails", "data added")
+            ArghyamUtils().longToast(this, "Additional data successfully added")
             var dataIntent: Intent = Intent().apply {
                 putExtra("DataBundle", args)
             }
@@ -276,7 +277,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         if (goBack) {
             finish()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose all entered data.")
             startTimer()
         }
         goBack = true
@@ -287,7 +288,7 @@ class AddAdditionalDetailsActivity : AppCompatActivity(), CalenderAdapter.OnRecy
         if (goBack) {
             finish()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose all entered data.")
             startTimer()
         }
         goBack = true

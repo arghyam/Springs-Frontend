@@ -21,7 +21,7 @@ android {
     buildTypes {
         release {
             applicationIdSuffix ".release"
-            buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
+            buildConfigField "String", "CLIENT_SECRET", keycloakClientSecret
             buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
             buildConfigField "String", "GRANT_TYPE", '"password"'
             buildConfigField "String", "ID", '"forWater.user.login"'
@@ -36,7 +36,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             debuggable true
-            buildConfigField "String", "CLIENT_SECRET", '"c167cb3a-9cf6-40ed-9e5b-699de04c378e"'
+            buildConfigField "String", "CLIENT_SECRET", keycloakClientSecret
             buildConfigField "String", "CLIENT_ID", '"Arghyam-client"'
             buildConfigField "String", "GRANT_TYPE", '"password"'
             buildConfigField "String", "ID", '"forWater.user.login"'
@@ -61,7 +61,7 @@ android {
             dimension "content"
         }
         prod {
-            buildConfigField "String", "BASE_URL", '"http://13.234.251.56:9090/"'
+            buildConfigField "String", "BASE_URL", '"http://15.206.32.13:9090/"'
             dimension "content"
         }
     }

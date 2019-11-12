@@ -108,11 +108,11 @@ class MoreFragment : Fragment() {
         }
         tick_icon.setOnClickListener {
             if (save_name.text == null || save_name.text.toString().trim().equals("")) {
-                ArghyamUtils().longToast(context!!, "Please enter name")
+                ArghyamUtils().longToast(context!!, "Please enter your name")
             } else if (save_name.text.toString().trim().length < 3) {
-                ArghyamUtils().longToast(context!!, "Name should contain atleast 3 characters")
+                ArghyamUtils().longToast(context!!, "Please enter atleast 3 characters")
             } else if( save_name.text.toString().startsWith(" ")){
-                ArghyamUtils().longToast(context!!, "Full name should not start with space")
+                ArghyamUtils().longToast(context!!, "Name can not start with space")
             } else {
                 initUpdateProfile()
                 rl_edit_name.visibility = VISIBLE

@@ -287,7 +287,7 @@ class AddDischargeActivity : AppCompatActivity() {
         if (goBack) {
             finish()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose all entered data.")
             startTimer()
         }
         goBack = true
@@ -299,7 +299,7 @@ class AddDischargeActivity : AppCompatActivity() {
         if (goBack) {
             finish()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose all entered data.")
             startTimer()
         }
         goBack = true
@@ -522,7 +522,7 @@ class AddDischargeActivity : AppCompatActivity() {
             assignDischargeData()
             if (volOfContainer != null && validateData() && clickable) {
                 addDischargeDataOnClick()
-                ArghyamUtils().longToast(this@AddDischargeActivity, "success")
+                ArghyamUtils().longToast(this@AddDischargeActivity, "Spring discharge data successfully added")
                 clickable = false
             } else
                 showToast()
@@ -532,15 +532,15 @@ class AddDischargeActivity : AppCompatActivity() {
 
     private fun showToast() {
         if (volumeOfContainer.text.toString().equals("")) {
-            ArghyamUtils().longToast(this, "Add the volume of the container")
+            ArghyamUtils().longToast(this, "Please add the volume of the container")
             return
         }
         if (timerList.size == 0) {
-            ArghyamUtils().longToast(this, "Add the discharge time")
+            ArghyamUtils().longToast(this, "Please measure discharge of the spring")
             return
         }
         if (imageList.size == 0) {
-            ArghyamUtils().longToast(this, "Add atleast one image of the discharge")
+            ArghyamUtils().longToast(this, "Please add a spring image showing discharge")
             return
         }
         if (!validateData()) {

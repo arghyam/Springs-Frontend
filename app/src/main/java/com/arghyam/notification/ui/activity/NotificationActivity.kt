@@ -196,12 +196,14 @@ class NotificationActivity : AppCompatActivity() {
                     )
                     intent.putExtra("SpringCode", deletedNotificationList[position].springCode)
                     intent.putExtra("submittedById",deletedNotificationList[position].userId)
-                    if(deletedNotificationList[position].status == "Created") {
+                    if(deletedNotificationList[position].status.equals("Created",true) ) {
                         startActivity(intent)
                         finish()
                     }
-                    else
+                    else {
+                        Log.e("Notification","not clickable")
                         listView.isClickable = false
+                    }
                 }
 
         } else{

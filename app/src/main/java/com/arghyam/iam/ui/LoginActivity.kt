@@ -191,7 +191,7 @@ class LoginActivity : AppCompatActivity() {
                 )
                 iamViewModel?.userLoginApi(this, loginObject)
             } else {
-                Toast.makeText(this@LoginActivity, "Please enter a valid number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Please enter a 10 digit phone number", Toast.LENGTH_SHORT).show()
             }
         }
     }

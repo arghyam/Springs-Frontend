@@ -306,7 +306,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
             } else if (clickable) {
                 createSpringOnClick()
                 add_spring_submit.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                ArghyamUtils().longToast(this@NewSpringActivity, "New spring added succesfully")
+                ArghyamUtils().longToast(this@NewSpringActivity, "You have succesfully added a new spring")
                 clickable = false
             }
         }
@@ -381,7 +381,7 @@ class NewSpringActivity : AppCompatActivity(), GoogleApiClient.ConnectionCallbac
         if (goBack) {
             onBackPressed()
         } else {
-            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose the Entered Data")
+            ArghyamUtils().longToast(this, "Are you sure you want to go back? You will lose all entered data.")
             startTimer()
         }
         goBack = true

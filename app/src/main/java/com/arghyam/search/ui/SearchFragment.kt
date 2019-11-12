@@ -317,12 +317,14 @@ class SearchFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.e("SearchFragment" , resultCode.toString())
-        if (resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra("searchText")?.let { makeSearchRequest(it) }
-            recentSearchRecyclerView.visibility = GONE
-            searchResultRecyclerView.visibility = VISIBLE
-            recent_search.text = "Search results"
+        if (requestCode == 1) {
+            Log.e("SearchFragment", resultCode.toString())
+            if (resultCode == Activity.RESULT_OK) {
+                data?.getStringExtra("searchText")?.let { makeSearchRequest(it) }
+                recentSearchRecyclerView.visibility = GONE
+                searchResultRecyclerView.visibility = VISIBLE
+                recent_search.text = "Search results"
+            }
         }
     }
 

@@ -176,11 +176,11 @@ class DeduplicationActivity : AppCompatActivity() {
                 )
             )
         )
-        makeApiCall(mRequestData,userId)
+        makeApiCall(mRequestData)
     }
 
-    private fun makeApiCall(mRequestData: RequestModel,userId: String) {
-        deduplicationViewModel?.deduplicationSpringsApi(this,userId, mRequestData)
+    private fun makeApiCall(mRequestData: RequestModel) {
+        deduplicationViewModel?.deduplicationSpringsApi(mRequestData)
     }
 
     private fun initRepository() {

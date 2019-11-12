@@ -32,10 +32,10 @@ class VerifyOtpRepository @Inject constructor() {
                         if (response.body()?.response?.responseCode == "200") {
                             responseListener.onSuccess(response.body()!!)
                         } else if(response.body()?.response?.responseCode == "422"){
-                            ArghyamUtils().longToast(context, "OTP is expired")
+                            ArghyamUtils().longToast(context, "OTP has expired, try again.")
                         }
                         else {
-                            responseListener.onError("Please enter correct Otp")
+                            responseListener.onError("Incorrect OTP, please re-enter.")
                         }
 
                     }
@@ -77,7 +77,7 @@ class VerifyOtpRepository @Inject constructor() {
                         if (response.body()?.response?.responseCode == "200") {
                             responseListener.onSuccess(response.body()!!)
                         } else {
-                            responseListener.onError("Please enter correct Otp")
+                            responseListener.onError("Incorrect OTP, please re-enter.")
                         }
 
                     } else {

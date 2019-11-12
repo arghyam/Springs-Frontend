@@ -715,7 +715,7 @@ class HomeFragment : Fragment(), GoogleApiClient.ConnectionCallbacks,
             userId = activity?.applicationContext?.let { SharedPreferenceFactory(it).getString(Constants.USER_ID) }
                 .toString()
         }
-        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(it, userId, mRequestData) }
+        activity?.applicationContext?.let { deduplicationViewModel?.deduplicationSpringsApi(mRequestData) }
     }
 
     private fun initRecyclerView() {
