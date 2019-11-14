@@ -42,8 +42,8 @@
                 android:layout_alignBottom="@id/badge"
                 android:gravity="center"
                 android:visibility="gone"
-                android:text="1"
-                android:textSize="10sp"
+                android:text="100"
+                android:textSize="8sp"
                 android:textColor="@color/white"
         />
     </RelativeLayout>

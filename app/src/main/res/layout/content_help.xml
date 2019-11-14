@@ -95,17 +95,6 @@
                     android:autoLink="phone"
                     android:textColor="@color/colorPrimary"/>
 
-            <TextView
-                    android:id="@+id/phone_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/help_num_two"
-                    android:textSize="@dimen/text_size_16"
-                    android:paddingTop="@dimen/margin_8"
-                    android:autoLink="phone"
-                    android:textColor="@color/colorPrimary"/>
-
-
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"

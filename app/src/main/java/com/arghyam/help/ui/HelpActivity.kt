@@ -31,7 +31,6 @@ class HelpActivity : AppCompatActivity() {
     private fun initEmail() {
         StringUtil().removeUnderlines(email.text as Spannable)
         StringUtil().removeUnderlines(phone_1.text as Spannable)
-        StringUtil().removeUnderlines(phone_2 .text as Spannable)
     }
 
     private fun initToolbar() {
